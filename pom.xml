@@ -4,8 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>web</module>
-        <module>service</module>
         <module>dao</module>
+        <module>entity</module>
+        <module>service</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -28,14 +29,7 @@
 
     </dependencyManagement>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+
 
     <repositories>
         <repository>
