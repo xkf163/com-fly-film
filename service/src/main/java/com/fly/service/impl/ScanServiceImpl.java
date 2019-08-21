@@ -1,5 +1,8 @@
-package impl;
+package com.fly.service.impl;
 
+import com.fly.dao.MediaRepository;
+import com.fly.entity.*;
+import com.fly.service.ScanService;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;

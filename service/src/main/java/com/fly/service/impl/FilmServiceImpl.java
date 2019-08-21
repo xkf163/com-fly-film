@@ -1,4 +1,10 @@
-package impl;
+package com.fly.service.impl;
+
+import com.fly.dao.*;
+import com.fly.entity.*;
+import com.fly.service.FilmService;
+import com.fly.service.PersonService;
+import com.fly.service.StarService;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -147,7 +153,8 @@ public class FilmServiceImpl implements FilmService {
         //判断数据库里是否存在
         QFilm qFilm = QFilm.film;
         Predicate predicate = qFilm.subject.eq(film.getSubject()).and(qFilm.doubanNo.eq(film.getDoubanNo()));
-        return filmRepository.findOne(predicate);
+        return  filmRepository.findOne(predicate);
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.fly.service.impl;
 
 
+import com.fly.entity.QMedia;
 import com.fly.entity.TreeNode;
 import com.fly.service.TreeService;
 import com.querydsl.jpa.impl.JPAQueryFactory;

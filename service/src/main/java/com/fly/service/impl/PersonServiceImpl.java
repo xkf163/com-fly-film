@@ -1,5 +1,8 @@
-package impl;
+package com.fly.service.impl;
 
+import com.fly.dao.PersonRepository;
+import com.fly.entity.*;
+import com.fly.service.PersonService;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
