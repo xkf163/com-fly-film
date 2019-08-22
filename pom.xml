@@ -15,11 +15,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.fly</groupId>
-    <artifactId>film</artifactId>
+    <artifactId>FlyFilm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>film</name>
-    <description>f's films</description>
+    <description>fly's films</description>
 
     <properties>
         <java.version>1.8</java.version>
