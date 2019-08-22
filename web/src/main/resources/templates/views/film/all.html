@@ -90,10 +90,20 @@
     <div class="row">
         <div class="col-xs-12">
             <!-- PAGE CONTENT BEGINS -->
-            <table id="user_table" class="table table-bordered table-striped table-hover">
+            <table id="film_table" class="table table-bordered table-striped table-hover">
             </table>
             <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
     </div><!-- /.row -->
 
 </div><!-- /.page-content -->
+
+
+<script>
+    //tableId,queryId,conditionContainer
+    var userTable;
+    $(function() {
+        //init table and fill data
+        userTable = new CommonTable("film_table", "film_list", "searchDiv");
+    });
+</script>

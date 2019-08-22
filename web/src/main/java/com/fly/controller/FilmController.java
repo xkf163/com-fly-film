@@ -3,7 +3,6 @@ package com.fly.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 public class FilmController {
 
     @GetMapping(value = "/all")
-    public String filmall(HttpServletRequest request) {
-        return "views/film";
+    public String filmAll(HttpServletRequest request) {
+        return "views/film/all";
     }
 }
