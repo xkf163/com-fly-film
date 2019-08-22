@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>APP PAGE</title>
+		<title>影音文件数据仓库</title>
 
 		<meta name="description" content="" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -66,8 +66,7 @@
 				<div class="navbar-header pull-left">
 					<a href="index.html" class="navbar-brand">
 						<small>
-							<i class="fa fa-leaf"></i>
-							影音库
+							<i class="fa fa-leaf"></i> 影音文件数据仓库
 						</small>
 					</a>
 				</div>
@@ -375,7 +374,7 @@
 				try{ace.settings.loadState('main-container')}catch(e){}
 			</script>
 
-			<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+			<div id="sidebar" class="sidebar  responsive ace-save-state sidebar-fixed">
 				<script type="text/javascript">
 					try{ace.settings.loadState('sidebar')}catch(e){}
 				</script>
@@ -867,7 +866,7 @@
 			</div>
 
 			<div class="main-content">
-				<div class="main-content-inner">
+				<div class="main-content-inner" id="mainDiv">
 
 				</div>
 			</div><!-- /.main-content -->
@@ -907,7 +906,7 @@
 
 		<!-- ./wrapper -->
 		<script type="text/javascript">
-            var basePath="${basePath}";//给外部js文件传递路径参数
+            var basePath="";//给外部js文件传递路径参数
 		</script>
 		<!--[if !IE]> -->
 		<script src="assets/js/jquery-2.1.4.min.js"></script>
@@ -943,7 +942,6 @@
                 //首页默认加载
                 //loadPage("/dashboard");
                 $("a[data-url]").click(function(evt){
-                    alert($(this).data("url"));
                     loadPage($(this).data("url"));
                     $("ul.treeview-menu li").removeClass("active");
                     $(this).parent().addClass("active");
