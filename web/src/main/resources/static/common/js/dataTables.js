@@ -63,14 +63,14 @@
 
         var columns = [
             {data:'id',title:'序号',width:50},
-            {data:'subject',title:'片名',width:80},
+            {data:'subject',title:'片名',width:110},
             {data:'subjectMain',title:'片名(全)'},
-            {data:"year",title:'年份',width:20},
-            {data:'country',title:'国家/地区',width:60},
-            {data:'genre',title:'类型',width:60},
+            {data:"year",title:'年份',width:30},
+            {data:'country',title:'国家/地区',width:80},
+            {data:'genre',title:'类型',width:80},
             {data:'imdbNo',title:'IMDB',width:30},
             {data:'doubanNo',title:'豆瓣',width:30},
-            {data:'runtime',title:'片长',width:20}
+            {data:'runtime',title:'片长',width:30}
         ];
 
         // alert(JSON.stringify(columns));
@@ -87,6 +87,7 @@
             "rowId": rowId,
             "info": allowPaging, // 分页明细
             "autoWidth": false,
+            "dom": 'rt<"row"<"col-sm-5"il><"col-sm-7"p>>',
             //"stateSave" : true,// 这样就可以在删除返回时，保留在同一页上
             "processing": true,// 是否显示取数据时的那个等待提示
             "pagingType": "full_numbers",// 分页样式
