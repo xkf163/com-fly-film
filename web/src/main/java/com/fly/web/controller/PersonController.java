@@ -1,4 +1,4 @@
-package com.fly.controller;
+package com.fly.web.controller;
 
 /**
  * @Author:xukangfeng

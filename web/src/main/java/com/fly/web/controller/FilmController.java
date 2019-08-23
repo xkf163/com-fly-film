@@ -1,4 +1,4 @@
-package com.fly.controller;
+package com.fly.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +18,7 @@ public class FilmController {
 
     @GetMapping(value = "/all")
     public String filmAll(HttpServletRequest request) {
-        return "views/film/all";
+        request.setAttribute("dataUrl", "api/film/all");
+        return "views/film/list";
     }
 }

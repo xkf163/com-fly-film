@@ -48,15 +48,73 @@
         // 表格横向自适应
         $("#" + this.tableId).css("width", "100%");
         // 初始化表格
-        this.initTable(tableId, queryId, searchDiv);
+        this.initTableJPA(tableId, queryId, searchDiv);
 
     }
+
+
+
+
+    CommonTable.prototype.initTableJPA = function (tableId, queryUrl, searchDiv) {
+        this.data = this.getServerDataJPA(null,tableId, queryUrl);
+        if (this.data == null) return;
+        this.dataCache.data("data", this.data);
+        var that = this;
+
+        var columns = [
+            {data:'id',title:'序号',width:50},
+            {data:'subject',title:'片名',width:80},
+            {data:'subjectMain',title:'片名(全)'},
+            {data:"year",title:'年份',width:20},
+            {data:'country',title:'国家/地区',width:60},
+            {data:'genre',title:'类型',width:60},
+            {data:'imdbNo',title:'IMDB',width:30},
+            {data:'doubanNo',title:'豆瓣',width:30},
+            {data:'runtime',title:'片长',width:20}
+        ];
+
+        // alert(JSON.stringify(columns));
+        //var allowPaging = this.data.query.allowPaging;
+        var allowPaging = true;
+       // var rowId = this.data.query.key;
+        var rowId = "id";
+        this.table = $('#' + tableId).DataTable($.extend({
+            "paging": allowPaging, // 分页
+            "lengthChange": allowPaging, // 每页记录数可选项
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "全部"]],
+            "searching": false, // 过滤
+            "ordering": true, // 排序
+            "rowId": rowId,
+            "info": allowPaging, // 分页明细
+            "autoWidth": false,
+            //"stateSave" : true,// 这样就可以在删除返回时，保留在同一页上
+            "processing": true,// 是否显示取数据时的那个等待提示
+            "pagingType": "full_numbers",// 分页样式
+            "language": { // 中文支持
+                "sUrl": basePath + "/common/json/zh_CN.json"
+            },
+            "displayLength": that.data.size,// 每页记录条数，默认为10
+            //"data": that.data.content,
+            "serverSide": true,
+            "ajaxDataProp": "data",
+            "ajaxSource": basePath + queryUrl,
+            "fnServerData": $.proxy(that.fillDataTableJPA, that),
+            "fnInitComplete": $.proxy(that.fnInitComplete, that),
+            "singleSelect": true,  //单选
+            "aoColumns": columns
+
+        }, that.config));
+
+
+
+    }
+
 
     /**
      * 初始化表格
      */
     CommonTable.prototype.initTable = function (tableId, queryId, searchDiv) {
-        this.data = this.getServerData(null, tableId);
+        this.data = this.getServerDataJPA(null, tableId);
         if (this.data == null) return;
         this.dataCache.data("data", this.data);
         //console.log(JSON.stringify(this.data));
@@ -431,6 +489,29 @@
         return conditions;
     }
 
+
+    CommonTable.prototype.getServerDataJPA = function (pageInfo,tableId,queryUrl) {
+        var dataCache = $("#dataCache" + tableId);
+        if (queryUrl == undefined) {
+            queryUrl = this.queryId;
+        }
+        var reqParam = {
+            queryUrl: dataCache.data("queryUrl"),
+            pageInfo: pageInfo,
+            query: null,
+            sortInfo: dataCache.data("sortInfo"),
+        };
+        dataCache.data("pageInfo", pageInfo);
+        var retData = null;
+        ajaxPost(basePath + queryUrl, {"reqObj": this.toJSONString(reqParam)}, function (result, status) {
+            retData = result;
+        });
+
+        if (retData == null) return null;
+        return retData;
+
+    }
+
     /**
      * 获取服务器中的数据
      *
@@ -601,6 +682,49 @@
         return obj;
     }
 
+
+    CommonTable.prototype.fillDataTableJPA = function (sSource, aoData, fnCallback, oSettings) {
+        var result = this.data;
+        var map = oSettings.oAjaxData;
+        console.log(map);
+        var dataCache = $("#dataCache" + oSettings.sTableId);
+        if (this.loaded) {// 换页
+            var pageInfo = {};
+            pageInfo.pageSize = map.iDisplayLength;
+            pageInfo.pageNum = map.iDisplayStart % map.iDisplayLength == 0 ? map.iDisplayStart / map.iDisplayLength + 1
+                : map.iDisplayStart / map.iDisplayLength;
+            // console.log(dataCache.data("getServerData"));
+            // 构造排序
+            var columnNames = map.sColumns.split(',');
+            var sortArr = [];
+            for (var i = 0; i < map.iSortingCols; i++) {
+                if (map["iSortCol_" + i] != 0)// 过滤掉rowIndex的排序
+                    sortArr.push(columnNames[map["iSortCol_" + i]] + " " + map["sSortDir_" + i]);
+            }
+            dataCache.data("sortInfo", sortArr.join());
+            result = this.getServerDataJPA(pageInfo, oSettings.sTableId);
+            this.data = result;
+
+        } else {// 首次加载
+            result = this.data;
+            this.loaded = true;
+        }
+        var obj = {};
+        obj['data'] = result.content;
+        obj["iTotalRecords"] = result.totalElements;
+        obj["iTotalDisplayRecords"] = result.totalElements;
+        fnCallback(obj);
+        //序号排序
+        $("table.table thead tr").each(function () {
+            $(this).find("th").eq(0).removeClass("sorting_asc").addClass("sorting_disabled");
+        });
+        //加载完成以后做一些其他处理
+        if (this.serverCallback) {
+            this.serverCallback.call(this, oSettings);
+        }
+
+
+    }
 
     /**
      * 换页、排序、查询按钮调用此方法

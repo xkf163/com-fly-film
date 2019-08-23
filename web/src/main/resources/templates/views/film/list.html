@@ -102,8 +102,10 @@
 <script>
     //tableId,queryId,conditionContainer
     var userTable;
+    var dataUrl ="${dataUrl}";
     $(function() {
         //init table and fill data
-        userTable = new CommonTable("film_table", "film_list", "searchDiv");
+        userTable = new CommonTable("film_table", dataUrl, "searchDiv");
     });
+
 </script>

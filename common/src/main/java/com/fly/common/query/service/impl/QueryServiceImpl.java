@@ -1,6 +1,11 @@
 package com.fly.common.query.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.fly.common.base.pojo.PageInfo;
+import com.fly.common.query.entity.Query;
+import com.fly.common.query.entity.QueryCondition;
 import com.fly.common.query.service.QueryService;
+import com.fly.common.query.util.QueryUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -14,10 +19,14 @@ public class QueryServiceImpl implements QueryService {
     public Map<String, Object> loadData(String reqObj) throws Exception {
         //用于接收返回数据(配置、分页、数据)
         Map<String, Object> map = new HashMap<>();
-        /*
+
+
         QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
+
+
         //获取Query配置
         Query query = QueryUtil.getQuery(queryCondition);
+           /*
         //获取所属的类
         Class<?> objClass = QueryUtil.getClassName(query.getClassName());
         // 分页信息
