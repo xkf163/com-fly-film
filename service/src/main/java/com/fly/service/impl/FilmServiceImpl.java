@@ -56,7 +56,7 @@ public class FilmServiceImpl implements FilmService {
         Integer pageSize = pageInfo.getPageSize();
 
         //3)排序信息
-        String sortInfo = queryCondition.getSortInfo();
+        String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
         Sort sort = null;
         if (!StrUtil.isEmpty(sortInfo)) {
             System.out.println("------------sortInfo--------------");

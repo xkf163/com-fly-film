@@ -20,4 +20,10 @@ public class RestMediaController {
     public Map<String, Object> mediaAll(String reqObj) throws Exception {
         return mediaService.findAll(reqObj);
     }
+
+    @PostMapping(value = "/duplicate")
+    public Map<String, Object> mediaDuplicate(String reqObj) throws Exception {
+        return mediaService.findDuplicate(reqObj);
+    }
+
 }

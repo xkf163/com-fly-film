@@ -15,9 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(value = "/media")
 public class MediaController {
+
     @GetMapping(value = "/all")
     public String mediaAll(HttpServletRequest request) {
         request.setAttribute("dataUrl", "api/media/all");
         return "views/media/list";
+    }
+
+
+    @GetMapping(value = "/duplicate")
+    public String mediaDuplicate(HttpServletRequest request) {
+        request.setAttribute("dataUrl", "api/media/duplicate");
+        return "views/media/duplicate";
     }
 }

@@ -14,7 +14,10 @@ import com.fly.entity.QFilm;
 import com.fly.entity.QMedia;
 import com.fly.service.MediaService;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +25,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +44,9 @@ public class MediaServiceImpl implements MediaService {
     @Autowired
     MediaRepository mediaRepository;
 
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Override
     public Map<String, Object> findAll(String reqObj) throws Exception {
         //用于接收返回数据(配置、分页、数据)
@@ -49,11 +58,12 @@ public class MediaServiceImpl implements MediaService {
         //获取Query配置
         Query query = QueryUtil.getQuery(queryCondition);
 
+
         int pageNum = pageInfo.getPageNum();
         int pageSize = pageInfo.getPageSize();
 
         //排序信息
-        String sortInfo = queryCondition.getSortInfo();
+        String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
         Sort sort = null;
         if (!StrUtil.isEmpty(sortInfo)) {
             //判断排序类型及排序字段
@@ -84,6 +94,66 @@ public class MediaServiceImpl implements MediaService {
 
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
+        Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);
+        List<Column> columnCarrier = query.getColumnList();
+
+        map.put("pageCarrier", pageCarrier);
+        map.put("columnCarrier", columnCarrier);
+
+        return map;
+    }
+
+
+    /**
+     * 去重
+     * @param reqObj
+     * @return
+     */
+    @Override
+    public Map<String, Object> findDuplicate(String reqObj) throws Exception {
+
+        //用于接收返回数据(配置、分页、数据)
+        Map<String, Object> map = new HashMap<>();
+        QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
+
+        // 分页信息
+        PageInfo pageInfo = QueryUtil.getPageInfo(queryCondition);
+        //获取Query配置
+        Query query = QueryUtil.getQuery(queryCondition);
+
+
+        int pageNum = pageInfo.getPageNum();
+        int pageSize = pageInfo.getPageSize();
+
+        //排序信息
+        String sortInfo = "nameChn asc";
+        Sort sort = null;
+        if (!StrUtil.isEmpty(sortInfo)) {
+            //判断排序类型及排序字段
+            String[] sortArray = sortInfo.split(" ");
+            System.out.println(sortArray);
+            sort = "asc".equals(sortArray[1]) ? new Sort(Sort.Direction.ASC, sortArray[0]) : new Sort(Sort.Direction.DESC, sortArray[0]);
+        }
+
+        Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
+
+        QMedia media = QMedia.media;
+        //查询语句动态准备
+        List<Predicate> criteria = new ArrayList<>();
+        criteria.add(media.deleted.eq(0));
+
+
+
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        List<String> listRepeat = queryFactory.selectFrom(media)
+                .groupBy(media.nameChn,media.year)
+                .select(media.nameChn)
+                .where(criteria.toArray(new Predicate[criteria.size()]))
+                .having(media.nameChn.count().gt(1))
+                .fetch();
+        //再次搜索：带分页
+        Predicate predicate = media.nameChn.in(listRepeat).and(media.deleted.eq(0));
+
         Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);
         List<Column> columnCarrier = query.getColumnList();
 

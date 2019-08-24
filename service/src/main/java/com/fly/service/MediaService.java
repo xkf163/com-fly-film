@@ -9,4 +9,8 @@ import java.util.Map;
  */
 public interface MediaService {
     Map<String, Object> findAll(String reqObj) throws Exception;
+
+    Map<String, Object> findDuplicate(String reqObj) throws Exception;
+
+
 }

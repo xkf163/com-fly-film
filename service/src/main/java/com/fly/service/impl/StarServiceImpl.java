@@ -50,7 +50,7 @@ public class StarServiceImpl implements StarService {
         int pageSize = pageInfo.getPageSize();
 
         //排序信息
-        String sortInfo = queryCondition.getSortInfo();
+        String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
         Sort sort = null;
         if (!StrUtil.isEmpty(sortInfo)) {
             //判断排序类型及排序字段
