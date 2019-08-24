@@ -4,6 +4,7 @@ import com.fly.entity.Person;
 import us.codecraft.webmagic.Page;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author:xukangfeng
@@ -12,21 +13,9 @@ import java.util.List;
  */
 public interface PersonService {
 
-    //从网页中提取Film Object
-    Person extractFilmSecondFromCrawler(Page page);
+    Map<String, Object> findAll(String reqObj) throws Exception;
 
-    Person extractFilmFirstFromCrawler(Page page);
 
-    Person findByNameAndDoubanNO(Person person);
 
-    void save(Person person);
 
-    //根据不为空字段来判断是否需要保存到数据库
-    boolean needCrawler(Person person);
-
-    Person findByDoubanNo(String doubanNo);
-
-    List<String> listPersonsDouBanNo();
-
-    Person findById(Long id);
 }

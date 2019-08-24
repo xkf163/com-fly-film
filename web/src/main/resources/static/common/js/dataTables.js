@@ -37,6 +37,7 @@
         }
         this.dataCache = dataCache;
         this.dataCache.data("queryUrl", this.queryUrl);
+
         //绑定查询事件
         var searchButton = $("#" + searchDiv + " button[data-btn-type='search']");
         this.searchButton = searchButton;
@@ -46,6 +47,7 @@
         //用户自定义列
         var customButton = $("#" + searchDiv + " button[data-btn-type='custom']");
         this.customButton = customButton;
+
         // 表格横向自适应
         $("#" + this.tableId).css("width", "100%");
         // 初始化表格
@@ -120,7 +122,29 @@
 
         }, that.config));
 
-
+        //绑定事件
+        ////查询按钮
+        if (this.searchButton) {
+            this.searchButton.click(function () {
+                that.table.page('first').draw(false);
+                // 执行查询的回调函数
+                if (that.searchButton.data("callback")) {
+                    eval(that.searchButton.data("callback"));
+                }
+            });
+        }
+        //重置按钮
+        if (this.resetButton) {
+            this.resetButton.click(function () {
+                //清除查询条件
+                that.clearSearchDiv(that.searchDiv);
+                //清除排序、分页、重置初始长度
+                that.table.order([]).page.len(10).draw();
+                if (that.resetButton.data("callback")) {
+                    eval(that.resetButton.data("callback"));
+                }
+            });
+        }
 
     }
 
@@ -486,6 +510,8 @@
                 if (!type && likeOption == "true" && value) {
                     value = "%" + value + "%";
                 }
+
+
                 if (isExist) {
                     map.value += "," + value;
                 } else {
@@ -514,7 +540,8 @@
             queryUrl: dataCache.data("queryUrl"),
             pageInfo: pageInfo,
             queryId: this.tableId,
-            sortInfo: dataCache.data("sortInfo")
+            sortInfo: dataCache.data("sortInfo"),
+            conditions: this.fnGetConditions(this.searchDiv)
         };
         dataCache.data("pageInfo", pageInfo);
         var retData = null;

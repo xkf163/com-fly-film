@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://www.example.org/query query.xsd ">
 
 	<!-- Film -->
-	<query id="film_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="id asc">
+	<query id="film_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="20"  widthType="px" order="id asc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="subject" header="片名" width="120"  align="left" />
-		<column key="subjectMain" header="片名(全)"  align="left" />
-		<column key="year" header="年份" width="60" allowSort="true" />
+		<column key="subjectMain" header="片名(全)" operator="like" align="left" />
+		<column key="year" header="年份" width="60"  operator="eq"  allowSort="true" />
 		<column key="country" header="国家/地区" width="80"  align="left" />
 		<column key="genre" header="类型" width="100"  align="left" />
 		<column key="imdbNo" header="IMDB编号" width="60"/>
@@ -18,16 +18,44 @@
 
 	<!-- Media -->
 	<query id="media_list" key="id" tableName="影音列表" className="com.fly.entity.Media"
-		pageSize="10"  widthType="px" order="id asc">
+		pageSize="20"  widthType="px" order="id asc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameChn" header="片名(中)" width="120"  align="left" />
-		<column key="nameEng" header="片名（英）" width="120"  align="left" />
-		<column key="year" header="年代" width="60" allowSort="true"/>
-		<column key="name" header="文件名" operator="like" align="left"  allowSort="true" />
+		<column key="nameChn" header="片名(中)" width="120"  operator="like"  align="left" />
+		<column key="nameEng" header="片名（英）" width="120"  operator="like"  align="left" />
+		<column key="year" header="年代" width="60"  operator="eq"  allowSort="true"/>
+		<column key="diskNo" header="盘符" width="40"  operator="like"  allowSort="true"/>
+		<column key="fullPath" header="全路径" operator="like" align="left"  allowSort="true" />
 		<column key="mediaSize" header="文件容量" align="center" width="100"  allowSort="true"/>
 		<column key="gatherDate" header="下载时间" operator="like" width="80" allowSort="true"/>
 		<!-- <column key="whetherFolder" header="文件夹" width="30"  render="1=是,0=否" /> -->
+	</query>
+
+
+	<!-- Person -->
+	<query id="person_list" key="id" tableName="人物列表" className="com.fly.entity.Person"
+		   pageSize="20"  widthType="px" order="id asc">
+		<column key="rowIndex" header="序号" width="30" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="name" header="姓名" width="120"  operator="like"  align="left" />
+		<column key="nameExtend" header="姓名中英" width="200"  operator="like"  align="left" />
+		<column key="birthDay" header="生日" width="60"  operator="eq"  allowSort="true"/>
+		<column key="birthPlace" header="出生地" width="40"  operator="like"  allowSort="true"/>
+		<column key="doubanNo" header="豆瓣编号" operator="like" align="left"  allowSort="true" />
+		<column key="imdbNo" header="IMDB编号" align="center" width="100"  allowSort="true"/>
+		<column key="job" header="职业" operator="like" width="80" allowSort="true"/>
+	</query>
+
+	<!-- Star -->
+	<query id="star_list" key="id" tableName="人物列表" className="com.fly.entity.Star"
+		   pageSize="20"  widthType="px" order="id asc">
+		<column key="rowIndex" header="序号" width="30" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="name" header="姓名" width="120"  operator="like"  align="left" />
+		<column key="nameExtend" header="姓名全" width="200"  operator="like"  align="left" />
+		<column key="asDirectorNumber" header="导演作品数" width="100" align="left"  allowSort="true" />
+		<column key="asActorNumber" header="演绎作品数" align="center" width="100"  allowSort="true"/>
+
 	</query>
 
 
