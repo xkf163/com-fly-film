@@ -26,6 +26,7 @@ public class QueryServiceImpl implements QueryService {
 
         //获取Query配置
         Query query = QueryUtil.getQuery(queryCondition);
+
            /*
         //获取所属的类
         Class<?> objClass = QueryUtil.getClassName(query.getClassName());

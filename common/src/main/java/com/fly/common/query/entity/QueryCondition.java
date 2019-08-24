@@ -21,6 +21,9 @@ public class QueryCondition {
 
     private String queryUrl;
 
+    //page上table容器的id，作为查询表格列头数据的关键字
+    private String queryId;
+
 
 
     private String pageName;
@@ -57,6 +60,14 @@ public class QueryCondition {
     public void setQueryUrl(String queryUrl) {
 
         this.queryUrl = queryUrl;
+    }
+
+    public String getQueryId() {
+        return queryId;
+    }
+
+    public void setQueryId(String queryId) {
+        this.queryId = queryId;
     }
 
     public Query getQuery() {

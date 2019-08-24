@@ -6,12 +6,10 @@ import com.fly.common.exception.QueryException;
 import com.fly.common.query.entity.Column;
 import com.fly.common.query.entity.Query;
 import com.fly.common.query.entity.QueryCondition;
+import com.fly.common.query.pojo.QueryDefinition;
 import com.fly.common.utils.SpringContextUtil;
 import com.fly.common.utils.StrUtil;
-import org.apache.shiro.SecurityUtils;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.type.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,13 +51,12 @@ public class QueryUtil {
     public static Query getQuery(QueryCondition queryCondition) throws QueryException {
         if (queryCondition.getQuery() != null)
             return queryCondition.getQuery();
-        String queryUrl = queryCondition.getQueryUrl();
-        if (!StrUtil.isEmpty(queryUrl)) {
+        String queryId = queryCondition.getQueryId();
+        if (!StrUtil.isEmpty(queryId)) {
 
-            Query query = null;
-
+            Query query = QueryDefinition.getQueryById(queryId);
             if (query == null) {
-                throw new QueryException("queryId为【" + queryUrl + "】的xml配置不存在");
+                throw new QueryException("queryId为【" + queryId + "】的xml配置不存在");
             } else {
                 return query;
             }
@@ -77,10 +74,10 @@ public class QueryUtil {
      * @param query          查询配置
      * @return 分页信息
      */
-    public static PageInfo getPageInfo(QueryCondition queryCondition, Query query) {
+    public static PageInfo getPageInfo(QueryCondition queryCondition) {
         PageInfo pageInfo = new PageInfo();
         if (queryCondition.getPageInfo() == null) {
-            pageInfo.setPageSize(query.getPagesize());
+
         } else {
             pageInfo = queryCondition.getPageInfo();
         }
@@ -113,30 +110,7 @@ public class QueryUtil {
         }
     }
 
-    /**
-     * 获取注入值类型
-     *
-     * @param objArr 值
-     * @return 值类型
-     */
-    public static Type[] getTypeArr(Object[] objArr) {
-        Type[] typeArr = new Type[objArr.length];
-        for (int i = 0; i < objArr.length; i++) {
-            Object obj = objArr[i];
-            if (obj instanceof String) {
-                typeArr[i] = StringType.INSTANCE;
-            } else if (obj instanceof Integer) {
-                typeArr[i] = IntegerType.INSTANCE;
-            } else if (obj instanceof Boolean) {
-                typeArr[i] = BooleanType.INSTANCE;
-            } else if (obj instanceof Date) {
-                typeArr[i] = DateType.INSTANCE;
-            } else {
-                typeArr[i] = StringType.INSTANCE;
-            }
-        }
-        return typeArr;
-    }
+
 
 
 

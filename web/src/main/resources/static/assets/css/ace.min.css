@@ -104,7 +104,7 @@ li.divider:before {
     background-color: #FFF;
     position: relative;
     margin: 0;
-    padding: 18px 30px
+    padding: 12px 24px 0px 24px;
 }
 
 .page-header {
@@ -2301,7 +2301,6 @@ pre.prettyprint {
     display: inline-block;
     min-width: 30px;
     margin-right: 2px;
-    vertical-align: sub;
     text-align: center;
     font-size: 18px;
     font-weight: 400
@@ -5943,7 +5942,6 @@ body.mob-safari .sidebar.sidebar-fixed {
     left: 12px;
     right: 12px;
     bottom: 4px;
-    padding: 8px;
     line-height: 36px;
     border-top: 3px double #E5E5E5
 }
@@ -16653,8 +16651,6 @@ div.dataTables_scrollFoot table {
 
 .dataTables_wrapper .row:last-child {
     border-bottom: 1px solid #e0e0e0;
-    padding-top: 12px;
-    padding-bottom: 12px;
 }
 
 .dataTables_wrapper .row:last-child >div {

@@ -18,7 +18,7 @@ spring:
       #path: /h2-console
       #enabled: true
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/springbootdb?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://127.0.0.1:3306/springbootdb?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password:
     driver-class-name: com.mysql.jdbc.Driver

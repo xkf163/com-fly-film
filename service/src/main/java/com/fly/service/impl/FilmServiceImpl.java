@@ -1,20 +1,27 @@
 package com.fly.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.fly.common.base.pojo.PageInfo;
+import com.fly.common.query.entity.Column;
+import com.fly.common.query.entity.Query;
+import com.fly.common.query.entity.QueryCondition;
+import com.fly.common.query.util.QueryUtil;
+import com.fly.common.utils.StrUtil;
 import com.fly.dao.*;
 import com.fly.entity.*;
 import com.fly.service.FilmService;
 
-import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -27,14 +34,41 @@ public class FilmServiceImpl implements FilmService {
     FilmRepository filmRepository;
 
     @Override
-    public Page<Film> findAll(String page,String size,String sort,String order) {
+    public Map<String, Object> findAll(String reqObj) throws Exception{
 
-        //排序及分页
-        Sort querySort = new Sort(Sort.Direction.ASC,sort);
-        if("DESC".equals(order.toUpperCase()))
-            querySort = new Sort(Sort.Direction.DESC,sort);
-        Pageable pageable = new PageRequest(Integer.parseInt(page)-1, Integer.parseInt(size), querySort);
-        return filmRepository.findAll(pageable);
+        //用于接收返回数据(配置、分页、数据)
+        Map<String, Object> map = new HashMap<>();
+        QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
+
+        // 分页信息
+        PageInfo pageInfo = QueryUtil.getPageInfo(queryCondition);
+        //获取Query配置
+        Query query = QueryUtil.getQuery(queryCondition);
+
+        Integer pageNum = pageInfo.getPageNum();
+        Integer pageSize = pageInfo.getPageSize();
+
+
+        //排序信息
+        String sortInfo = queryCondition.getSortInfo();
+        Sort sort = null;
+        if (!StrUtil.isEmpty(sortInfo)) {
+            System.out.println("------------sortInfo--------------");
+            System.out.println(sortInfo);
+            //判断排序类型及排序字段
+            String[] sortArray = sortInfo.split(" ");
+            System.out.println(sortArray);
+            sort = "asc".equals(sortArray[1]) ? new Sort(Sort.Direction.ASC, sortArray[0]) : new Sort(Sort.Direction.DESC, sortArray[0]);
+        }
+
+        Pageable pageable = new PageRequest(pageNum-1, pageSize , sort);
+        Page<Film> pageCarrier = filmRepository.findAll(pageable);
+        List<Column> columnCarrier = query.getColumnList();
+
+        map.put("pageCarrier", pageCarrier);
+        map.put("columnCarrier", columnCarrier);
+
+        return map;
 
     }
 

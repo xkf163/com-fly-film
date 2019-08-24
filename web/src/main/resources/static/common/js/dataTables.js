@@ -3,8 +3,8 @@
  *
  * @param tableId
  *            table组件id
- * @param queryId
- *            query查询id
+ * @param queryUrl
+ *            query查询url
  * @param searchDiv
  *            查询条件div的id
  * @author bill1012 qq:475572229
@@ -14,13 +14,13 @@
 //'use strict';
 
     window.Table = function (config) {
-        return new CommonTable(config.tableId, config.queryId, config.searchDiv, config.config);
+        return new CommonTable(config.tableId, config.queryUrl, config.searchDiv, config.config);
     }
 
     //window.CommonTable=window.CommonTable;
-    window.CommonTable = function (tableId, queryId, searchDiv, config) {
+    window.CommonTable = function (tableId, queryUrl, searchDiv, config) {
         this.tableId = tableId;
-        this.queryId = queryId;
+        this.queryUrl = queryUrl;
         this.searchDiv = searchDiv;
         this.data = null;
         this.loaded = false;
@@ -32,10 +32,11 @@
         if (dataCache.length == 0) {
             dataCache = $("<div></div>");
             dataCache.attr("id", "dataCache" + tableId);
+            dataCache.attr("queryId", tableId);
             $(document.body).append(dataCache);
         }
         this.dataCache = dataCache;
-        this.dataCache.data("queryId", this.queryId);
+        this.dataCache.data("queryUrl", this.queryUrl);
         //绑定查询事件
         var searchButton = $("#" + searchDiv + " button[data-btn-type='search']");
         this.searchButton = searchButton;
@@ -48,7 +49,7 @@
         // 表格横向自适应
         $("#" + this.tableId).css("width", "100%");
         // 初始化表格
-        this.initTableJPA(tableId, queryId, searchDiv);
+        this.initTableJPA(tableId, queryUrl, searchDiv);
 
     }
 
@@ -61,18 +62,31 @@
         this.dataCache.data("data", this.data);
         var that = this;
 
-        var columns = [
-            {data:'id',title:'序号',width:50},
-            {data:'subject',title:'片名',width:110},
-            {data:'subjectMain',title:'片名(全)'},
-            {data:"year",title:'年份',width:30},
-            {data:'country',title:'国家/地区',width:80},
-            {data:'genre',title:'类型',width:80},
-            {data:'imdbNo',title:'IMDB',width:30},
-            {data:'doubanNo',title:'豆瓣',width:30},
-            {data:'runtime',title:'片长',width:30}
-        ];
-
+        var columns = [];
+        for (var i = 0; i < this.data.columnCarrier.length; i++) {
+            var column = this.data.columnCarrier[i];
+            var obj = {};
+            obj["data"] = column.key;
+            obj["title"] = column.header;
+            obj["name"] = column.key;
+            obj["visible"] = !column.hidden;
+            obj["sortable"] = column.allowSort;
+            obj["class"] = "text-" + column.align;
+            //obj["width"]=column.width+"px";
+            //obj["sWidthOrig"]=null;
+            if (column.fnRender) {
+                var fnRender = null;
+                try {
+                    fnRender = eval(column.fnRender)
+                } catch (e) {
+                    if (e instanceof ReferenceError) {
+                        modals.error(column.fnRender + " 未定义！");
+                    }
+                }
+                obj["mRender"] = fnRender;
+            }
+            columns.push(obj);
+        }
         // alert(JSON.stringify(columns));
         //var allowPaging = this.data.query.allowPaging;
         var allowPaging = true;
@@ -81,7 +95,7 @@
         this.table = $('#' + tableId).DataTable($.extend({
             "paging": allowPaging, // 分页
             "lengthChange": allowPaging, // 每页记录数可选项
-            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "全部"]],
+            "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "全部"]],
             "searching": false, // 过滤
             "ordering": true, // 排序
             "rowId": rowId,
@@ -114,14 +128,14 @@
     /**
      * 初始化表格
      */
-    CommonTable.prototype.initTable = function (tableId, queryId, searchDiv) {
+    CommonTable.prototype.initTable = function (tableId, queryUrl, searchDiv) {
         this.data = this.getServerDataJPA(null, tableId);
         if (this.data == null) return;
         this.dataCache.data("data", this.data);
         //console.log(JSON.stringify(this.data));
         var that = this;
         var columns = [];
-        var hiddenCols = this.getCustomHiddenColumns(queryId, this.customButton.data('pagename'));
+        var hiddenCols = this.getCustomHiddenColumns(queryUrl, this.customButton.data('pagename'));
         for (var i = 0; i < this.data.query.columnList.length; i++) {
             var column = this.data.query.columnList[i];
             var obj = {};
@@ -205,7 +219,7 @@
                     winId: 'customWin',
                     title: '【' + that.data.query.tableName + '】自定义列',
                     width: '400px',
-                    url: basePath + "/query/tableConfig?queryId=" + that.data.query.id + "&pageName=" + pagename,
+                    url: basePath + "/query/tableConfig?queryUrl=" + that.data.query.id + "&pageName=" + pagename,
                     hideFunc: function () {
                         that.setVisible();
                     }
@@ -228,7 +242,7 @@
 
     //自定义单元格的可见性
     CommonTable.prototype.setVisible = function () {
-        var hiddenCols = this.getCustomHiddenColumns(queryId, this.customButton.data('pagename'));
+        var hiddenCols = this.getCustomHiddenColumns(queryUrl, this.customButton.data('pagename'));
         if (!hiddenCols)
             return;
         var dataArr = this.table.columns().dataSrc();
@@ -494,13 +508,13 @@
     CommonTable.prototype.getServerDataJPA = function (pageInfo,tableId,queryUrl) {
         var dataCache = $("#dataCache" + tableId);
         if (queryUrl == undefined) {
-            queryUrl = this.queryId;
+            queryUrl = this.queryUrl;
         }
         var reqParam = {
             queryUrl: dataCache.data("queryUrl"),
             pageInfo: pageInfo,
-            query: null,
-            sortInfo: dataCache.data("sortInfo"),
+            queryId: this.tableId,
+            sortInfo: dataCache.data("sortInfo")
         };
         dataCache.data("pageInfo", pageInfo);
         var retData = null;
@@ -509,6 +523,101 @@
         });
 
         if (retData == null) return null;
+
+        //遍历rows，为每行增加行序号字段的值
+        var start = 0;
+        if (pageInfo) {
+            start = pageInfo.pageSize * (pageInfo.pageNum - 1)
+        }
+        var columns = retData.columnCarrier;
+        //通过 numberFormat render endableTooltip改变单元格的值
+        //遍历 先列 后行
+        for (var j = 0; j < columns.length; j++) {
+            var column = columns[j];
+            //console.log(column);
+            for (var i = 0; i < retData.pageCarrier.content.length; i++) {
+                retData.pageCarrier.content[i]["rowIndex"] = start + i + 1;
+                //console.log(retData.pageCarrier.content[i]);
+                //获取关联对象的值如message.sendSubject
+                var value_str = "retData.pageCarrier.content[i]." + column.key;
+                var value = eval(value_str);
+                // 格式化日期
+                if (column.dateFormat) {
+                    //retData.rows[i][column.key] = formatDate(retData.rows[i][column.key], column.dateFormat);
+                    eval(value_str + "=formatDate(value, column.dateFormat)");
+                    value = eval(value_str);
+                }
+                // 格式化数字
+                if (column.numberFormat) {
+                    // TODO format the number,like 0,000,000.00;
+                }
+                //扩展enableTooltip
+                if (column.enableTooltip) {
+                    /*var title = retData.rows[i][column.tooltip] || retData.rows[i][column.key];
+                     var maxLen = parseInt(column.maxLen || 20);
+                     var cellData = retData.rows[i][column.key];
+                     if (cellData && cellData.length > maxLen) {
+                     cellData = cellData.substring(0, maxLen) + "...";
+                     retData.rows[i][column.key] = "<span data-toggle='tooltip' data-placement='right' data-html='true'  title='" + title + "'>" + cellData + "</span>";
+                     }*/
+                    //重构为支持关联对象方式
+                    var title = eval("retData.rows[i]." + (column.tooltip || column.key));
+                    var maxLen = parseInt(column.maxLen || 20);
+                    if (value && value.length > maxLen) {
+                        value = value.substring(0, maxLen) + "...";
+                        eval(value_str + "=\"<span data-toggle='tooltip' data-placement='right' data-html='true'  title='\" + title + \"'>\" + value + \"</span>\"");
+                        value = eval(value_str);
+                    }
+                }
+                // 格式化render
+                if (column.render) {
+                    //替换通过[column.key]的参数  用于替换动态参数
+                    var columnRender = this.getRenderValueByMatcher(column.render, retData.rows[i]);
+                    var obj = this.getRenderObject(columnRender);
+                    if (value != null) {
+                        if (obj.type == "eq") {
+                            //替换值 render="type=eq,0=临时保存,1=提交" type=eq可缺省
+                            //retData.rows[i][column.key] = obj[retData.rows[i][column.key]];
+                            eval(value_str + "=obj[" + value_str + "]");
+                            value = eval(value_str);
+                        } else if (obj.type == "window") {
+                            //弹出模态窗体 render="type=window,url=/message/show?id=[id],title=查看[name],width=900
+                            if (!obj.winId || !obj.url) {
+                                modals.warn("render配置中type=window缺少url和winId参数");
+                                return false;
+                            }
+                            obj.url = basePath + obj.url;
+                            //retData.rows[i][column.key] = "<a href='#' onclick='javascript:modals.openWin(" + JSON.stringify(obj) + ")'>" + retData.rows[i][column.key] + "</a>";
+                            eval(value_str + "=\"<a href='#' onclick='javascript:modals.openWin(\" + JSON.stringify(obj) + \")'>\" + retData.rows[i][column.key] + \"</a>\"");
+                            value = eval(value_str);
+                        } else if (obj.type == "link") {
+                            //超链接，自定义方法使用，在界面要定义该方法
+                            var invoke_str = "";
+                            if (obj.params) {
+                                var params = obj.params.replace(/;/g, ",");
+                                invoke_str = obj.method + "(" + params + ")";
+                            } else {
+                                if (retData.rows[i][retData.query.key]) {
+                                    //invoke_str = obj.method + "('" + retData.rows[i][retData.query.key] + "')";
+                                    var value_key = eval("retData.rows[i]." + retData.query.key);
+                                    invoke_str = obj.method + "('" + value_key + "')";
+                                }
+                                else {
+                                    modals.error("render配置获取" + retData.query.key + "出错，请检查query的key配置");
+                                    return false;
+                                }
+                            }
+                            //alert(invoke_str);
+                            //retData.rows[i][column.key] = "<a href='#' onclick=" +invoke_str+ ">" + retData.rows[i][column.key] + "</a>";
+                            eval(value_str + "=\"<a href='#' onclick=\" +invoke_str+ \">\" + value + \"</a>\"");
+                            value = eval(value_str);
+                        }
+                    }
+                }
+
+            }
+        }
+
         return retData;
 
     }
@@ -525,7 +634,7 @@
         var dataCache = $("#dataCache" + tableId);
         //console.log(document.getElementById("mainDiv"));
         var reqParam = {
-            queryId: dataCache.data("queryId"),
+            queryUrl: dataCache.data("queryUrl"),
             pageName: this.customButton.data("pagename"),
             pageInfo: pageInfo,
             query: null,
@@ -636,11 +745,11 @@
     }
 
     //获取用户自定义的隐藏列
-    CommonTable.prototype.getCustomHiddenColumns = function (queryId, pageName) {
+    CommonTable.prototype.getCustomHiddenColumns = function (queryUrl, pageName) {
         var retData = null;
         if (!pageName)
             return retData;
-        ajaxPost(basePath + "/query/getSelectedColumns", {queryId: queryId, pageName: pageName}, function (hideCols) {
+        ajaxPost(basePath + "/query/getSelectedColumns", {queryUrl: queryUrl, pageName: pageName}, function (hideCols) {
             retData = hideCols;
         });
         return retData;
@@ -687,7 +796,7 @@
     CommonTable.prototype.fillDataTableJPA = function (sSource, aoData, fnCallback, oSettings) {
         var result = this.data;
         var map = oSettings.oAjaxData;
-        console.log(map);
+        console.log(oSettings);
         var dataCache = $("#dataCache" + oSettings.sTableId);
         if (this.loaded) {// 换页
             var pageInfo = {};
@@ -702,8 +811,9 @@
                 if (map["iSortCol_" + i] != 0)// 过滤掉rowIndex的排序
                     sortArr.push(columnNames[map["iSortCol_" + i]] + " " + map["sSortDir_" + i]);
             }
+            console.log(sortArr.join());
             dataCache.data("sortInfo", sortArr.join());
-            result = this.getServerDataJPA(pageInfo, oSettings.sTableId);
+            result = this.getServerDataJPA(pageInfo, oSettings.sTableId, oSettings.sAjaxSource);
             this.data = result;
 
         } else {// 首次加载
@@ -711,9 +821,9 @@
             this.loaded = true;
         }
         var obj = {};
-        obj['data'] = result.content;
-        obj["iTotalRecords"] = result.totalElements;
-        obj["iTotalDisplayRecords"] = result.totalElements;
+        obj['data'] = result.pageCarrier.content;
+        obj["iTotalRecords"] = result.pageCarrier.totalElements;
+        obj["iTotalDisplayRecords"] = result.pageCarrier.totalElements;
         fnCallback(obj);
         //序号排序
         $("table.table thead tr").each(function () {

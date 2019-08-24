@@ -4,7 +4,7 @@ package com.fly.common.query.entity;
 import org.apache.commons.digester3.annotations.rules.ObjectCreate;
 import org.apache.commons.digester3.annotations.rules.SetProperty;
 
-import javax.persistence.Transient;
+
 
 /**
  * 列
@@ -199,7 +199,7 @@ public class Column {
     @SetProperty(attributeName = "foreignClass", pattern = "queryContext/query/column")
     private String foreignClass;
 
-    @Transient
+
     private Boolean isShow;
 
     public Column() {

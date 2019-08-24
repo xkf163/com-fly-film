@@ -12,6 +12,5 @@ import org.springframework.stereotype.Repository;
  * Created by F on 2017/6/20.
  */
 @Repository
-public interface MediaRepository extends JpaRepository<Media,Long>, QueryDslPredicateExecutor<Media>, JpaSpecificationExecutor {
-    Page<Media> findByYear(Short year, Pageable pageable);
+public interface MediaRepository extends JpaRepository<Media,Long>, QueryDslPredicateExecutor<Media> {
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author:xukangfeng
@@ -22,10 +23,7 @@ public class RestFilmController {
     FilmService filmService;
 
     @PostMapping(value = "/all")
-    public Page<Film> filmAll(HttpServletRequest request, @RequestParam(value = "page",defaultValue = "1",required = false) String page,
-                              @RequestParam(value = "rows",defaultValue = "10",required = false) String size,
-                              @RequestParam(value = "sort",defaultValue = "year",required = false) String sort,
-                              @RequestParam(value = "order",defaultValue = "DESC",required = false) String order){
-        return filmService.findAll(page,size,sort,order);
+    public Map<String, Object> filmAll(String reqObj) throws Exception {
+        return filmService.findAll(reqObj);
     }
 }
