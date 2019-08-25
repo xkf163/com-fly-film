@@ -59,6 +59,18 @@
 	</query>
 
 
+	<!-- Series -->
+	<query id="series_list" key="id" tableName="系列列表" className="com.fly.entity.Series"
+		   pageSize="20"  widthType="px" order="id asc">
+		<column key="rowIndex" header="序号" width="30" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="name" header="系列名称" width="120"  operator="like"  align="left" />
+		<column key="createDate" header="创建时间" width="200"  operator="like"  align="left" />
+		<column key="modifiedDate" header="更新时间" width="100" align="left"  allowSort="true" />
+		<column key="asMediaNumber" header="作品数" align="center" width="100"  allowSort="true"/>
+	</query>
+
+
 	<!-- 用户列表 用于演示数据权限  显示和当前登录人所在部门的用户  测试帐号 zrA/bill -->
 	<query id="user_ff_list" key="id" tableName="用户列表-数据权限"
 		   pageSize="10"  widthType="px" order="u.id asc">
