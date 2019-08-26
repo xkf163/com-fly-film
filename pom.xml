@@ -8,6 +8,7 @@
         <module>entity</module>
         <module>service</module>
         <module>common</module>
+        <module>crawler</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

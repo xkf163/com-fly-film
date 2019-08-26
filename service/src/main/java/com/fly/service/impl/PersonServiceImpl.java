@@ -10,10 +10,7 @@ import com.fly.common.utils.StrUtil;
 import com.fly.dao.PersonRepository;
 import com.fly.entity.*;
 import com.fly.service.PersonService;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
