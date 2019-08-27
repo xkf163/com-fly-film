@@ -1,6 +1,9 @@
 package com.fly.service;
 
 
+import com.fly.entity.Film;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,6 +13,6 @@ public interface FilmService {
 
     Map<String, Object> findAll(String reqObj) throws Exception;
 
-
+    void batchInsertAndUpdate(List<Film> films);
 
 }

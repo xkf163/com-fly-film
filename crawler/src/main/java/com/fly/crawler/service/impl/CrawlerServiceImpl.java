@@ -4,6 +4,7 @@ import com.fly.crawler.entity.Crawler;
 import com.fly.crawler.processor.DouBanProcessor;
 import com.fly.crawler.service.CrawlerService;
 import com.fly.entity.Film;
+import com.fly.service.FilmService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ import java.util.List;
 
 @Service
 public class CrawlerServiceImpl implements CrawlerService {
+
+    @Autowired
+    FilmService filmService;
 
     @Autowired
     DouBanProcessor douBanProcessor;
@@ -54,8 +58,21 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     }
 
+
     @Override
     public Film extractFilm(Page page) {
+        Film f = new Film();
+        //1）片名
+        page.putField("subject", page.getHtml().xpath("//div[@id=\"content\"]/h1/span[1]/text()").toString());
+        System.out.println(page.getHtml().xpath("//div[@id=\"content\"]/h1/span[1]/text()").toString());
+        System.out.println("-------------crawler-------------");
+        return f;
+    }
+
+
+
+
+    public Film extractFilm1(Page page) {
         Film f = new Film();
         //影片页
         //1）片名
@@ -98,4 +115,12 @@ public class CrawlerServiceImpl implements CrawlerService {
 
         return f;
     }
+
+
+    @Override
+    public void saveFilmList(List<Film> filmList) {
+        filmService.batchInsertAndUpdate(filmList);
+    }
+
+
 }

@@ -3,8 +3,6 @@ package com.fly.crawler.processor;
 import com.fly.crawler.service.CrawlerService;
 import com.fly.entity.Film;
 import com.fly.entity.Person;
-import com.fly.service.FilmService;
-import com.fly.service.PersonService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectable;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,11 +49,9 @@ public class DouBanProcessor implements PageProcessor {
     @Autowired
     CrawlerService crawlerService;
 
-    @PersistenceContext
-    EntityManager entityManager;
-
     //爬虫是否单个电影爬取，默认单个爬取完成后就结束；false即无限延伸爬取，时间比较长
     public boolean singleCrawler = true;
+
     //批量保存临界个数
     public int batchNumber = 10;
 
@@ -102,7 +93,6 @@ public class DouBanProcessor implements PageProcessor {
             .addCookie("push_doumail_num", "0")
             .addCookie("_vwo_uuid_v2", "D8570F0119A0D26A171627FC7CD214FE|f9fd83098aac087eb826bd151219de18")
             .addCookie("Referer", "movie.douban.com")
-
 //            .addCookie("viewed","3135476")
 //            .addCookie("gr_user_id","922cd5e7-60dc-4640-92ac-f15bf31d7a41")
 //            .addCookie("as","https://movie.douban.com/")
@@ -112,7 +102,7 @@ public class DouBanProcessor implements PageProcessor {
             .addHeader("Connection", "keep-alive")
             .addHeader("Cache-Control", "max-age=0")
             .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.79 Safari/537.36");
-    // .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0");
+            //.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0");
 
 
     @Override
@@ -121,7 +111,6 @@ public class DouBanProcessor implements PageProcessor {
     }
 
     @Override
-    @Transactional
     public void process(Page page) {
 
         //电影页面
@@ -134,36 +123,12 @@ public class DouBanProcessor implements PageProcessor {
             }
         }
 
+       //批量保存，而不是抓一个就保存一次
+        crawlerService.saveFilmList(filmSaveQueue);
 
-        /**
-         * 批量保存，而不是抓一个就保存一次
-         */
-
-        System.out.println("-->NeedSaveFilms::::::"+filmSaveQueue.size());
-        int size = filmSaveQueue.size();
-        if(size >= batchNumber){
-            try {
-                for (int i = 0;i<filmSaveQueue.size();i++){
-                    Film film = filmSaveQueue.get(i);
-                    //存在隐患：万一保存失败
-                    //dbFilmsDouBanNo.add(film.getDoubanNo());
-                    entityManager.persist(film);
-                }
-
-                entityManager.flush();
-                entityManager.clear();
-            }catch (Exception e){
-                filmSaveQueue.clear();
-            }finally {
-                //加入到savedPersons
-                savedFilms.addAll(filmSaveQueue);
-                filmSaveQueue.clear();
-            }
-        }
-
-
-
-
+        //加入到savedPersons
+        savedFilms.addAll(filmSaveQueue);
+        filmSaveQueue.clear();
 
     }
 

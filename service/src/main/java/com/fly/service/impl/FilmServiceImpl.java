@@ -12,7 +12,6 @@ import com.fly.entity.*;
 import com.fly.service.FilmService;
 
 
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,10 @@ public class FilmServiceImpl implements FilmService {
 
     @Autowired
     FilmRepository filmRepository;
+
+    @PersistenceContext
+    EntityManager entityManager;
+
 
     @Override
     public Map<String, Object> findAll(String reqObj) throws Exception{
@@ -98,15 +103,30 @@ public class FilmServiceImpl implements FilmService {
         map.put("columnCarrier", columnCarrier);
 
         return map;
-
     }
+
+
+    @Override
+    @Transactional
+    public void batchInsertAndUpdate(List<Film> films) {
+        int size = films.size();
+        for (int i = 0; i < size; i++) {
+            Film ff = films.get(i);
+            entityManager.persist(ff);
+            if (i % 10 == 0 || i == (size - 1)) { // 每1000条数据执行一次，或者最后不足1000条时执行
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
+    }
+
 
     public static boolean isNumeric(String str) {
         String bigStr;
         try {
             bigStr = new BigDecimal(str).toString();
         } catch (Exception e) {
-            return false;//异常 说明包含非数字。
+            return false; //异常 说明包含非数字。
         }
         return true;
     }
