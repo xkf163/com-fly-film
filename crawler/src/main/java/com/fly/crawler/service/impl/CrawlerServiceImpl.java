@@ -1,19 +1,56 @@
 package com.fly.crawler.service.impl;
 
+import com.fly.crawler.entity.Crawler;
+import com.fly.crawler.processor.DouBanProcessor;
 import com.fly.crawler.service.CrawlerService;
 import com.fly.entity.Film;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Page;
+import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.PlainText;
 import us.codecraft.webmagic.selector.Selectable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
 public class CrawlerServiceImpl implements CrawlerService {
 
+    @Autowired
+    DouBanProcessor douBanProcessor;
+
     @Override
-    public void running() {
+    public void running(Crawler crawler) {
+
+        System.out.println(crawler.toString());
+
+        douBanProcessor.filmSaveQueue=new ArrayList<>();
+        douBanProcessor.savedFilms=new ArrayList<>();
+        ///douBanProcessor.dbFilmsDouBanNo  = filmService.listFilmsDouBanNo();
+        //douBanProcessor.dbPersonsDouBanNo = personService.listPersonsDouBanNo();
+        douBanProcessor.directorAllowEmpty = crawler.getDirectorEmpty();
+        douBanProcessor.actorAllowEmpty = crawler.getActorEmpty();
+        //批量保存临界值
+        douBanProcessor.setBatchNumber(Integer.parseInt(crawler.getBatchNumber()));
+
+        String url  = crawler.getUrl();
+        Integer thread = Integer.parseInt(crawler.getThread());
+        //首页进入
+        if ("1".equals(crawler.getHomepage())) {
+            url = "https://movie.douban.com/";
+            Spider.create(douBanProcessor).addUrl(url).thread(thread).run();
+        }else{
+            //转换成数组
+            String[] targetUrls= url.split("\r\n");
+            //默认spider
+            Spider spider = Spider.create(douBanProcessor).addUrl(targetUrls).thread(thread);
+            spider.run();
+        }
+
+
 
     }
 

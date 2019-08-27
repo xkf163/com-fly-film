@@ -1,0 +1,146 @@
+<div class="page-content">
+
+    <div class="page-header">
+        <h1>Search Results </h1>
+    </div><!-- /.page-header -->
+
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="crawler-form" method="crawler-form" class="form-horizontal">
+            <div class="col-xs-12 col-sm-3">
+
+
+
+
+    <div class="search-area well well-sm">
+        <h5 class="smaller no-margin-bottom">
+            <i class="ace-icon fa fa-sliders light-green bigger-130"></i>&nbsp; 选项
+        </h5>
+    </div>
+    <div class="space-10"></div>
+
+    <h4 class="blue smaller">
+        <i class="fa fa-location-arrow light-grey bigger-110"></i>
+        起始页面地址：(回车换行)
+    </h4>
+    <div class="search-filter-element">
+        <input type="text" class="form-control" id="url" name="url" placeholder="豆瓣URL" value="https://movie.douban.com/subject/10512661/"  />
+    </div>
+
+
+    <h4 class="blue smaller">
+        <i class="fa fa-location-arrow light-grey bigger-110"></i>
+        线程数：
+    </h4>
+    <div class="search-filter-element">
+        <input type="text" class="form-control" id="thread" name="thread" value="1" />
+    </div>
+
+    <h4 class="blue smaller">
+        <i class="fa fa-location-arrow light-grey bigger-110"></i>
+        批量保存临界值：
+    </h4>
+    <div class="search-filter-element">
+        <input type="text" class="form-control" id="batchNumber" name="batchNumber" value="10" />
+    </div>
+
+    <h4 class="blue smaller">
+        <i class="fa fa-location-arrow light-grey bigger-110"></i>
+        首页进入：
+    </h4>
+    <div class="search-filter-element">
+        <input type="checkbox" value="1" class="form-control"  id="homepage" name="homepage" />
+    </div>
+
+    <h4 class="blue smaller">
+        <i class="fa fa-location-arrow light-grey bigger-110"></i>
+        延伸爬取：
+    </h4>
+    <div class="search-filter-element">
+        <input type="checkbox" value="1"  class="form-control" id="mutil" name="mutil"  />
+    </div>
+
+    <h4 class="blue smaller">
+        <i class="fa fa-location-arrow light-grey bigger-110"></i>
+        导演可为空：
+    </h4>
+    <div class="search-filter-element">
+        <input type="checkbox" value="1"  class="form-control" id="directorEmpty" name="directorEmpty"  />
+    </div>
+
+    <h4 class="blue smaller">
+        <i class="fa fa-location-arrow light-grey bigger-110"></i>
+        演员可为空：
+    </h4>
+    <div class="search-filter-element">
+        <input type="checkbox" value="1"  class="form-control" id="actorEmpty" name="actorEmpty"  />
+    </div>
+
+        <!-- /.box-body -->
+        <div class="box-footer text-right">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">开爬</button>
+        </div>
+
+
+
+
+            </div>
+            </form>
+            <div class="col-xs-12 col-sm-9">
+                table
+            </div>
+
+
+
+            </div>
+            </div>
+</div>
+
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+    var id="${id?default(0)}";
+    $(function() {
+        //初始化控件
+        form=$("#crawler-form").form();
+        //数据校验
+        $("#crawler-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认开始？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    ajaxPost(basePath+'/crawler/running', params, function(data, status) {
+                        if(data.success){
+                            if(id!="0"){//更新
+                                modals.hideWin(winId);
+                                //seriesTable.reloadRowData(id);
+                            }else{//新增
+                                //modals.info("数据保存成功");
+                                modals.hideWin(winId);
+                               // seriesTable.reloadData();
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+
+        form.initComponent();
+        //回填id
+        if(id!="0"){
+            ajaxPost(basePath+"/user/get",{id:id},function(data){
+                form.initFormData(data);
+            })
+        }
+    });
+
+</script>
