@@ -15,12 +15,6 @@
 
         <dependency>
             <groupId>com.fly</groupId>
-            <artifactId>film-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fly</groupId>
             <artifactId>film-crawler</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

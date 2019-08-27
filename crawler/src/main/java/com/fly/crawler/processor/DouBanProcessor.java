@@ -1,5 +1,6 @@
 package com.fly.crawler.processor;
 
+import com.fly.crawler.service.CrawlerService;
 import com.fly.entity.Film;
 import com.fly.entity.Person;
 import com.fly.service.FilmService;
@@ -29,7 +30,7 @@ public class DouBanProcessor implements PageProcessor {
     public static final String URL_FILM = "/subject/\\d+/";
 //  https://movie.douban.com/subject/1291839/?from=subject-page
     public static final String URL_FILM_FROM_SUBJECT_PAGE=  "/subject/\\d+/\\?from=subject-page";
-    //豆瓣首页抓取用
+    //豆瓣首页
     public static final String URL_FILM_FROM_SHOWING=  "/subject/\\d+/\\?from=showing";
     //https://movie.douban.com/subject/24753477/?tag=%E7%83%AD%E9%97%A8&from=gaia
     public static final String URL_FILM_FROM_HOT=  "/subject/\\d+/\\?tag=.*&from=.*";
@@ -41,13 +42,19 @@ public class DouBanProcessor implements PageProcessor {
 
     public static List<Film> savedFilms; //此次任务最终完成的数据，返回给前端
     public static List<Person> savedPersons;
-    public static List<Film> needSaveFilms;  //临时数据，每次批量保存后清空
+
+    public static List<Film> saveListFilms;  //临时数据，每次批量保存后清空
     public static List<Person> needSavePersons; //临时数据，每次批量保存后清空
+
     public static List<String> dbPersonsDouBanNo; //数据库已存persons的doubanno
     public static List<String> dbFilmsDouBanNo; //数据库已存persons的doubanno
 
     public static String actorAllowEmpty;
     public static String directorAllowEmpty;
+
+
+    @Autowired
+    CrawlerService crawlerService;
 
     @Autowired
     FilmService filmService;
@@ -67,6 +74,7 @@ public class DouBanProcessor implements PageProcessor {
             .me()
             .setSleepTime(10000)
             .setRetryTimes(3)
+            .setTimeOut(6000)
             .setCharset("utf-8")
             .setDomain("movie.douban.com")
             //%7B%22distinct_id%22%3A%20%2215cf2586637111-09cc812eb1fc81-701238-2a3000-15cf258663828b%22%2C%22%24id%22%3A%20%22163054123%22%2C%22initial_view_time%22%3A%20%221498714502%22%2C%22initial_referrer%22%3A%20%22https%3A%2F%2Fmovie.douban.com%2Fsubject_search%3Fsearch_text%3D%25E7%2581%25AB%25E9%2594%2585%25E8%258B%25B1%25E9%259B%2584%26cat%3D1002%22%2C%22initial_referrer_domain%22%3A%20%22movie.douban.com%22%2C%22%24_sessionid%22%3A%200%2C%22%24_sessionTime%22%3A%201498717202%2C%22%24dp%22%3A%200%2C%22%24_sessionPVTime%22%3A%201498717202%7D;
@@ -112,15 +120,19 @@ public class DouBanProcessor implements PageProcessor {
             .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.79 Safari/537.36");
            // .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0");
 
-
-
-
-
-
-
     @Override
     @Transactional
     public void process(Page page) {
+
+        //电影页面
+        if (page.getUrl().regex(URL_FILM).match() ) {
+            Film f = crawlerService.extractFilm(page);
+            if (f != null){
+                saveListFilms.add(f);
+            }else{
+                page.setSkip(true);
+            }
+        }
 
     }
 
