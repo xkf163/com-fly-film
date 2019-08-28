@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.PlainText;
 import us.codecraft.webmagic.selector.Selectable;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 
 @Service
@@ -25,6 +26,12 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     @Autowired
     DouBanProcessor douBanProcessor;
+
+    public static Map<String,String> xPathMap = new HashMap<>();
+
+    static {
+        xPathMap.put("subject","//div[@id=\"content\"]/h1/span[1]/text()");
+    }
 
     @Override
     public void running(Crawler crawler) {
@@ -61,11 +68,45 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     @Override
     public Film extractFilm(Page page) {
+
+        Html pageHtml = page.getHtml();
+        Selectable filmInfoWrap = pageHtml.xpath("//*[@id=\"content\"]/div[2]/div[1]/div[1]/div[1]");
+
+
         Film f = new Film();
         //1）片名
-        page.putField("subject", page.getHtml().xpath("//div[@id=\"content\"]/h1/span[1]/text()").toString());
-        System.out.println(page.getHtml().xpath("//div[@id=\"content\"]/h1/span[1]/text()").toString());
+        page.putField("subject", pageHtml.xpath(xPathMap.get("subject")).toString());
+        f.setSubject(page.getResultItems().get("subject"));
+        //2）导演
+        f.setDirectors(StringUtils.join(filmInfoWrap.xpath("//a[@rel='v:directedBy']/@href").regex("/celebrity/(\\d+)/").all().toArray(), ","));
+        //3）演员
+        f.setActors(StringUtils.join(filmInfoWrap.xpath("//a[@rel='v:starring']/@href").regex("/celebrity/(\\d+)/").all().toArray(), ","));
+
+        //4）豆瓣编号
+        f.setDoubanNo(page.getUrl().regex("/subject/(\\d+)/").toString());
+
+        //5、6）豆瓣评分及评分人数
+        Selectable selectableRating = pageHtml.xpath("//div[@typeof='v:Rating']");
+        PlainText object = (PlainText) selectableRating.xpath("//strong/text()");
+        if (null != object && !"".equals(object.getFirstSourceText())) {
+            f.setDoubanRating(Float.parseFloat(selectableRating.xpath("//strong/text()").toString()));
+            f.setDoubanSum(Long.parseLong(selectableRating.xpath("//span[@property='v:votes']/text()").toString()));
+        }
+        //7)集数<span class="pl">集数:</span><br>
+        String episodeNumber = filmInfoWrap.regex("<span class=\"pl\">集数:</span> (\\d+)\n"+
+                " <br>").toString();
+        if (null != episodeNumber && !"".equals(episodeNumber)) {
+            f.setEpisodeNumber(episodeNumber);
+        }
+
+        //8）年代
+        page.putField("year", page.getHtml().xpath("//div[@id='content']/h1//span[@class='year']/text()").regex("\\((.*)\\)"));
+        if(page.getResultItems().get("year").toString()!=null)
+            f.setYear(Short.parseShort(page.getResultItems().get("year").toString()));
+
+
         System.out.println("-------------crawler-------------");
+        System.out.println(f);
         return f;
     }
 
