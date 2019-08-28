@@ -105,6 +105,21 @@ public class CrawlerServiceImpl implements CrawlerService {
             f.setYear(Short.parseShort(page.getResultItems().get("year").toString()));
 
 
+        //9)影片简介
+        Selectable selectableInfo = pageHtml.xpath("//div[@id='info']");
+        page.putField("info", selectableInfo);
+        f.setInfo(page.getResultItems().get("info").toString());
+
+        //10)imdb编号
+        String imdbNo = selectableInfo.regex("<a href=\"http://www.imdb.com/title/tt\\d+\" target=\"_blank\" rel=\"nofollow\">(tt\\d+)</a>").toString();
+        f.setImdbNo(imdbNo);
+
+        //11)其他片名
+        page.putField("subjectMain", page.getHtml().xpath("//div[@id='content']/h1//span[@property='v:itemreviewed']/text()"));
+        f.setSubjectMain(page.getResultItems().get("subjectMain").toString().trim());
+
+
+
         System.out.println("-------------crawler-------------");
         System.out.println(f);
         return f;
