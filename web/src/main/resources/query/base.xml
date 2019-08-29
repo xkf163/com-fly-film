@@ -25,9 +25,9 @@
 		<column key="nameChn" header="片名(中)" width="150"  operator="like"  align="left" />
 		<column key="nameEng" header="片名（英）" width="150"  operator="like"  align="left" />
 		<column key="year" header="年代" width="60"  operator="eq"  allowSort="true"/>
-		<column key="diskNo" header="盘符" width="40"  operator="like"  allowSort="true"/>
+		<column key="diskName" header="盘名" width="40"  operator="like"  allowSort="true"/>
 		<column key="fullPath" header="全路径" operator="like" align="left"  allowSort="true" />
-		<column key="mediaSize" header="文件容量" align="center" width="60"  allowSort="true"/>
+		<column key="mediaSizeGB" header="大小(GB)" align="left" width="60"  allowSort="true"/>
 		<column key="gatherDate" header="下载时间" operator="like" align="left"  width="100" allowSort="true"/>
 		<!-- <column key="whetherFolder" header="文件夹" width="30"  render="1=是,0=否" /> -->
 	</query>

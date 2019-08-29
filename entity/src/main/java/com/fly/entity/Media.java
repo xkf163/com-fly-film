@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Table(name = "fm_media",uniqueConstraints = {@UniqueConstraint(name = "cons_media",columnNames = {"name","fullPath","deleted"})},indexes ={@Index(name = "index_media",columnList = "id,name")})
 @Data
-public class Media implements Serializable {
+public class Media extends BaseEntity implements Serializable {
 
 	@Id
 	@GeneratedValue
@@ -19,9 +19,13 @@ public class Media implements Serializable {
 
 	private String name;
 
-	private Long diskSize; //占用磁盘空间（单位字节）
+	private Long mediaSize; //占用磁盘空间（单位字节）
 
-	private String mediaSize;//占用磁盘空间（单位MB、GB）
+	private Float mediaSizeGB;//占用磁盘空间（单位GB）
+
+	private String pcName; //电脑主机名
+
+	private String diskName; //硬盘名称
 
 	private String diskNo; //盘符
 
@@ -33,11 +37,8 @@ public class Media implements Serializable {
 	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
 	private Date modifiedDate; //资源修改时间
 
-	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
-	private Date createDate; //条目创建时间
 
-	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
-	private Date updateDate; //条目更新时间
+
 
 	private Integer whetherFolder;//是否文件夹
 

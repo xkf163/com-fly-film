@@ -1,0 +1,108 @@
+<div class="page-content">
+
+    <div class="page-header">
+        <h1>Search Results </h1>
+    </div><!-- /.page-header -->
+
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="scanner-form" method="scanner-form" class="form-horizontal">
+                <div class="col-xs-12 col-sm-3">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="pcName"> PC名称 </label>
+
+                        <div class="col-sm-9">
+                            <input type="text" name="pcName" id="pcName" class="col-sm-10">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="diskName"> 硬盘名称 </label>
+
+                        <div class="col-sm-9">
+                            <input type="text" name="diskName" id="diskName" class="col-sm-10">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="mediaFolder"> 影音路径 </label>
+
+                        <div class="col-sm-9">
+                            <input type="text" name="mediaFolder" id="mediaFolder" class="col-sm-10">
+                        </div>
+                    </div>
+
+
+                    <!-- /.box-body -->
+                    <div class="box-footer text-right">
+                        <!--以下两种方式提交验证,根据所需选择-->
+                        <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary" data-btn-type="save">开爬</button>
+                    </div>
+
+
+
+
+                </div>
+            </form>
+
+
+
+            <div class="col-xs-12 col-sm-9">
+                table
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+    var id="${id?default(0)}";
+    $(function() {
+        //初始化控件
+        form=$("#scanner-form").form();
+        //数据校验
+        $("#scanner-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认开始？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    ajaxPost(basePath+'/scanner/start', params, function(data, status) {
+                        if(data.success){
+                            if(id!="0"){//更新
+                                modals.hideWin(winId);
+                                //seriesTable.reloadRowData(id);
+                            }else{//新增
+                                //modals.info("数据保存成功");
+                                modals.hideWin(winId);
+                                // seriesTable.reloadData();
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+
+        form.initComponent();
+        //回填id
+        if(id!="0"){
+            ajaxPost(basePath+"/user/get",{id:id},function(data){
+                form.initFormData(data);
+            })
+        }
+    });
+
+</script>

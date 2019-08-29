@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table(name = "fm_star")
-public class Star implements Serializable{
+public class Star extends BaseEntity implements Serializable{
 
     @Id
     @GeneratedValue
