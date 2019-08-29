@@ -3,7 +3,9 @@ package com.fly.web.controller;
 import com.fly.crawler.entity.Crawler;
 import com.fly.crawler.processor.DouBanProcessor;
 import com.fly.crawler.service.CrawlerService;
+import com.fly.entity.Film;
 import com.fly.service.FilmService;
+import com.fly.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import us.codecraft.webmagic.Spider;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/crawler")
@@ -23,6 +26,9 @@ public class CrawlerController {
 
     @Autowired
     FilmService filmService;
+
+    @Autowired
+    PersonService personService;
 
     @Autowired
     DouBanProcessor douBanProcessor;
@@ -47,12 +53,14 @@ public class CrawlerController {
     @ResponseBody
     public void running(Crawler crawler){
 
-        System.out.println(crawler.toString());
+        //System.out.println(crawler.toString());
 
        // DouBanProcessor douBanProcessor = new DouBanProcessor();
         douBanProcessor.directorAllowEmpty = crawler.getDirectorEmpty();
         douBanProcessor.actorAllowEmpty = crawler.getActorEmpty();
+
         douBanProcessor.dbFilmDouBanNoList = filmService.findAllDouBanNo();
+        douBanProcessor.dbPersonDouBanNoList = personService.findAllDouBanNo();
         //批量保存临界值
         douBanProcessor.setBatchNumber(Integer.parseInt(crawler.getBatchNumber()));
 

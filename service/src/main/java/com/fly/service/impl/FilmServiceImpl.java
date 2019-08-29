@@ -117,10 +117,10 @@ public class FilmServiceImpl implements FilmService {
         for (int i = 0; i < size; i++) {
             Film ff = films.get(i);
 
-            Film film = findBySubjectAndDoubanNo(ff);
-            if (null == film) {
+            //Film film = findBySubjectAndDoubanNo(ff);
+            //if (null == film) {
                 entityManager.persist(ff);
-            }
+           // }
 
             if (i % 10 == 0 || i == (size - 1)) { // 每10条数据执行一次，或者最后不足10条时执行
                 entityManager.flush();

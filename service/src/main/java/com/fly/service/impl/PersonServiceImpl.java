@@ -11,12 +11,14 @@ import com.fly.dao.PersonRepository;
 import com.fly.entity.*;
 import com.fly.service.PersonService;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.persistence.EntityManager;
@@ -77,5 +79,31 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
+    @Override
+    public List<String> findAllDouBanNo() {
+        QPerson person = QPerson.person;
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<String> listDouBanNo = jpaQueryFactory.select(person.doubanNo)
+                .from(person)
+                .fetch();
+        return listDouBanNo;
+    }
+
+
+    @Override
+    @Transactional
+    public void batchInsertAndUpdate(List<Person> persons) {
+        int size = persons.size();
+        for (int i = 0; i < size; i++) {
+            Person pp = persons.get(i);
+
+            entityManager.persist(pp);
+
+            if (i % 10 == 0 || i == (size - 1)) { // 每10条数据执行一次，或者最后不足10条时执行
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
+    }
 
 }

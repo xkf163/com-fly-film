@@ -20,43 +20,61 @@ public class Film implements Serializable{
 
     private String subjectMain;
 
+    //又名
     private String subjectOther;
 
+    //年代
     private Short year;
 
+    //html 源码
     @Column(columnDefinition = "TEXT")
     private String info;
 
+    //影片简介
     @Column(columnDefinition = "TEXT")
     private String introduce;
 
+    //豆瓣编号
     private String doubanNo;
 
+    //豆瓣评分
     private Float doubanRating;
 
+    //豆瓣评分人数
     private Long doubanSum;
 
-    //评分
+    //IMDB编号
+    private String imdbNo;
+
+    //IMDB评分
     private Float imdbRating;
 
-    //评分人数
+    //IMDB评分人数
     private Long imdbSum;
 
+    //导演们 的id字符串，用逗号分隔
     private String directors;
 
+    //演员们 的id字符串，用逗号分隔
     @Column(columnDefinition = "TEXT")
     private String actors;
 
+    //影片类型
     private String genre;
 
+    //影片发行日期
     private String initialReleaseDate;
 
-    private String runtime;
+    //时长
+    private Short runtime;
 
-    private String imdbNo;
+    //时长文本（包括单位 播放地区）
+    //private String runtimeFull;
 
+    //国家或地区
     private String country;
 
+    //电视剧集数
     @Transient
     private String episodeNumber;
 

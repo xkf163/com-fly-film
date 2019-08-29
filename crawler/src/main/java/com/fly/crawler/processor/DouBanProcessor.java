@@ -33,16 +33,17 @@ public class DouBanProcessor implements PageProcessor {
 
     public static final String URL_PERSON = "/celebrity/\\d+/";
     public static final String URL_PERSON_FULL = "https://movie\\.douban\\.com/celebrity/\\d+/";
+
     public static final String URL_HOMEPAGE = "https://movie\\.douban\\.com";
     public static final String URL_SEARCH = "https://movie\\.douban\\.com/subject_search";
 
     public static List<Film> filmSaveQueue = new ArrayList<>();  //临时数据，每次批量保存后清空
     public static List<Film> savedFilms = new ArrayList<>(); //此次任务最终完成的数据，返回给前端
 
-    public static List<Person> savedPersons;
-    public static List<Person> personSaveQueue; //临时数据，每次批量保存后清空
+    public static List<Person> savedPersons= new ArrayList<>();
+    public static List<Person> personSaveQueue= new ArrayList<>();  //临时数据，每次批量保存后清空
 
-    public static List<String> dbPersonsDouBanNo; //数据库已存persons的doubanno
+    public static List<String> dbPersonDouBanNoList; //数据库已存persons的doubanno
     public static List<String> dbFilmDouBanNoList; //数据库已存persons的doubanno
 
     public static String actorAllowEmpty;
@@ -114,37 +115,62 @@ public class DouBanProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
-
-        //电影页面
+        System.out.println("---队列长度---"+page.getTargetRequests().size());
+        System.out.println("---当前页面---"+page.getUrl());
+        //1)电影页面
         if (page.getUrl().regex(URL_FILM).match() || page.getUrl().regex(URL_FILM_FROM_SUBJECT_PAGE).match()
                 || page.getUrl().regex(URL_FILM_FROM_SHOWING).match() || page.getUrl().regex(URL_FILM_FROM_HOT).match() ) {
             Film f = crawlerService.extractFilm(page, dbFilmDouBanNoList);
             if (f != null){
                 filmSaveQueue.add(f);
-                //把页面中的相关影片URL加入到爬取队列中
+                //1)把页面中的相关人物URL加入到爬取队列中
+                crawlerService.addTargetRequests(page, "div.subject.clearfix" , URL_PERSON,"/celebrity/(\\d+)/" , dbPersonDouBanNoList , "csspath");
+
+                //是否延伸爬
                 if(!this.singleCrawler){
-                    crawlerService.addTargetRequests(page, "//div[@class='recommendations-bd']/dl/dt" , URL_FILM_FROM_SUBJECT_PAGE , dbFilmDouBanNoList);
+                    //2)把页面中的相关影片URL加入到爬取队列中
+                    crawlerService.addTargetRequests(page, "//div[@class='recommendations-bd']/dl/dt" ,URL_FILM_FROM_SUBJECT_PAGE, "/subject/(\\d+)/" , dbFilmDouBanNoList , "xpath");
                 }
+
             }else{
                 page.setSkip(true);
             }
-        }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
-            //入口是豆瓣主页
-            //1)正在热映
-            //page.addTargetRequests(page.getHtml().xpath("//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]").links().regex(URL_FILM_FROM_SHOWING).all());
-            crawlerService.addTargetRequests(page, "//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]", URL_FILM_FROM_SHOWING , dbFilmDouBanNoList);
+        }else if(page.getUrl().regex(URL_PERSON).match()){
+            Person p = crawlerService.extractPerson(page, dbPersonDouBanNoList);
+            if (p != null){
+                personSaveQueue.add(p);
+                //是否延伸爬
+                if(!this.singleCrawler){
 
+                }
+            }
+
+        }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
+            //3)入口是豆瓣主页
+            //3.1)正在热映
+            //page.addTargetRequests(page.getHtml().xpath("//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]").links().regex(URL_FILM_FROM_SHOWING).all());
+            crawlerService.addTargetRequests(page, "//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]", URL_FILM_FROM_SHOWING, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
             //2)最近热门电影:貌似是动态生成，抓不到
             //page.addTargetRequests(page.getHtml().xpath("//div[@class='slide-page']").links().regex(URL_FILM_FROM_HOT).all());
-
+        }else {
+            System.out.println("--URL不符合Rule--"+page.getUrl());
         }
+
+
+
+
+
 
        //批量保存，而不是抓一个就保存一次
         crawlerService.saveFilmList(filmSaveQueue);
+        crawlerService.savePersonList(personSaveQueue);
 
         //加入到savedPersons
         savedFilms.addAll(filmSaveQueue);
+        savedPersons.addAll(personSaveQueue);
+
         filmSaveQueue.clear();
+        personSaveQueue.clear();
 
     }
 

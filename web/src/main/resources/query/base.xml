@@ -7,12 +7,13 @@
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="subject" header="片名" width="120"  align="left" />
-		<column key="subjectMain" header="片名(全)" operator="like" align="left" />
+		<column key="subjectMain" header="片名(全)" width="160"  operator="like" align="left" />
 		<column key="year" header="年份" width="60"  operator="eq"  allowSort="true" />
 		<column key="country" header="国家/地区" width="80"  align="left" />
 		<column key="genre" header="类型" width="100"  align="left" />
 		<column key="imdbNo" header="IMDB编号" width="60"/>
 		<column key="doubanNo" header="豆瓣编号" width="60"/>
+		<column key="doubanRating" header="豆瓣评分" width="30" allowSort="true"/>
 		<column key="runtime" header="时长" operator="like" width="30" allowSort="true" />
 	</query>
 
@@ -40,10 +41,10 @@
 		<column key="name" header="姓名" width="120"  operator="like"  align="left" />
 		<column key="nameExtend" header="姓名中英" width="200"  operator="like"  align="left" />
 		<column key="birthDay" header="生日" width="60"  operator="eq"  allowSort="true"/>
-		<column key="birthPlace" header="出生地" width="40"  operator="like"  allowSort="true"/>
+		<column key="birthPlace" header="出生地" width="40"   align="left"  operator="like"  allowSort="true"/>
 		<column key="doubanNo" header="豆瓣编号" operator="like" align="left"  allowSort="true" />
 		<column key="imdbNo" header="IMDB编号" align="center" width="100"  allowSort="true"/>
-		<column key="job" header="职业" operator="like" width="80" allowSort="true"/>
+		<column key="job" header="职业" operator="like" width="80"   align="left" allowSort="true"/>
 	</query>
 
 	<!-- Star -->
