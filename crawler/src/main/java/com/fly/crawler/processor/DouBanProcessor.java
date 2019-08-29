@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
+import us.codecraft.webmagic.selector.Selectable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,12 +123,20 @@ public class DouBanProcessor implements PageProcessor {
                 filmSaveQueue.add(f);
                 //把页面中的相关影片URL加入到爬取队列中
                 if(!this.singleCrawler){
-                    crawlerService.addTargetRequests(page, URL_FILM_FROM_SUBJECT_PAGE , dbFilmDouBanNoList);
+                    crawlerService.addTargetRequests(page, "//div[@class='recommendations-bd']/dl/dt" , URL_FILM_FROM_SUBJECT_PAGE , dbFilmDouBanNoList);
                 }
-
             }else{
                 page.setSkip(true);
             }
+        }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
+            //入口是豆瓣主页
+            //1)正在热映
+            //page.addTargetRequests(page.getHtml().xpath("//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]").links().regex(URL_FILM_FROM_SHOWING).all());
+            crawlerService.addTargetRequests(page, "//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]", URL_FILM_FROM_SHOWING , dbFilmDouBanNoList);
+
+            //2)最近热门电影:貌似是动态生成，抓不到
+            //page.addTargetRequests(page.getHtml().xpath("//div[@class='slide-page']").links().regex(URL_FILM_FROM_HOT).all());
+
         }
 
        //批量保存，而不是抓一个就保存一次

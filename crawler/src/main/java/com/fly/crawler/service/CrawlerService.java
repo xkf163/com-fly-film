@@ -14,6 +14,5 @@ public interface CrawlerService {
 
     void saveFilmList(List<Film> filmList);
 
-
-    void addTargetRequests(Page page , String URL_FILM_FROM_SUBJECT_PAGE , List<String> dbFilmDouBanNoList);
+    void addTargetRequests(Page page , String xPath,String URL_FILM_FROM_SUBJECT_PAGE , List<String> dbFilmDouBanNoList);
 }

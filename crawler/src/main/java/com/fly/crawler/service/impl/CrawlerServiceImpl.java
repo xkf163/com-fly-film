@@ -36,7 +36,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     @Override
     public Film extractFilm(Page page , List<String> dbFilmDouBanNoList) {
 
-        System.out.println("extracFilm");
+        //System.out.println("extracFilm");
 
         Html pageHtml = page.getHtml();
         Selectable filmInfoWrap = pageHtml.xpath("//div[@id='info']");
@@ -61,6 +61,7 @@ public class CrawlerServiceImpl implements CrawlerService {
         //4）豆瓣编号
         f.setDoubanNo(page.getUrl().regex("/subject/(\\d+)/").toString());
         if(dbFilmDouBanNoList.contains(f.getDoubanNo())){
+            System.out.println("--->!!!film豆瓣编号"+f.getDoubanNo()+"在数据库已存在，不加入保存队列");
             return null; //数据库已存在该Film则返回空
         }
 
@@ -82,11 +83,9 @@ public class CrawlerServiceImpl implements CrawlerService {
 
         //Selectable selectableInfo = page.getHtml().xpath("//div[@id='info']");
 
-        //9)影片简介
-        page.putField("info", pageHtml.xpath("//*[@id=\"link-report\"]/span/text()"));
+        //9)
+        page.putField("info", filmInfoWrap);
         f.setInfo(page.getResultItems().get("info").toString());
-
-
 
         //10)imdb编号
         String imdbNo = filmInfoWrap.regex("<a href=\"http://www.imdb.com/title/tt\\d+\" target=\"_blank\" rel=\"nofollow\">(tt\\d+)</a>").toString();
@@ -96,16 +95,19 @@ public class CrawlerServiceImpl implements CrawlerService {
         page.putField("subjectMain", page.getHtml().xpath("//div[@id='content']/h1//span[@property='v:itemreviewed']/text()"));
         f.setSubjectMain(page.getResultItems().get("subjectMain").toString().trim());
 
-        //12）
+        //12）影片简介
         page.putField("introduce", page.getHtml().xpath("//div[@class='related-info']//div[@class='indent']//span[@property='v:summary']/text()"));
         f.setIntroduce(page.getResultItems().get("introduce").toString());
 
         //13）影片类别
         f.setGenre(StringUtils.join(filmInfoWrap.xpath("//span[@property='v:genre']/text()").all().toArray(), ","));
+
         //14）发行日期
         f.setInitialReleaseDate(StringUtils.join(filmInfoWrap.xpath("//span[@property='v:initialReleaseDate']/text()").all().toArray(), ","));
+
         //15）影片时长
         f.setRuntime(StringUtils.join(filmInfoWrap.xpath("//span[@property='v:runtime']/@content").all().toArray(), ","));
+
         //16）影片所属国家/地区
         String country_temp = filmInfoWrap.regex("<span class=\"pl\">制片国家/地区:</span> (.*)\n" +
                 " <br>").toString();
@@ -113,6 +115,7 @@ public class CrawlerServiceImpl implements CrawlerService {
             String country = country_temp.substring(0, country_temp.indexOf("\n"));
             f.setCountry(country);
         }
+
         //17）影片其他片名
         String subject_temp = filmInfoWrap.regex("<span class=\"pl\">又名:</span> (.*)\n" +
                 " <br>").toString();
@@ -125,18 +128,20 @@ public class CrawlerServiceImpl implements CrawlerService {
             }
         }
 
-        System.out.println(f);
+        //System.out.println(f);
         return f;
     }
 
     @Override
-    public void addTargetRequests(Page page , String URL_FILM_FROM_SUBJECT_PAGE , List<String> dbFilmDouBanNoList){
+    public void addTargetRequests(Page page , String xPath, String URL_FILM_FROM_SUBJECT_PAGE , List<String> dbFilmDouBanNoList){
             //2）后续的电影url，有10个
             //2.1)取出后续电影doubannNo LIST，判断dbFilmsDouBanNoList是否已存在，已存在就不add了
-            Selectable selectable = page.getHtml().xpath("//div[@class='recommendations-bd']/dl/dt").links().regex(URL_FILM_FROM_SUBJECT_PAGE);
+            Selectable selectable = page.getHtml().xpath(xPath).links().regex(URL_FILM_FROM_SUBJECT_PAGE);
             List<String> filmQueue = filterUrl(selectable,"/subject/(\\d+)/",dbFilmDouBanNoList);
             page.addTargetRequests(filmQueue);
     }
+
+
 
 
     public List<String> filterUrl(Selectable selectable,String regexRule,List<String> dbFilmDouBanNoList){

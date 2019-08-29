@@ -76,7 +76,7 @@ public class CrawlerController {
 
     }
 
-    @PostMapping(value = "/stop")
+    @GetMapping(value = "/stop")
     public void running(){
 
         if (spider != null){

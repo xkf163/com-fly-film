@@ -133,7 +133,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film findBySubjectAndDoubanNo(Film film) {
-        System.out.println(film);
+       // System.out.println(film);
         //判断数据库里是否存在
         QFilm qFilm = QFilm.film;
         Predicate predicate = qFilm.subject.eq(film.getSubject()).and(qFilm.doubanNo.eq(film.getDoubanNo()));
