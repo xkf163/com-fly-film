@@ -9,10 +9,11 @@ import java.util.List;
 
 public interface CrawlerService {
 
-    void running(Crawler crawler);
 
-    Film extractFilm(Page page);
+    Film extractFilm(Page page, List<String> dbFilmDouBanNoList);
 
     void saveFilmList(List<Film> filmList);
 
+
+    void addTargetRequests(Page page , String URL_FILM_FROM_SUBJECT_PAGE , List<String> dbFilmDouBanNoList);
 }

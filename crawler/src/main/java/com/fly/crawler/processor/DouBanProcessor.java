@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,33 +29,32 @@ public class DouBanProcessor implements PageProcessor {
     public static final String URL_FILM_FROM_SHOWING = "/subject/\\d+/\\?from=showing";
     //https://movie.douban.com/subject/24753477/?tag=%E7%83%AD%E9%97%A8&from=gaia
     public static final String URL_FILM_FROM_HOT = "/subject/\\d+/\\?tag=.*&from=.*";
+
     public static final String URL_PERSON = "/celebrity/\\d+/";
     public static final String URL_PERSON_FULL = "https://movie\\.douban\\.com/celebrity/\\d+/";
     public static final String URL_HOMEPAGE = "https://movie\\.douban\\.com";
     public static final String URL_SEARCH = "https://movie\\.douban\\.com/subject_search";
 
+    public static List<Film> filmSaveQueue = new ArrayList<>();  //临时数据，每次批量保存后清空
+    public static List<Film> savedFilms = new ArrayList<>(); //此次任务最终完成的数据，返回给前端
 
-    public static List<Film> savedFilms; //此次任务最终完成的数据，返回给前端
     public static List<Person> savedPersons;
-
-    public static List<Film> filmSaveQueue;  //临时数据，每次批量保存后清空
     public static List<Person> personSaveQueue; //临时数据，每次批量保存后清空
 
     public static List<String> dbPersonsDouBanNo; //数据库已存persons的doubanno
-    public static List<String> dbFilmsDouBanNo; //数据库已存persons的doubanno
+    public static List<String> dbFilmDouBanNoList; //数据库已存persons的doubanno
 
     public static String actorAllowEmpty;
     public static String directorAllowEmpty;
 
-
-    @Autowired
-    CrawlerService crawlerService;
-
     //爬虫是否单个电影爬取，默认单个爬取完成后就结束；false即无限延伸爬取，时间比较长
-    public boolean singleCrawler = true;
+    public boolean singleCrawler = false;
 
     //批量保存临界个数
     public int batchNumber = 10;
+
+    @Autowired
+    CrawlerService crawlerService;
 
     private Site site = Site
             .me()
@@ -114,10 +115,16 @@ public class DouBanProcessor implements PageProcessor {
     public void process(Page page) {
 
         //电影页面
-        if (page.getUrl().regex(URL_FILM).match() ) {
-            Film f = crawlerService.extractFilm(page);
+        if (page.getUrl().regex(URL_FILM).match() || page.getUrl().regex(URL_FILM_FROM_SUBJECT_PAGE).match()
+                || page.getUrl().regex(URL_FILM_FROM_SHOWING).match() || page.getUrl().regex(URL_FILM_FROM_HOT).match() ) {
+            Film f = crawlerService.extractFilm(page, dbFilmDouBanNoList);
             if (f != null){
                 filmSaveQueue.add(f);
+                //把页面中的相关影片URL加入到爬取队列中
+                if(!this.singleCrawler){
+                    crawlerService.addTargetRequests(page, URL_FILM_FROM_SUBJECT_PAGE , dbFilmDouBanNoList);
+                }
+
             }else{
                 page.setSkip(true);
             }

@@ -15,4 +15,9 @@ public interface FilmService {
 
     void batchInsertAndUpdate(List<Film> films);
 
+    Film findBySubjectAndDoubanNo(Film film);
+
+    void save(Film film);
+
+    List<String> findAllDouBanNo();
 }

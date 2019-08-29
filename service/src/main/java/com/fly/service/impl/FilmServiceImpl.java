@@ -14,6 +14,7 @@ import com.fly.service.FilmService;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +44,9 @@ public class FilmServiceImpl implements FilmService {
     EntityManager entityManager;
 
 
+    /*
+    Datatables 返回所有Film列表
+     */
     @Override
     public Map<String, Object> findAll(String reqObj) throws Exception{
 
@@ -112,8 +116,13 @@ public class FilmServiceImpl implements FilmService {
         int size = films.size();
         for (int i = 0; i < size; i++) {
             Film ff = films.get(i);
-            entityManager.persist(ff);
-            if (i % 10 == 0 || i == (size - 1)) { // 每1000条数据执行一次，或者最后不足1000条时执行
+
+            Film film = findBySubjectAndDoubanNo(ff);
+            if (null == film) {
+                entityManager.persist(ff);
+            }
+
+            if (i % 10 == 0 || i == (size - 1)) { // 每10条数据执行一次，或者最后不足10条时执行
                 entityManager.flush();
                 entityManager.clear();
             }
@@ -121,6 +130,40 @@ public class FilmServiceImpl implements FilmService {
     }
 
 
+
+    @Override
+    public Film findBySubjectAndDoubanNo(Film film) {
+        System.out.println(film);
+        //判断数据库里是否存在
+        QFilm qFilm = QFilm.film;
+        Predicate predicate = qFilm.subject.eq(film.getSubject()).and(qFilm.doubanNo.eq(film.getDoubanNo()));
+        return filmRepository.findOne(predicate);
+    }
+
+
+    @Override
+    public void save(Film film) {
+        filmRepository.save(film);
+    }
+
+
+    @Override
+    public List<String> findAllDouBanNo() {
+
+            QFilm qFilm = QFilm.film;
+            JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+            List<String> listDouBanNo = jpaQueryFactory.select(qFilm.doubanNo)
+                    .from(qFilm)
+                    .fetch();
+            return listDouBanNo;
+
+    }
+
+
+
+    /*
+        是否未数字
+         */
     public static boolean isNumeric(String str) {
         String bigStr;
         try {
