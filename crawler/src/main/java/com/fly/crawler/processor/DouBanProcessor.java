@@ -146,13 +146,14 @@ public class DouBanProcessor implements PageProcessor {
             }
 
         }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
+            System.out.println(page.getHtml());
             //3)入口是豆瓣主页
             //3.1)正在热映
             //page.addTargetRequests(page.getHtml().xpath("//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]").links().regex(URL_FILM_FROM_SHOWING).all());
             crawlerService.addTargetRequests(page, "//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]", URL_FILM_FROM_SHOWING, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
             //2)最近热门电影:貌似是动态生成，抓不到
             //page.addTargetRequests(page.getHtml().xpath("//*[@id="content"]/div/div[2]/div[4]/div[3]/div/div[1]").links().regex(URL_FILM_FROM_HOT).all());
-            crawlerService.addTargetRequests(page, "//*[@class=\"slide-wrapper\"]", URL_FILM_FROM_HOT, "/subject/(\\d+)/\\?tag=.*&from=.*"  , dbFilmDouBanNoList , "xpath");
+            crawlerService.addTargetRequests(page, "//*[@class=\"billboard-bd\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
 
         }else {
             System.out.println("--URL不符合Rule--"+page.getUrl());

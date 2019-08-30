@@ -221,7 +221,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     public void addTargetRequests(Page page , String xPath, String regexRuleForUrl , String regexRuleForData , List<String> dbDouBanNoList ,String crawlerType){
             //2）后续的电影url，有10个
             //2.1)取出后续电影doubannNo LIST，判断dbFilmsDouBanNoList是否已存在，已存在就不add了
-        System.out.println("---------------addTargetRequests--------"+crawlerType+"------------");
+        System.out.println("---------------addTargetRequests--------"+crawlerType+"--------"+regexRuleForUrl+"----");
         Selectable selectable ;
         if ("xpath".equals(crawlerType)) {
              selectable = page.getHtml().xpath(xPath).links().regex(regexRuleForUrl);
