@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "fm_film",uniqueConstraints = {@UniqueConstraint(name = "cons_film",columnNames = {"doubanNo","imdbNo","subject"})},indexes ={@Index(name = "index_film",columnList = "subject,doubanNo")})
 @Data
-public class Film implements Serializable{
+public class Film extends BaseEntity implements Serializable{
 
     @Id
     @GeneratedValue

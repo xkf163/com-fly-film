@@ -28,6 +28,8 @@ public class DouBanProcessor implements PageProcessor {
     public static final String URL_FILM_FROM_SUBJECT_PAGE = "/subject/\\d+/\\?from=subject-page";
     //豆瓣首页
     public static final String URL_FILM_FROM_SHOWING = "/subject/\\d+/\\?from=showing";
+
+    public static final String URL_FILM_FROM_REVIEWS = "/subject/\\d+/\\?from=reviews";
     //https://movie.douban.com/subject/24753477/?tag=%E7%83%AD%E9%97%A8&from=gaia
     public static final String URL_FILM_FROM_HOT = "https://movie\\.douban\\.com/subject/\\d+/\\?tag=.*&from=.*";
 
@@ -118,8 +120,9 @@ public class DouBanProcessor implements PageProcessor {
         System.out.println("---队列长度---"+page.getTargetRequests().size());
         System.out.println("---当前页面---"+page.getUrl());
         //1)电影页面
-        if (page.getUrl().regex(URL_FILM).match() || page.getUrl().regex(URL_FILM_FROM_SUBJECT_PAGE).match()
-                || page.getUrl().regex(URL_FILM_FROM_SHOWING).match() || page.getUrl().regex(URL_FILM_FROM_HOT).match() ) {
+//        if (page.getUrl().regex(URL_FILM).match() || page.getUrl().regex(URL_FILM_FROM_SUBJECT_PAGE).match()
+//                || page.getUrl().regex(URL_FILM_FROM_SHOWING).match() || page.getUrl().regex(URL_FILM_FROM_HOT).match() ) {
+        if (page.getUrl().regex(URL_FILM).match() ) {
             Film f = crawlerService.extractFilm(page, dbFilmDouBanNoList);
             if (f != null){
                 filmSaveQueue.add(f);
@@ -146,14 +149,20 @@ public class DouBanProcessor implements PageProcessor {
             }
 
         }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
-            System.out.println(page.getHtml());
+            //System.out.println(page.getHtml());
+            crawlerService.addTargetRequests(page, "//*[@id=\"content\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
+
             //3)入口是豆瓣主页
             //3.1)正在热映
             //page.addTargetRequests(page.getHtml().xpath("//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]").links().regex(URL_FILM_FROM_SHOWING).all());
-            crawlerService.addTargetRequests(page, "//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]", URL_FILM_FROM_SHOWING, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
+            //crawlerService.addTargetRequests(page, "//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]", URL_FILM_FROM_SHOWING, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
             //2)最近热门电影:貌似是动态生成，抓不到
             //page.addTargetRequests(page.getHtml().xpath("//*[@id="content"]/div/div[2]/div[4]/div[3]/div/div[1]").links().regex(URL_FILM_FROM_HOT).all());
-            crawlerService.addTargetRequests(page, "//*[@class=\"billboard-bd\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
+            //3)一周口碑榜
+            //crawlerService.addTargetRequests(page, "//*[@class=\"billboard-bd\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
+            //4)最受欢迎的影评
+            //crawlerService.addTargetRequests(page, "//*[@class=\"reviews-bd\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
+
 
         }else {
             System.out.println("--URL不符合Rule--"+page.getUrl());
