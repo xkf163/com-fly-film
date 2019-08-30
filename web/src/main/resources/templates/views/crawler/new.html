@@ -1,93 +1,61 @@
 <div class="page-content">
 
     <div class="page-header">
-        <h1>Search Results </h1>
+        <h1>爬虫配置 </h1>
     </div><!-- /.page-header -->
 
     <div class="row">
         <div class="col-xs-12">
-            <form id="crawler-form" method="crawler-form" class="form-horizontal">
+
             <div class="col-xs-12 col-sm-3">
 
 
+                <form id="crawler-form" method="crawler-form" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="url">起始页面地址：(回车换行)</label>
+                        <input type="text" class="form-control" id="url" name="url" value="https://movie.douban.com/subject/10512661/" >
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-xs-6 form-group">
+                            <label for="thread">线程数：</label>
+                            <input type="text" class="form-control" id="thread" name="thread" value="1" />
+                        </div>
+                        <div  class="col-md-6 col-xs-6 form-group pull-right">
+                            <label for="thread">批量保存临界值: </label>
+                            <input type="text" class="form-control" id="batchNumber" name="batchNumber" value="10" />
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="1"  id="homepage" name="homepage"> 首页进入?
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="1"  id="mutil" name="mutil"> 延伸爬取?
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="1"  id="directorEmpty" name="directorEmpty"> 导演可为空?
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="1"  id="actorEmpty" name="actorEmpty"> 演员可为空?
+                        </label>
+                    </div>
 
+                    <br>
+                        <!--以下两种方式提交验证,根据所需选择-->
+                        <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary" data-btn-type="save">开爬</button>
 
-    <div class="search-area well well-sm">
-        <h5 class="smaller no-margin-bottom">
-            <i class="ace-icon fa fa-sliders light-green bigger-130"></i>&nbsp; 选项
-        </h5>
-    </div>
-    <div class="space-10"></div>
-
-    <h4 class="blue smaller">
-        <i class="fa fa-location-arrow light-grey bigger-110"></i>
-        起始页面地址：(回车换行)
-    </h4>
-    <div class="search-filter-element">
-        <input type="text" class="form-control" id="url" name="url" placeholder="豆瓣URL" value="https://movie.douban.com/subject/10512661/"  />
-    </div>
-
-
-    <h4 class="blue smaller">
-        <i class="fa fa-location-arrow light-grey bigger-110"></i>
-        线程数：
-    </h4>
-    <div class="search-filter-element">
-        <input type="text" class="form-control" id="thread" name="thread" value="1" />
-    </div>
-
-    <h4 class="blue smaller">
-        <i class="fa fa-location-arrow light-grey bigger-110"></i>
-        批量保存临界值：
-    </h4>
-    <div class="search-filter-element">
-        <input type="text" class="form-control" id="batchNumber" name="batchNumber" value="10" />
-    </div>
-
-    <h4 class="blue smaller">
-        <i class="fa fa-location-arrow light-grey bigger-110"></i>
-        首页进入：
-    </h4>
-    <div class="search-filter-element">
-        <input type="checkbox" value="1" class="form-control"  id="homepage" name="homepage" />
-    </div>
-
-    <h4 class="blue smaller">
-        <i class="fa fa-location-arrow light-grey bigger-110"></i>
-        延伸爬取：
-    </h4>
-    <div class="search-filter-element">
-        <input type="checkbox" value="1"  class="form-control" id="mutil" name="mutil"  />
-    </div>
-
-    <h4 class="blue smaller">
-        <i class="fa fa-location-arrow light-grey bigger-110"></i>
-        导演可为空：
-    </h4>
-    <div class="search-filter-element">
-        <input type="checkbox" value="1"  class="form-control" id="directorEmpty" name="directorEmpty"  />
-    </div>
-
-    <h4 class="blue smaller">
-        <i class="fa fa-location-arrow light-grey bigger-110"></i>
-        演员可为空：
-    </h4>
-    <div class="search-filter-element">
-        <input type="checkbox" value="1"  class="form-control" id="actorEmpty" name="actorEmpty"  />
-    </div>
-
-        <!-- /.box-body -->
-        <div class="box-footer text-right">
-            <!--以下两种方式提交验证,根据所需选择-->
-            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
-            <button type="submit" class="btn btn-primary" data-btn-type="save">开爬</button>
-        </div>
-
-
+                </form>
 
 
             </div>
-            </form>
+
             <div class="col-xs-12 col-sm-9">
                 table
             </div>
@@ -133,14 +101,6 @@
             }
         });
 
-
-        form.initComponent();
-        //回填id
-        if(id!="0"){
-            ajaxPost(basePath+"/user/get",{id:id},function(data){
-                form.initFormData(data);
-            })
-        }
     });
 
 </script>

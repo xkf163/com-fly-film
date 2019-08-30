@@ -29,7 +29,7 @@ public class DouBanProcessor implements PageProcessor {
     //豆瓣首页
     public static final String URL_FILM_FROM_SHOWING = "/subject/\\d+/\\?from=showing";
     //https://movie.douban.com/subject/24753477/?tag=%E7%83%AD%E9%97%A8&from=gaia
-    public static final String URL_FILM_FROM_HOT = "/subject/\\d+/\\?tag=.*&from=.*";
+    public static final String URL_FILM_FROM_HOT = "https://movie\\.douban\\.com/subject/\\d+/\\?tag=.*&from=.*";
 
     public static final String URL_PERSON = "/celebrity/\\d+/";
     public static final String URL_PERSON_FULL = "https://movie\\.douban\\.com/celebrity/\\d+/";
@@ -50,7 +50,7 @@ public class DouBanProcessor implements PageProcessor {
     public static String directorAllowEmpty;
 
     //爬虫是否单个电影爬取，默认单个爬取完成后就结束；false即无限延伸爬取，时间比较长
-    public boolean singleCrawler = false;
+    public boolean singleCrawler = true;
 
     //批量保存临界个数
     public int batchNumber = 10;
@@ -151,7 +151,9 @@ public class DouBanProcessor implements PageProcessor {
             //page.addTargetRequests(page.getHtml().xpath("//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]").links().regex(URL_FILM_FROM_SHOWING).all());
             crawlerService.addTargetRequests(page, "//*[@id=\"screening\"]/div[2]/ul/li/ul/li[2]", URL_FILM_FROM_SHOWING, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
             //2)最近热门电影:貌似是动态生成，抓不到
-            //page.addTargetRequests(page.getHtml().xpath("//div[@class='slide-page']").links().regex(URL_FILM_FROM_HOT).all());
+            //page.addTargetRequests(page.getHtml().xpath("//*[@id="content"]/div/div[2]/div[4]/div[3]/div/div[1]").links().regex(URL_FILM_FROM_HOT).all());
+            crawlerService.addTargetRequests(page, "//*[@class=\"slide-wrapper\"]", URL_FILM_FROM_HOT, "/subject/(\\d+)/\\?tag=.*&from=.*"  , dbFilmDouBanNoList , "xpath");
+
         }else {
             System.out.println("--URL不符合Rule--"+page.getUrl());
         }

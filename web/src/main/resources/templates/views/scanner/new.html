@@ -1,7 +1,7 @@
 <div class="page-content">
 
     <div class="page-header">
-        <h1>Search Results </h1>
+        <h1>扫描配置 </h1>
     </div><!-- /.page-header -->
 
     <div class="row">
@@ -95,14 +95,6 @@
             }
         });
 
-
-        form.initComponent();
-        //回填id
-        if(id!="0"){
-            ajaxPost(basePath+"/user/get",{id:id},function(data){
-                form.initFormData(data);
-            })
-        }
     });
 
 </script>
