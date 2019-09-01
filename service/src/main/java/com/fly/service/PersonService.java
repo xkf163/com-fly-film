@@ -17,4 +17,6 @@ public interface PersonService {
     List<String> findAllDouBanNo();
 
     void batchInsertAndUpdate(List<Person> persons);
+
+    Person findByDouBanNo(String douBanNo);
 }

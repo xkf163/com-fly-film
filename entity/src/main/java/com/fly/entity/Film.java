@@ -27,8 +27,8 @@ public class Film extends BaseEntity implements Serializable{
     private Short year;
 
     //html 源码
-    @Column(columnDefinition = "TEXT")
-    private String info;
+    //@Column(columnDefinition = "TEXT")
+    //private String info;
 
     //影片简介
     @Column(columnDefinition = "TEXT")
@@ -55,9 +55,12 @@ public class Film extends BaseEntity implements Serializable{
     //导演们 的id字符串，用逗号分隔
     private String directors;
 
-    //演员们 的id字符串，用逗号分隔
+    //演员们的id字符串，用逗号分隔
     @Column(columnDefinition = "TEXT")
     private String actors;
+
+    //编剧们  的id字符串，用逗号分隔
+    private String screenWriter ;
 
     //影片类型
     private String genre;

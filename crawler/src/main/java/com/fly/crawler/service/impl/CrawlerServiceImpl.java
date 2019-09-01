@@ -58,9 +58,8 @@ public class CrawlerServiceImpl implements CrawlerService {
             return null; //如果是电视剧保存
         }
 
-
-
         Film f = new Film();
+
         String tempString;
 
         //4）豆瓣编号
@@ -70,7 +69,6 @@ public class CrawlerServiceImpl implements CrawlerService {
             return null; //数据库已存在该Film则返回空
         }
 
-
         //1）片名
         page.putField("subject", pageHtml.xpath(xPathMap.get("subject")).toString());
         f.setSubject(page.getResultItems().get("subject"));
@@ -79,9 +77,20 @@ public class CrawlerServiceImpl implements CrawlerService {
         //3）演员
         f.setActors(StringUtils.join(filmInfoWrap.xpath("//a[@rel='v:starring']/@href").regex("/celebrity/(\\d+)/").all().toArray(), ","));
 
+        //4）编剧#info > span:nth-child(3) > span.pl
+        System.out.println("----------编剧----start-------");
+        Selectable writerSelectable = pageHtml.xpath("//*[@id=\"info\"]/span[2]/span[1]/text()");
+        if (writerSelectable != null){
+            //System.out.println(writerSelectable.toString());
+            if ("编剧".equals(writerSelectable.toString())) {
+                tempString = StringUtils.join( pageHtml.xpath("//*[@id=\"info\"]/span[2]").regex("/celebrity/(\\d+)/").all().toArray(), ",");
+                System.out.println(tempString);
+                f.setScreenWriter(tempString);
+            }
+        }
+        System.out.println("----------编剧---end---------");
 
-
-
+        //return null;
         //5、6）豆瓣评分及评分人数
         Selectable selectableRating = pageHtml.xpath("//div[@typeof='v:Rating']");
         PlainText object = (PlainText) selectableRating.xpath("//strong/text()");
@@ -98,9 +107,9 @@ public class CrawlerServiceImpl implements CrawlerService {
 
         //Selectable selectableInfo = page.getHtml().xpath("//div[@id='info']");
 
-        //9)
-        page.putField("info", filmInfoWrap);
-        f.setInfo(page.getResultItems().get("info").toString());
+        //9)HTML源码
+        //page.putField("info", filmInfoWrap);
+        //f.setInfo(page.getResultItems().get("info").toString());
 
         //10)imdb编号
         String imdbNo = filmInfoWrap.regex("<a href=\"http://www.imdb.com/title/tt\\d+\" target=\"_blank\" rel=\"nofollow\">(tt\\d+)</a>").toString();
@@ -175,13 +184,13 @@ public class CrawlerServiceImpl implements CrawlerService {
 
         Person p  = new Person();
         //1)豆瓣编号
-        p.setDoubanNo(page.getResultItems().get("doubanNo"));
-        if("".equals(p.getDoubanNo())) {
+        p.setDouBanNo(page.getResultItems().get("doubanNo"));
+        if("".equals(p.getDouBanNo())) {
             return null;
         }
 
-        if(dbPersonDouBanNoList.contains(p.getDoubanNo())) {
-            System.out.println("--->!!!Person豆瓣编号"+p.getDoubanNo()+"在数据库已存在，不加入保存队列");
+        if(dbPersonDouBanNoList.contains(p.getDouBanNo())) {
+            System.out.println("--->!!!Person豆瓣编号"+p.getDouBanNo()+"在数据库已存在，不加入保存队列");
             return null; //数据库已存在该Film则返回空
         }
 
@@ -209,7 +218,7 @@ public class CrawlerServiceImpl implements CrawlerService {
 
         p.setNameExtend(page.getResultItems().get("nameExtend").toString());
         p.setIntroduce(page.getResultItems().get("introduce").toString());
-        p.setInfo(page.getResultItems().get("info").toString());
+        //p.setInfo(page.getResultItems().get("info").toString());
 
         p.setBirthDay(birthday);
         p.setJob(profession);

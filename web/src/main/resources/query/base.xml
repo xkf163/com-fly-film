@@ -7,7 +7,6 @@
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="subject" header="片名" width="120"  align="left" />
-		<column key="subjectMain" header="片名(全)" width="160"  operator="like" align="left" />
 		<column key="year" header="年份" width="60"  operator="eq"  allowSort="true" />
 		<column key="country" header="国家/地区" width="80"  align="left" />
 		<column key="genre" header="类型" width="100"  align="left" />
@@ -54,6 +53,7 @@
 		<column key="nameExtend" header="姓名全" width="200"  operator="like"  align="left" />
 		<column key="asDirectorNumber" header="导演作品数" width="100" align="left"  allowSort="true" />
 		<column key="asActorNumber" header="演绎作品数" align="center" width="100"  allowSort="true"/>
+		<column key="asWriterNumber" header="编剧作品数" align="center" width="100"  allowSort="true"/>
 		<column key="person.job" header="职业" align="left" width="100"  operator="like" />
 	</query>
 

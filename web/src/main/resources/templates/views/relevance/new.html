@@ -1,0 +1,81 @@
+<div class="page-content">
+
+    <div class="page-header">
+        <h1>Media关联Film </h1>
+    </div><!-- /.page-header -->
+
+    <div class="row">
+        <div class="col-xs-12">
+
+                <div class="col-xs-12 col-sm-3">
+                    <form id="relevance-form" method="relevance-form" class="form-horizontal">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="1"  id="relevantAll" name="relevantAll"> 关联全部Media?（默认只执行未关联的Media）
+                            </label>
+                        </div>
+
+
+                    <!-- /.box-body -->
+                    <div class="box-footer text-right">
+                        <!--以下两种方式提交验证,根据所需选择-->
+                        <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary" data-btn-type="save">关联</button>
+                    </div>
+
+
+                    </form>
+
+                </div>
+
+
+
+
+            <div class="col-xs-12 col-sm-9">
+                table
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+    var id="${id?default(0)}";
+    $(function() {
+        //初始化控件
+        form=$("#relevance-form").form();
+        //数据校验
+        $("#relevance-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认开始？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    ajaxPost(basePath+'/relevance/start', params, function(data, status) {
+                        if(data.success){
+                            if(id!="0"){//更新
+                                modals.hideWin(winId);
+                                //seriesTable.reloadRowData(id);
+                            }else{//新增
+                                //modals.info("数据保存成功");
+                                modals.hideWin(winId);
+                                // seriesTable.reloadData();
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+
+</script>

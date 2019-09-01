@@ -26,4 +26,12 @@ public class RestMediaController {
         return mediaService.findDuplicate(reqObj);
     }
 
+
+    @PostMapping(value = "/unlink")
+    public Map<String, Object> mediaUnlink(String reqObj) throws Exception {
+        return mediaService.findUnlink(reqObj);
+    }
+
+
+
 }

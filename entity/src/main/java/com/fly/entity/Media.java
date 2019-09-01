@@ -38,15 +38,12 @@ public class Media extends BaseEntity implements Serializable {
 	private Date modifiedDate; //资源修改时间
 
 
-
-
 	private Integer whetherFolder;//是否文件夹
 
 	private Integer whetherTransfer; //是否需要转换成mediaVO
 
 	private Integer whetherAlive; //全路径是否存在文件(夹)
 
-	private Integer deleted = 0; //删除标记
 
 	private String nameChn;
 

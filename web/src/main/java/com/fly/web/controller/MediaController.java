@@ -28,4 +28,11 @@ public class MediaController {
         request.setAttribute("dataUrl", "api/media/duplicate");
         return "views/media/duplicate";
     }
+
+    @GetMapping(value = "/unlink")
+    public String mediaUnlink(HttpServletRequest request) {
+        request.setAttribute("dataUrl", "api/media/unlink");
+        return "views/media/unlink";
+    }
+
 }

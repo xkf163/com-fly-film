@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.monitor.SpiderMonitor;
 
+import javax.management.JMException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class CrawlerController {
      */
     @PostMapping(value = "/start")
     @ResponseBody
-    public void running(Crawler crawler){
+    public void running(Crawler crawler) throws JMException {
 
         //System.out.println(crawler.toString());
 
@@ -83,6 +85,9 @@ public class CrawlerController {
             spider = Spider.create(douBanProcessor).addUrl(targetUrls).thread(thread);
 
         }
+
+        //SpiderMonitor.instance().register(spider);
+
         //异步启动，当前线程继续执行
         spider.start();
 

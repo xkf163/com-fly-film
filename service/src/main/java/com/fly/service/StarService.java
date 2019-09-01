@@ -12,4 +12,11 @@ import java.util.Map;
  */
 public interface StarService {
     Map<String, Object> findAll(String reqObj) throws Exception;
+
+
+    List<String> findAllDouBanNo();
+
+    Star findByDouBanNo(String douBanNo);
+
+    Star save(Star star);
 }

@@ -12,5 +12,5 @@ public interface MediaService {
 
     Map<String, Object> findDuplicate(String reqObj) throws Exception;
 
-
+    Map<String, Object> findUnlink(String reqObj) throws Exception;
 }

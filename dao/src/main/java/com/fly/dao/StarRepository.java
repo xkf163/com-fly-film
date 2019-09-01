@@ -14,4 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StarRepository extends JpaRepository<Star,Long>,QueryDslPredicateExecutor<Star> {
 
+    Star findByDouBanNo(String douBanNo);
+
 }

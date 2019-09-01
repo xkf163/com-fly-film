@@ -37,7 +37,8 @@ public class DouBanProcessor implements PageProcessor {
     public static final String URL_PERSON_FULL = "https://movie\\.douban\\.com/celebrity/\\d+/";
 
     public static final String URL_HOMEPAGE = "https://movie\\.douban\\.com";
-    public static final String URL_SEARCH = "https://movie\\.douban\\.com/subject_search";
+
+    public static final String URL_FILM_SEARCH = "https://movie\\.douban\\.com/subject_search";
 
     public static List<Film> filmSaveQueue = new ArrayList<>();  //临时数据，每次批量保存后清空
     public static List<Film> savedFilms = new ArrayList<>(); //此次任务最终完成的数据，返回给前端
@@ -47,6 +48,9 @@ public class DouBanProcessor implements PageProcessor {
 
     public static List<String> dbPersonDouBanNoList; //数据库已存persons的doubanno
     public static List<String> dbFilmDouBanNoList; //数据库已存persons的doubanno
+
+    public static List<String> filmDouBanNoQueue = new ArrayList<>();  //保存队列中Film的豆瓣NO，防止Film重复加入filmSaveQueue
+    public static List<String> personDouBanNoQueue = new ArrayList<>();
 
     public static String actorAllowEmpty;
     public static String directorAllowEmpty;
@@ -117,15 +121,20 @@ public class DouBanProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
-        System.out.println("---队列长度---"+page.getTargetRequests().size());
-        System.out.println("---当前页面---"+page.getUrl());
         //1)电影页面
 //        if (page.getUrl().regex(URL_FILM).match() || page.getUrl().regex(URL_FILM_FROM_SUBJECT_PAGE).match()
 //                || page.getUrl().regex(URL_FILM_FROM_SHOWING).match() || page.getUrl().regex(URL_FILM_FROM_HOT).match() ) {
         if (page.getUrl().regex(URL_FILM).match() ) {
             Film f = crawlerService.extractFilm(page, dbFilmDouBanNoList);
             if (f != null){
-                filmSaveQueue.add(f);
+
+                //doubanno不存在 filmDouBanNoQueue 中才能加入保存队列，防止重复加入
+                String douBanNo = f.getDoubanNo();
+                if (!filmDouBanNoQueue.contains(douBanNo)){
+                    filmSaveQueue.add(f);
+                    filmDouBanNoQueue.add(douBanNo);
+                }
+
                 //1)把页面中的相关人物URL加入到爬取队列中
                 crawlerService.addTargetRequests(page, "div.subject.clearfix" , URL_PERSON,"/celebrity/(\\d+)/" , dbPersonDouBanNoList , "csspath");
 
@@ -141,12 +150,23 @@ public class DouBanProcessor implements PageProcessor {
         }else if(page.getUrl().regex(URL_PERSON).match()){
             Person p = crawlerService.extractPerson(page, dbPersonDouBanNoList);
             if (p != null){
-                personSaveQueue.add(p);
+                //doubanno不存在 filmDouBanNoQueue 中才能加入保存队列，防止重复加入
+                String douBanNo = p.getDouBanNo();
+                if (!personDouBanNoQueue.contains(douBanNo)){
+                    personSaveQueue.add(p);
+                    personDouBanNoQueue.add(douBanNo);
+                }
+
                 //是否延伸爬
                 if(!this.singleCrawler){
 
                 }
             }
+        }else if(page.getUrl().regex(URL_FILM_SEARCH).match()){
+            //System.out.println(page.getHtml());
+            //无效：动态页面 抓取不到
+            //查询结果页面第一页的所有链接加入队列
+            //crawlerService.addTargetRequests(page, "//*[@id=\"wrapper\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
 
         }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
             //System.out.println(page.getHtml());
@@ -162,7 +182,6 @@ public class DouBanProcessor implements PageProcessor {
             //crawlerService.addTargetRequests(page, "//*[@class=\"billboard-bd\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
             //4)最受欢迎的影评
             //crawlerService.addTargetRequests(page, "//*[@class=\"reviews-bd\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
-
 
         }else {
             System.out.println("--URL不符合Rule--"+page.getUrl());

@@ -33,8 +33,13 @@ public class Star extends BaseEntity implements Serializable{
 
     private String asActor;
 
+    private String asWriter;
+
     private Integer asDirectorNumber = 0;
 
     private Integer asActorNumber = 0;
+
+    //编剧作品数
+    private Integer asWriterNumber = 0;
 
 }

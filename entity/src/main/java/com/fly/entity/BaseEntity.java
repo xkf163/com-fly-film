@@ -18,6 +18,6 @@ public class BaseEntity {
     @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date deleteDate; //条目删除时间
 
-
+    private Integer deleted = 0; //删除标记
 
 }

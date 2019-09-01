@@ -1,8 +1,7 @@
 
 package com.fly.entity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 
+import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -23,14 +22,14 @@ public class Person extends BaseEntity implements Serializable {
 
     private String nameExtend;
 
-    @JsonIgnore
-    @Column(columnDefinition = "TEXT")
-    private String info;
+    //@JsonIgnore
+    //@Column(columnDefinition = "TEXT")
+    //private String info;
 
     @Column(columnDefinition = "TEXT")
     private String introduce;
 
-    private String doubanNo;
+    private String douBanNo;
 
 
     private String gender;

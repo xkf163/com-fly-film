@@ -9,8 +9,11 @@ import com.fly.common.query.util.QueryUtil;
 import com.fly.common.utils.StrUtil;
 import com.fly.dao.StarRepository;
 import com.fly.entity.Person;
+import com.fly.entity.QFilm;
+import com.fly.entity.QStar;
 import com.fly.entity.Star;
 import com.fly.service.StarService;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +39,8 @@ public class StarServiceImpl implements StarService {
     StarRepository starRepository;
 
 
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Override
     public Map<String, Object> findAll(String reqObj) throws Exception {
@@ -68,5 +75,28 @@ public class StarServiceImpl implements StarService {
         map.put("columnCarrier", columnCarrier);
 
         return map;
+    }
+
+
+    @Override
+    public List<String> findAllDouBanNo() {
+
+        QStar star = QStar.star;
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<String> listDouBanNo = jpaQueryFactory.select(star.douBanNo)
+                .from(star)
+                .fetch();
+        return listDouBanNo;
+
+    }
+
+    @Override
+    public Star findByDouBanNo(String douBanNo) {
+        return starRepository.findByDouBanNo(douBanNo);
+    }
+
+    @Override
+    public Star save(Star star) {
+        return starRepository.save(star);
     }
 }

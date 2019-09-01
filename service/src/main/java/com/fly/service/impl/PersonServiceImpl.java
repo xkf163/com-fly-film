@@ -83,7 +83,7 @@ public class PersonServiceImpl implements PersonService {
     public List<String> findAllDouBanNo() {
         QPerson person = QPerson.person;
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
-        List<String> listDouBanNo = jpaQueryFactory.select(person.doubanNo)
+        List<String> listDouBanNo = jpaQueryFactory.select(person.douBanNo)
                 .from(person)
                 .fetch();
         return listDouBanNo;
@@ -104,6 +104,13 @@ public class PersonServiceImpl implements PersonService {
                 entityManager.clear();
             }
         }
+    }
+
+
+
+    @Override
+    public Person findByDouBanNo(String douBanNo) {
+        return personRepository.findByDouBanNo(douBanNo);
     }
 
 }
