@@ -65,7 +65,7 @@ public class CrawlerServiceImpl implements CrawlerService {
         //4）豆瓣编号
         f.setDoubanNo(page.getUrl().regex("/subject/(\\d+)/").toString());
         if(dbFilmDouBanNoList.contains(f.getDoubanNo())){
-            System.out.println("--->!!!film豆瓣编号"+f.getDoubanNo()+"在数据库已存在，不加入保存队列");
+            System.out.println("--->!!! film 豆瓣编号"+f.getDoubanNo()+"在数据库已存在，不加入保存队列");
             return null; //数据库已存在该Film则返回空
         }
 
@@ -78,17 +78,17 @@ public class CrawlerServiceImpl implements CrawlerService {
         f.setActors(StringUtils.join(filmInfoWrap.xpath("//a[@rel='v:starring']/@href").regex("/celebrity/(\\d+)/").all().toArray(), ","));
 
         //4）编剧#info > span:nth-child(3) > span.pl
-        System.out.println("----------编剧----start-------");
+        //System.out.println("----------编剧----start-------");
         Selectable writerSelectable = pageHtml.xpath("//*[@id=\"info\"]/span[2]/span[1]/text()");
         if (writerSelectable != null){
             //System.out.println(writerSelectable.toString());
             if ("编剧".equals(writerSelectable.toString())) {
                 tempString = StringUtils.join( pageHtml.xpath("//*[@id=\"info\"]/span[2]").regex("/celebrity/(\\d+)/").all().toArray(), ",");
-                System.out.println(tempString);
+                //System.out.println(tempString);
                 f.setScreenWriter(tempString);
             }
         }
-        System.out.println("----------编剧---end---------");
+        //System.out.println("----------编剧---end---------");
 
         //return null;
         //5、6）豆瓣评分及评分人数
@@ -233,27 +233,26 @@ public class CrawlerServiceImpl implements CrawlerService {
     }
 
     @Override
-    public void addTargetRequests(Page page , String xPath, String regexRuleForUrl , String regexRuleForData , List<String> dbDouBanNoList ,String crawlerType){
+    public void addTargetRequests(Page page , String xPath, String regexRuleForUrl , String regexRuleForData , List<String> dbDouBanNoList ,String crawlerType ,String crawlerObj){
             //2）后续的电影url，有10个
             //2.1)取出后续电影doubannNo LIST，判断dbFilmsDouBanNoList是否已存在，已存在就不add了
-        System.out.println("---------------addTargetRequests--------"+crawlerType+"--------"+xPath+"----");
+        System.out.println("-----列队addTargetRequests---"+crawlerType+"---"+xPath+"---"+crawlerObj+"---");
         Selectable selectable ;
-        String entity = "Film ";
         if ("xpath".equals(crawlerType)) {
              selectable = page.getHtml().xpath(xPath).links().regex(regexRuleForUrl);
         }else{
              selectable = page.getHtml().css(xPath).links().regex(regexRuleForUrl);
-            entity = "Person ";
         }
-        List<String> crawlerQueue = filterUrl(selectable,regexRuleForData,dbDouBanNoList,entity);
+        List<String> crawlerQueue = filterUrl(selectable,regexRuleForData,dbDouBanNoList,crawlerObj);
         page.addTargetRequests(crawlerQueue);
+
     }
 
 
     public List<String> filterUrl(Selectable selectable,String regexRule,List<String> dbFilmDouBanNoList , String entity){
         //原始urls
         List<String> oriUrlList =selectable.all(); //影片页面中的 符合条件的相关影片URLS
-        System.out.println("------本次待加入---------filterUrl-----过滤前---------------"+oriUrlList.size());
+        System.out.println("-----本次待加入---------filterUrl-----过滤前-----"+oriUrlList.size());
 
         List<String> oriDouBanNoList =selectable.regex(regexRule).all(); //提取oriUrlList 中的 豆瓣no，供后续唯一性判断用
         List<String> filmQueue = new ArrayList<>(oriUrlList);
@@ -264,7 +263,7 @@ public class CrawlerServiceImpl implements CrawlerService {
                 filmQueue.remove(oriUrlList.get(i));
             }
         }
-        System.out.println("-----本次待加入----------filterUrl---------过滤后-----------"+filmQueue.size());
+        System.out.println("-----本次待加入---------filterUrl-----过滤后-----"+filmQueue.size());
         return filmQueue;
     }
 

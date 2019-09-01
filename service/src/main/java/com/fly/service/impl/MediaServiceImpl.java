@@ -181,14 +181,16 @@ public class MediaServiceImpl implements MediaService {
         int pageSize = pageInfo.getPageSize();
 
         //排序信息
-        String sortInfo = "gatherDate desc";
+        String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
+        //String sortInfo = "gatherDate desc";
         Sort sort = null;
         if (!StrUtil.isEmpty(sortInfo)) {
             //判断排序类型及排序字段
             String[] sortArray = sortInfo.split(" ");
-            System.out.println(sortArray);
+            //System.out.println(sortArray);
             sort = "asc".equals(sortArray[1]) ? new Sort(Sort.Direction.ASC, sortArray[0]) : new Sort(Sort.Direction.DESC, sortArray[0]);
         }
+
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
 

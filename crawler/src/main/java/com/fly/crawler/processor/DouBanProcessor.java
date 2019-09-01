@@ -52,8 +52,11 @@ public class DouBanProcessor implements PageProcessor {
     public static List<String> filmDouBanNoQueue = new ArrayList<>();  //保存队列中Film的豆瓣NO，防止Film重复加入filmSaveQueue
     public static List<String> personDouBanNoQueue = new ArrayList<>();
 
-    public static String actorAllowEmpty;
-    public static String directorAllowEmpty;
+    public static boolean actorAllowEmpty = false;
+    public static boolean directorAllowEmpty = false;
+
+    public static boolean filmOnly = false; //只爬取电影
+    public static boolean personOnly = false;
 
     //爬虫是否单个电影爬取，默认单个爬取完成后就结束；false即无限延伸爬取，时间比较长
     public boolean singleCrawler = true;
@@ -125,30 +128,59 @@ public class DouBanProcessor implements PageProcessor {
 //        if (page.getUrl().regex(URL_FILM).match() || page.getUrl().regex(URL_FILM_FROM_SUBJECT_PAGE).match()
 //                || page.getUrl().regex(URL_FILM_FROM_SHOWING).match() || page.getUrl().regex(URL_FILM_FROM_HOT).match() ) {
         if (page.getUrl().regex(URL_FILM).match() ) {
-            Film f = crawlerService.extractFilm(page, dbFilmDouBanNoList);
-            if (f != null){
 
+            //3种情况
+            //1)personOnly = false; filmOnly = false
+            //2)personOnly = true; filmOnly = false
+            //3)personOnly = false; filmOnly = true
+
+
+            Film f = null;
+            if (!personOnly){
+                f = crawlerService.extractFilm(page, dbFilmDouBanNoList);
+            }
+
+            if (f != null){
                 //doubanno不存在 filmDouBanNoQueue 中才能加入保存队列，防止重复加入
                 String douBanNo = f.getDoubanNo();
                 if (!filmDouBanNoQueue.contains(douBanNo)){
                     filmSaveQueue.add(f);
                     filmDouBanNoQueue.add(douBanNo);
                 }
-
-                //1)把页面中的相关人物URL加入到爬取队列中
-                crawlerService.addTargetRequests(page, "div.subject.clearfix" , URL_PERSON,"/celebrity/(\\d+)/" , dbPersonDouBanNoList , "csspath");
-
-                //是否延伸爬
-                if(!this.singleCrawler){
-                    //2)把页面中的相关影片URL加入到爬取队列中
-                    crawlerService.addTargetRequests(page, "//div[@class='recommendations-bd']/dl/dt" ,URL_FILM_FROM_SUBJECT_PAGE, "/subject/(\\d+)/" , dbFilmDouBanNoList , "xpath");
+                if(!filmOnly){
+                    //1)把页面中的相关人物URL加入到爬取队列中
+                    crawlerService.addTargetRequests(page, "div.subject.clearfix" , URL_PERSON,"/celebrity/(\\d+)/" , dbPersonDouBanNoList , "csspath", "Person");
                 }
 
+                //是否延伸爬
+                if(!this.singleCrawler && !personOnly){
+                    //2)把页面中的相关影片URL加入到爬取队列中
+                    crawlerService.addTargetRequests(page, "//div[@class='recommendations-bd']/dl/dt" ,URL_FILM_FROM_SUBJECT_PAGE, "/subject/(\\d+)/" , dbFilmDouBanNoList , "xpath", "Film");
+                }
+            }else if(f == null && !personOnly){
+                //2)把页面中的相关影片URL加入到爬取队列中
+                crawlerService.addTargetRequests(page, "//div[@class='recommendations-bd']/dl/dt" ,URL_FILM_FROM_SUBJECT_PAGE, "/subject/(\\d+)/" , dbFilmDouBanNoList , "xpath", "Film");
+
+            }else if(f == null && !filmOnly){
+                //1)把页面中的相关人物URL加入到爬取队列中
+                crawlerService.addTargetRequests(page, "div.subject.clearfix" , URL_PERSON,"/celebrity/(\\d+)/" , dbPersonDouBanNoList , "csspath", "Person");
             }else{
                 page.setSkip(true);
             }
+
         }else if(page.getUrl().regex(URL_PERSON).match()){
-            Person p = crawlerService.extractPerson(page, dbPersonDouBanNoList);
+
+            //3种情况
+            //1)personOnly = false; filmOnly = false
+            //2)personOnly = true; filmOnly = false
+            //3)personOnly = false; filmOnly = true
+
+            Person p = null;
+            if (!filmOnly){
+                p = crawlerService.extractPerson(page, dbPersonDouBanNoList);
+            }
+
+
             if (p != null){
                 //doubanno不存在 filmDouBanNoQueue 中才能加入保存队列，防止重复加入
                 String douBanNo = p.getDouBanNo();
@@ -157,11 +189,29 @@ public class DouBanProcessor implements PageProcessor {
                     personDouBanNoQueue.add(douBanNo);
                 }
 
-                //是否延伸爬
-                if(!this.singleCrawler){
-
+                if(!filmOnly){
+                    //合作2次以上的影人  · · · · ·
+                    crawlerService.addTargetRequests(page, "//*[@id=\"partners\"]/div[@class=\"bd\"]/ul[@class=\"list-s\"]/li/div[@class=\"pic\"]" ,URL_PERSON, "/celebrity/(\\d+)/" , dbPersonDouBanNoList , "xpath", "Person");
                 }
+
+                //是否延伸爬
+                if(!this.singleCrawler && !filmOnly){
+                    crawlerService.addTargetRequests(page, "//*[@id=\"recent_movies\"]/div[@class=\"bd\"]/ul[@class=\"list-s\"]/li/div[@class=\"pic\"]" ,URL_FILM, "/subject/(\\d+)/" , dbFilmDouBanNoList , "xpath", "Film");
+                }
+
+            }else if(p == null && !personOnly){
+                //把人物页面的 影片加入队列
+                crawlerService.addTargetRequests(page, "//*[@id=\"recent_movies\"]/div[@class=\"bd\"]/ul[@class=\"list-s\"]/li/div[@class=\"pic\"]" ,URL_FILM, "/subject/(\\d+)/" , dbFilmDouBanNoList , "xpath", "Film");
+            }else if(p == null && !filmOnly){
+                //合作2次以上的影人
+                crawlerService.addTargetRequests(page, "//*[@id=\"partners\"]/div[@class=\"bd\"]/ul[@class=\"list-s\"]/li/div[@class=\"pic\"]" ,URL_PERSON, "/celebrity/(\\d+)/" , dbPersonDouBanNoList , "xpath", "Person");
+
+            }else {
+                page.setSkip(true);
             }
+
+
+
         }else if(page.getUrl().regex(URL_FILM_SEARCH).match()){
             //System.out.println(page.getHtml());
             //无效：动态页面 抓取不到
@@ -170,7 +220,7 @@ public class DouBanProcessor implements PageProcessor {
 
         }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
             //System.out.println(page.getHtml());
-            crawlerService.addTargetRequests(page, "//*[@id=\"content\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
+            crawlerService.addTargetRequests(page, "//*[@id=\"content\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath", "Film");
 
             //3)入口是豆瓣主页
             //3.1)正在热映

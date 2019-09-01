@@ -12,5 +12,7 @@ public class Crawler {
     String directorEmpty = "0";
     String actorEmpty ="0";
     String batchNumber;
+    String filmOnly = "0";
+    String personOnly ="0";
 
 }

@@ -36,7 +36,6 @@
 		   pageSize="20"  widthType="px" order="createDate asc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="name" header="姓名" width="120"  operator="like"  align="left" />
 		<column key="nameExtend" header="姓名中英" width="200"  operator="like"  align="left" />
 		<column key="birthDay" header="生日" width="60"  operator="eq"  allowSort="true"/>
 		<column key="birthPlace" header="出生地" width="40"   align="left"  operator="like"  allowSort="true"/>

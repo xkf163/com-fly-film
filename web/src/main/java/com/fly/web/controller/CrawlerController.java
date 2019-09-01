@@ -58,8 +58,8 @@ public class CrawlerController {
         //System.out.println(crawler.toString());
 
        // DouBanProcessor douBanProcessor = new DouBanProcessor();
-        douBanProcessor.directorAllowEmpty = crawler.getDirectorEmpty();
-        douBanProcessor.actorAllowEmpty = crawler.getActorEmpty();
+       // douBanProcessor.directorAllowEmpty = crawler.getDirectorEmpty();
+       // douBanProcessor.actorAllowEmpty = crawler.getActorEmpty();
 
         douBanProcessor.dbFilmDouBanNoList = filmService.findAllDouBanNo();
         douBanProcessor.dbPersonDouBanNoList = personService.findAllDouBanNo();
@@ -68,6 +68,15 @@ public class CrawlerController {
         //是延伸爬
         if("1".equals(crawler.getMutil())){
             douBanProcessor.setSingleCrawler(false);
+        }
+
+        //是否只爬取电影
+        if("1".equals(crawler.getFilmOnly())){
+           douBanProcessor.filmOnly = true;
+        }
+        //是否只爬取影人
+        if("1".equals(crawler.getPersonOnly())){
+            douBanProcessor.personOnly = true;
         }
 
         String url  = crawler.getUrl();
@@ -94,11 +103,13 @@ public class CrawlerController {
     }
 
     @GetMapping(value = "/stop")
-    public void running(){
+    public String running(){
 
         if (spider != null){
             spider.stop();
         }
+
+        return "views/crawler/new";
 
     }
 

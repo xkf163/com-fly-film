@@ -19,5 +19,5 @@ public interface CrawlerService {
 
     void savePersonList(List<Person> personList);
 
-    void addTargetRequests(Page page , String xPath, String regexRuleForUrl , String regexRuleForData, List<String> dbFilmDouBanNoList , String crawlerType );
+    void addTargetRequests(Page page , String xPath, String regexRuleForUrl , String regexRuleForData, List<String> dbFilmDouBanNoList , String crawlerType ,String crawlerObj);
 }
