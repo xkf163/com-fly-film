@@ -89,7 +89,8 @@ public class CrawlerController {
 
         }else{
             //转换成数组
-            String[] targetUrls= url.split("\r\n");
+            String[] targetUrls= url.split("\n");
+            System.out.println(targetUrls.length);
             //默认spider
             spider = Spider.create(douBanProcessor).addUrl(targetUrls).thread(thread);
 

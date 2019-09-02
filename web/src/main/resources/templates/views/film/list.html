@@ -2,6 +2,7 @@
 <div class="page-content" >
     <h5 class="pull-left">用户列表</h5>
     <div class="dataTables_filter" id="searchDiv">
+        <input type="checkbox" value="1"  id="refresh" name="refresh"> 自动刷新?
         <input placeholder="请输入片名" name="subjectMain" class="form-control" type="search" likeOption="true"/>
         <input placeholder="请输入年份" name="year" class="form-control" type="search" />
         <div class="btn-group">
@@ -31,6 +32,24 @@
     $(function() {
         //init table and fill data
         userTable = new CommonTable("film_list", dataUrl, "searchDiv");
+
+        setInterval(function () {
+           if ($("#refresh").is(':checked')) {
+               refreshAuto();
+           }else{
+              // console.log("unchecked");
+           }
+
+        }, 5000);
     });
+
+
+
+
+    function refreshAuto() {
+        //console.log("refresh table");
+        userTable.reloadData();
+    }
+
 
 </script>

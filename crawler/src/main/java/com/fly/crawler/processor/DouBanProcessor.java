@@ -125,8 +125,6 @@ public class DouBanProcessor implements PageProcessor {
     @Override
     public void process(Page page) {
         //1)电影页面
-//        if (page.getUrl().regex(URL_FILM).match() || page.getUrl().regex(URL_FILM_FROM_SUBJECT_PAGE).match()
-//                || page.getUrl().regex(URL_FILM_FROM_SHOWING).match() || page.getUrl().regex(URL_FILM_FROM_HOT).match() ) {
         if (page.getUrl().regex(URL_FILM).match() ) {
 
             //3种情况
