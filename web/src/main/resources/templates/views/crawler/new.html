@@ -58,9 +58,9 @@
 
                     <br>
                         <!--以下两种方式提交验证,根据所需选择-->
-                        <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
                         <button type="submit" class="btn btn-primary" data-btn-type="save">开爬</button>
-
+                        <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" onclick="endCrawler();" data-btn-type="end">终止</button>
                 </form>
 
 
@@ -113,4 +113,16 @@
 
     });
 
+    
+    function endCrawler() {
+        $.ajax({
+            type: "get",
+            url: "/crawler/stop",
+            cache:false,
+            async:true,
+        });
+
+        modals.info("终止请求发出成功！")
+    }
+    
 </script>

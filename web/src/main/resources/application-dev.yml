@@ -1,0 +1,38 @@
+spring:
+  #datasource:
+    #url: jdbc:h2:~/film
+    #driver-class-name: org.h2.Driver
+    #username: sa
+    #password: 123456
+  #    schema: classpath:db/schema.sql
+  #    data: classpath:db/data.sql
+  #jpa:
+    #database: h2
+    #hibernate:
+      #ddl-auto: update
+    #show-sql: true
+  #h2:
+    #console:
+      #settings:
+        #web-allow-others: true
+      #path: /h2-console
+      #enabled: true
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/springbootdb?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  freemarker:
+    check-template-location: true
+    template-loader-path: classpath:/templates/
+    suffix: .html
+    content-type: text/html
+    charset: UTF-8
+    cache: false
+server:
+  port: 80

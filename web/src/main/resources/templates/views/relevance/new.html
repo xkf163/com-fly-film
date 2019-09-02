@@ -60,6 +60,9 @@
                 modals.confirm('确认开始？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
+                    $.ajaxSetup({
+                        async: true
+                    });
                     ajaxPost(basePath+'/relevance/start', params, function(data, status) {
                         if(data.success){
                             if(id!="0"){//更新

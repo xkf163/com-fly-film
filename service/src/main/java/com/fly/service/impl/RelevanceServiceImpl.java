@@ -310,21 +310,49 @@ public class RelevanceServiceImpl implements RelevanceService {
         QFilm qFilm = QFilm.film;
         Predicate[] predicateArray = new Predicate[2];
         predicateArray[0] = qFilm.subject.trim().eq(media.getNameChn().trim()).and(qFilm.year.eq(media.getYear()));
-        predicateArray[1] = (qFilm.subjectOther.trim().contains(media.getNameEng().trim()).or(qFilm.subjectMain.contains(media.getNameChn().trim()))).and(qFilm.year.eq(media.getYear()));
+        predicateArray[1] = (qFilm.subjectOther.trim().contains(media.getNameChn().trim()).or(qFilm.subjectOther.trim().contains(media.getNameEng().trim())).or(qFilm.subjectMain.contains(media.getNameChn().trim()))).and(qFilm.year.eq(media.getYear()));
+
         List<Film> films = (List<Film>) filmRepository.findAll(predicateArray[0]);
         if(films.size()== 1){
             return films.get(0);
         }else if(films.size()>1){
+            Film f = null;
             for(Film film : films){
                 String nameEng = media.getNameEng();
-                if(nameEng!=null & (film.getSubjectMain().indexOf(nameEng)>0 || film.getSubjectOther().indexOf(nameEng)>0)){
-                    return film;
+                String nameChn = media.getNameChn();
+                if (nameChn!=null && film.getSubject().contains(nameChn)){
+                    f =  film;
+                    break;
                 }
+
+                if(nameEng!=null && (film.getSubjectMain().indexOf(nameEng)>0 || film.getSubjectOther().indexOf(nameEng)>0)){
+                    f = film;
+                    break;
+                }
+
             }
+            return f;
         }else {
             films = (List<Film>) filmRepository.findAll(predicateArray[1]);
             if(films.size()==1){
                 return films.get(0);
+            }else if(films.size()>1){
+                Film f = null;
+                for(Film film : films){
+                    String nameEng = media.getNameEng();
+                    String nameChn = media.getNameChn();
+                    if (nameChn!=null && film.getSubject().contains(nameChn)){
+                        f =  film;
+                        break;
+                    }
+
+                    if(nameEng!=null && film.getSubjectMain().indexOf(nameEng)>0 ){
+                        f = film;
+                        break;
+                    }
+
+                }
+                return f;
             }
         }
 

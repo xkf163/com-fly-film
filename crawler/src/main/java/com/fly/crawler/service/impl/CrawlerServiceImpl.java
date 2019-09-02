@@ -46,28 +46,42 @@ public class CrawlerServiceImpl implements CrawlerService {
     public Film extractFilm(Page page , List<String> dbFilmDouBanNoList) {
 
         //System.out.println("extracFilm");
-
         Html pageHtml = page.getHtml();
         Selectable filmInfoWrap = pageHtml.xpath("//div[@id='info']");
 
-        //0)集数<span class="pl">集数:</span><br>
+
+        String tempString;
+        //1）豆瓣编号
+        tempString = page.getUrl().regex("/subject/(\\d+)/").toString();
+        if(dbFilmDouBanNoList.contains(tempString)){
+            System.out.println("--->!!! Film 豆瓣编号"+tempString+"在数据库已存在，不加入保存队列。");
+            return null; //数据库已存在该Film则返回空
+        }
+
+        //2)集数<span class="pl">集数:</span><br>
         String episodeNumber = filmInfoWrap.regex("<span class=\"pl\">集数:</span> (\\d+)\n"+
                 " <br>").toString();
         if (null != episodeNumber && !"".equals(episodeNumber)) {
-            //f.setEpisodeNumber(episodeNumber);
+            System.out.println("--->!!! Film 豆瓣编号"+tempString+"是电视剧，不加入保存队列。");
             return null; //如果是电视剧保存
         }
 
         Film f = new Film();
+        //1）豆瓣编号
+        f.setDoubanNo(tempString);
 
-        String tempString;
-
-        //4）豆瓣编号
-        f.setDoubanNo(page.getUrl().regex("/subject/(\\d+)/").toString());
-        if(dbFilmDouBanNoList.contains(f.getDoubanNo())){
-            System.out.println("--->!!! film 豆瓣编号"+f.getDoubanNo()+"在数据库已存在，不加入保存队列");
+        //5、6）豆瓣评分及评分人数
+        Selectable selectableRating = pageHtml.xpath("//div[@typeof='v:Rating']");
+        PlainText object = (PlainText) selectableRating.xpath("//strong/text()");
+        if (null != object && !"".equals(object.getFirstSourceText())) {
+            f.setDoubanRating(Float.parseFloat(selectableRating.xpath("//strong/text()").toString()));
+            f.setDoubanSum(Long.parseLong(selectableRating.xpath("//span[@property='v:votes']/text()").toString()));
+        }
+        if(f.getDoubanRating() == null){
+            System.out.println("--->!!! film 豆瓣编号"+f.getDoubanNo()+"豆瓣评分为空值，不加入保存队列");
             return null; //数据库已存在该Film则返回空
         }
+
 
         //1）片名
         page.putField("subject", pageHtml.xpath(xPathMap.get("subject")).toString());
@@ -90,14 +104,7 @@ public class CrawlerServiceImpl implements CrawlerService {
         }
         //System.out.println("----------编剧---end---------");
 
-        //return null;
-        //5、6）豆瓣评分及评分人数
-        Selectable selectableRating = pageHtml.xpath("//div[@typeof='v:Rating']");
-        PlainText object = (PlainText) selectableRating.xpath("//strong/text()");
-        if (null != object && !"".equals(object.getFirstSourceText())) {
-            f.setDoubanRating(Float.parseFloat(selectableRating.xpath("//strong/text()").toString()));
-            f.setDoubanSum(Long.parseLong(selectableRating.xpath("//span[@property='v:votes']/text()").toString()));
-        }
+
 
         //8）年代
         page.putField("year", page.getHtml().xpath("//div[@id='content']/h1//span[@class='year']/text()").regex("\\((.*)\\)"));
