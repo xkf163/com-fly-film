@@ -65,8 +65,11 @@ public class RelevanceServiceImpl implements RelevanceService {
         System.out.println(mediaList.size());
 
         for(Media media : mediaList){
+
+            System.out.println("-----------media.getNameChn()------------"+media.getNameChn());
             //1)为Media关联Film，并加入更新List
-            Film film = findConnectedFilmForMedia(media);
+            Film film = null;
+            film = findConnectedFilmForMedia(media);
 
             media.setFilm(film);
             media.setUpdateDate(new Date());
@@ -76,185 +79,194 @@ public class RelevanceServiceImpl implements RelevanceService {
                 continue;
             }
             needUpdateMediaList.add(media);
+
+            System.out.println("----------film.getId()-------------"+film.getId());
+
             //2）为当前匹配到的Film中的导演和演员Person转化为Star（或更新Star）
             String filmId = String.valueOf(media.getId());
-            String directorsDoubanNo = film.getDirectors().trim();
-            String actorsDoubanNo = film.getActors().trim();
-            String writerDoubanNo = film.getScreenWriter().trim();
+            String directorsDoubanNo = film.getDirectors();
+            String actorsDoubanNo = film.getActors();
+            String writerDoubanNo = film.getScreenWriter();
             //director doubanid array
             String[] ddno_array=null,adno_array=null,sdno_array=null;
-            if(directorsDoubanNo!=null)
+
+            if (directorsDoubanNo != null && !directorsDoubanNo.trim().equals(""))
                 ddno_array = directorsDoubanNo.split(",");
-            if(actorsDoubanNo!=null)
+            if (actorsDoubanNo != null && !actorsDoubanNo.trim().equals(""))
                 adno_array = actorsDoubanNo.split(",");
-            if(writerDoubanNo!=null)
+            if (writerDoubanNo != null && !writerDoubanNo.trim().equals(""))
                 sdno_array = writerDoubanNo.split(",");
 
             //Film中的导演doubanNo
-            for(String douBanNo : ddno_array){
-                //找star表，看是否存在，不存在则新建，存在即asdirect加上此filmid（先判断有无此filmid）
-                if(starDouBanNoList.contains(douBanNo)){
-                    Star star = starService.findByDouBanNo(douBanNo);
-                    //判断当前filmid是否已存在当前star的asdirect字段中
-                    //不存在add进去，并更新number
-                    String[] asDArray;
-                    if(star.getAsDirector()!=null){
-                        asDArray = star.getAsDirector().split(",");
-                        if(asDArray!=null && !Arrays.asList(asDArray).contains(filmId)) {
-                            String[] asDArrayNew = new String[asDArray.length + 1];
-                            System.arraycopy(asDArray, 0, asDArrayNew, 0, asDArray.length);//将a数组内容复制新数组b
-                            asDArrayNew[asDArrayNew.length - 1] = filmId;
-                            star.setAsDirector(StringUtils.join(asDArrayNew, ","));
-                            star.setAsDirectorNumber(asDArrayNew.length);
+            if (ddno_array != null) {
+                for (String douBanNo : ddno_array) {
+                    //找star表，看是否存在，不存在则新建，存在即asdirect加上此filmid（先判断有无此filmid）
+                    if (starDouBanNoList.contains(douBanNo)) {
+                        Star star = starService.findByDouBanNo(douBanNo);
+                        //判断当前filmid是否已存在当前star的asdirect字段中
+                        //不存在add进去，并更新number
+                        String[] asDArray;
+                        if (star.getAsDirector() != null) {
+                            asDArray = star.getAsDirector().split(",");
+                            if (asDArray != null && !Arrays.asList(asDArray).contains(filmId)) {
+                                String[] asDArrayNew = new String[asDArray.length + 1];
+                                System.arraycopy(asDArray, 0, asDArrayNew, 0, asDArray.length);//将a数组内容复制新数组b
+                                asDArrayNew[asDArrayNew.length - 1] = filmId;
+                                star.setAsDirector(StringUtils.join(asDArrayNew, ","));
+                                star.setAsDirectorNumber(asDArrayNew.length);
+                            }
+                        } else {
+                            //asdirector空的情况
+                            star.setAsDirector(filmId);
+                            star.setAsDirectorNumber(1);
                         }
-                    }else {
-                        //asdirector空的情况
-                        star.setAsDirector(filmId);
+                        star.setUpdateDate(new Date());
+                        //star是地址引用，故若已添加，不需再次添加
+                        if (!needUpdateStarList.contains(star)) {
+                            needUpdateStarList.add(star);
+                        }
+
+                    } else {
+
+                        //starNeedSaveMap.put(douBanNo,filmId);
+
+                        //根据Person信息创建new star
+                        Person person = personService.findByDouBanNo(douBanNo);
+                        if (person == null) {
+                            System.out.println("-----------Person is not find-----------" + douBanNo);
+                            continue;
+                        }
+                        Star star = new Star();
+                        star.setCreateDate(new Date());
+                        star.setDouBanNo(douBanNo);
                         star.setAsDirectorNumber(1);
+                        star.setAsDirector(filmId);
+                        star.setName(person.getName());
+                        star.setNameExtend(person.getNameExtend());
+                        star.setPerson(person);
+
+                        //新建star保存
+                        starService.save(star);
+
+                        starSavedList.add(star);
+                        starDouBanNoList = starService.findAllDouBanNo();
+
                     }
-                    star.setUpdateDate(new Date());
-                    //star是地址引用，故若已添加，不需再次添加
-                    if (!needUpdateStarList.contains(star) ) {
-                        needUpdateStarList.add(star);
-                    }
-
-                }else{
-
-                    //starNeedSaveMap.put(douBanNo,filmId);
-
-                    //根据Person信息创建new star
-                    Person person =personService.findByDouBanNo(douBanNo);
-                    if(person == null){
-                        System.out.println("-----------Person is not find-----------"+douBanNo);
-                        continue;
-                    }
-                    Star star = new Star();
-                    star.setCreateDate(new Date());
-                    star.setDouBanNo(douBanNo);
-                    star.setAsDirectorNumber(1);
-                    star.setAsDirector(filmId);
-                    star.setName(person.getName());
-                    star.setNameExtend(person.getNameExtend());
-                    star.setPerson(person);
-
-                    //新建star保存
-                    starService.save(star);
-
-                    starSavedList.add(star);
-                    starDouBanNoList = starService.findAllDouBanNo();
 
                 }
-
             }
-
             //as主演
-            for(String douBanNo : adno_array){
+            if (adno_array != null) {
+                for (String douBanNo : adno_array) {
 
-                if(starDouBanNoList.contains(douBanNo)){
-                    Star star =  starService.findByDouBanNo(douBanNo);
-                    //判断当前filmid是否已存在当前star的asdirect字段中
-                    //不存在add进去，并更新number
-                    String[] asAArray = null;
-                    if(star.getAsActor()!=null){
-                        asAArray= star.getAsActor().split(",");
-                        if(asAArray!=null && !Arrays.asList(asAArray).contains(filmId)) {
-                            String[] asAArrayNew = new String[asAArray.length + 1];
-                            System.arraycopy(asAArray, 0, asAArrayNew, 0, asAArray.length);//将a数组内容复制新数组b
-                            asAArrayNew[asAArrayNew.length - 1] = filmId;
-                            star.setAsActor(StringUtils.join(asAArrayNew, ","));
-                            star.setAsActorNumber(asAArrayNew.length);
+                    if (starDouBanNoList.contains(douBanNo)) {
+                        Star star = starService.findByDouBanNo(douBanNo);
+                        //判断当前filmid是否已存在当前star的asdirect字段中
+                        //不存在add进去，并更新number
+                        String[] asAArray = null;
+                        if (star.getAsActor() != null) {
+                            asAArray = star.getAsActor().split(",");
+                            if (asAArray != null && !Arrays.asList(asAArray).contains(filmId)) {
+                                String[] asAArrayNew = new String[asAArray.length + 1];
+                                System.arraycopy(asAArray, 0, asAArrayNew, 0, asAArray.length);//将a数组内容复制新数组b
+                                asAArrayNew[asAArrayNew.length - 1] = filmId;
+                                star.setAsActor(StringUtils.join(asAArrayNew, ","));
+                                star.setAsActorNumber(asAArrayNew.length);
+
+                            }
+                        } else {
+                            //asactor空的情况
+                            star.setAsActor(filmId);
+                            star.setAsActorNumber(1);
 
                         }
-                    }  else {
-                        //asactor空的情况
-                        star.setAsActor(filmId);
+                        star.setUpdateDate(new Date());
+                        //star是地址引用，故若已添加，不需再次添加
+                        if (!needUpdateStarList.contains(star)) {
+                            needUpdateStarList.add(star);
+                        }
+
+                    } else {
+                        //new
+                        Person person = personService.findByDouBanNo(douBanNo);
+                        if (person == null) {
+                            System.out.println("-----------Person is not find-----------" + douBanNo);
+                            continue;
+                        }
+                        //new
+                        Star star = new Star();
+                        star.setCreateDate(new Date());
+                        star.setDouBanNo(douBanNo);
                         star.setAsActorNumber(1);
+                        star.setAsActor(filmId);
+                        star.setName(person.getName());
+                        star.setNameExtend(person.getNameExtend());
+                        star.setPerson(person);
+
+                        //新建star保存
+                        starService.save(star);
+                        starSavedList.add(star);
+                        starDouBanNoList = starService.findAllDouBanNo();
 
                     }
-                    star.setUpdateDate(new Date());
-                    //star是地址引用，故若已添加，不需再次添加
-                    if (!needUpdateStarList.contains(star) ) {
-                        needUpdateStarList.add(star);
-                    }
-
-                }else{
-                    //new
-                    Person person = personService.findByDouBanNo(douBanNo);
-                    if(person==null){
-                        System.out.println("-----------Person is not find-----------"+douBanNo);
-                        continue;
-                    }
-                    //new
-                    Star star = new Star();
-                    star.setCreateDate(new Date());
-                    star.setDouBanNo(douBanNo);
-                    star.setAsActorNumber(1);
-                    star.setAsActor(filmId);
-                    star.setName(person.getName());
-                    star.setNameExtend(person.getNameExtend());
-                    star.setPerson(person);
-
-                    //新建star保存
-                    starService.save(star);
-                    starSavedList.add(star);
-                    starDouBanNoList = starService.findAllDouBanNo();
-
                 }
             }
-
             //as编剧
-            for(String douBanNo : sdno_array){
+            if (sdno_array != null) {
+                for (String douBanNo : sdno_array) {
 
-                if(starDouBanNoList.contains(douBanNo)){
-                    Star star =  starService.findByDouBanNo(douBanNo);
-                    //判断当前filmid是否已存在当前star的asdirect字段中
-                    //不存在add进去，并更新number
-                    String[] asAArray = null;
-                    if(star.getAsWriter()!=null){
-                        asAArray= star.getAsWriter().split(",");
-                        if(asAArray!=null && !Arrays.asList(asAArray).contains(filmId)) {
-                            String[] asAArrayNew = new String[asAArray.length + 1];
-                            System.arraycopy(asAArray, 0, asAArrayNew, 0, asAArray.length);//将a数组内容复制新数组b
-                            asAArrayNew[asAArrayNew.length - 1] = filmId;
-                            star.setAsWriter(StringUtils.join(asAArrayNew, ","));
-                            star.setAsWriterNumber(asAArrayNew.length);
+                    if (starDouBanNoList.contains(douBanNo)) {
+                        Star star = starService.findByDouBanNo(douBanNo);
+                        //判断当前filmid是否已存在当前star的asdirect字段中
+                        //不存在add进去，并更新number
+                        String[] asAArray = null;
+                        if (star.getAsWriter() != null) {
+                            asAArray = star.getAsWriter().split(",");
+                            if (asAArray != null && !Arrays.asList(asAArray).contains(filmId)) {
+                                String[] asAArrayNew = new String[asAArray.length + 1];
+                                System.arraycopy(asAArray, 0, asAArrayNew, 0, asAArray.length);//将a数组内容复制新数组b
+                                asAArrayNew[asAArrayNew.length - 1] = filmId;
+                                star.setAsWriter(StringUtils.join(asAArrayNew, ","));
+                                star.setAsWriterNumber(asAArrayNew.length);
+
+                            }
+                        } else {
+                            //asactor空的情况
+                            star.setAsWriter(filmId);
+                            star.setAsWriterNumber(1);
 
                         }
-                    }  else {
-                        //asactor空的情况
-                        star.setAsWriter(filmId);
+                        star.setUpdateDate(new Date());
+                        //star是地址引用，故若已添加，不需再次添加
+                        if (!needUpdateStarList.contains(star)) {
+                            needUpdateStarList.add(star);
+                        }
+
+                    } else {
+                        //new
+                        Person person = personService.findByDouBanNo(douBanNo);
+                        if (person == null) {
+                            System.out.println("-----------Person is not find-----------" + douBanNo);
+                            continue;
+                        }
+                        //new
+                        Star star = new Star();
+                        star.setCreateDate(new Date());
+                        star.setDouBanNo(douBanNo);
                         star.setAsWriterNumber(1);
+                        star.setAsWriter(filmId);
+                        star.setName(person.getName());
+                        star.setNameExtend(person.getNameExtend());
+                        star.setPerson(person);
+
+                        //新建star保存
+                        starService.save(star);
+                        starSavedList.add(star);
+                        starDouBanNoList = starService.findAllDouBanNo();
 
                     }
-                    star.setUpdateDate(new Date());
-                    //star是地址引用，故若已添加，不需再次添加
-                    if (!needUpdateStarList.contains(star) ) {
-                        needUpdateStarList.add(star);
-                    }
-
-                }else{
-                    //new
-                    Person person = personService.findByDouBanNo(douBanNo);
-                    if(person==null){
-                        System.out.println("-----------Person is not find-----------"+douBanNo);
-                        continue;
-                    }
-                    //new
-                    Star star = new Star();
-                    star.setCreateDate(new Date());
-                    star.setDouBanNo(douBanNo);
-                    star.setAsWriterNumber(1);
-                    star.setAsWriter(filmId);
-                    star.setName(person.getName());
-                    star.setNameExtend(person.getNameExtend());
-                    star.setPerson(person);
-
-                    //新建star保存
-                    starService.save(star);
-                    starSavedList.add(star);
-                    starDouBanNoList = starService.findAllDouBanNo();
-
                 }
+
             }
 
 
