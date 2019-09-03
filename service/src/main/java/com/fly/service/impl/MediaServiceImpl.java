@@ -208,6 +208,11 @@ public class MediaServiceImpl implements MediaService {
     }
 
 
+    @Override
+    public Media findOne(Long id) {
+        return mediaRepository.findOne(id);
+    }
+
 
     public static boolean isNumeric(String str) {
         String bigStr;

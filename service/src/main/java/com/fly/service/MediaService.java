@@ -1,5 +1,7 @@
 package com.fly.service;
 
+import com.fly.entity.Media;
+
 import java.util.Map;
 
 /**
@@ -13,4 +15,8 @@ public interface MediaService {
     Map<String, Object> findDuplicate(String reqObj) throws Exception;
 
     Map<String, Object> findUnlink(String reqObj) throws Exception;
+
+    Media findOne(Long id);
+
+
 }

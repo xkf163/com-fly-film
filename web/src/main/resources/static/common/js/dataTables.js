@@ -346,6 +346,22 @@
             }, 200);
             //setTimeout(function(){_this.fixHeaderWidth()},100);
         }
+
+
+        //增加双击行事件 190903
+        $('#' + this.tableId + ' tbody').on('dblclick','tr',function() {
+            var _id = _this.getSelectedRowData().id;
+            var _obj = _this.tableId.substring(0,_this.tableId.indexOf("_"));
+            var _url = "/"+_obj+"/edit?id="+_id;
+            var _winId= _obj+"Win";
+            modals.openWin({
+                winId:_winId,
+                title:'新增编辑',
+                width:'900px',
+                url: basePath+_url
+            });
+        });
+
     }
 
 

@@ -267,7 +267,9 @@ function getServerTime(base_path, format) {
  */
 function formatDate(date, format) {
     if (!date)return date;
-    date = (typeof date == "number") ? new Date(date) : date;
+    console.log(typeof date);
+
+    date = (typeof date == "number") ? new Date(date) : new Date(date.replace(/-/g,"/"));
     return date.Format(format);
 }
 

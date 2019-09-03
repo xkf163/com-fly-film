@@ -70,8 +70,8 @@
         if (form.find('[name="deleted"]').length == 0) {
             form.prepend("<input type='hidden' name='deleted' value='0'>");
         }
-        if (form.find(':hidden[name="createDateTime"]').length == 0) {
-            form.prepend('<input type="hidden" name="createDateTime" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">');
+        if (form.find(':hidden[name="createDate"]').length == 0) {
+            form.prepend('<input type="hidden" name="createDate" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">');
         }
         if (form.find(':hidden[name="version"]').length == 0) {
             form.prepend("<input type='hidden' name='version'>");
@@ -326,8 +326,10 @@
         var form = this.$element;
         if (form.length == 0)
             return;
+        console.log(form);
         form.find('input[name], select[name], textarea[name], label[name]').not(":file").each(function (ind, elem) {
             var obj = $(elem), el_name = obj.attr('name'), value;
+            console.log(el_name);
             try {
                 value = eval('json_data.' + el_name);
             } catch (e) {
@@ -337,6 +339,8 @@
                 var is_radio = elem.type == 'radio', is_ckbox = elem.type == 'checkbox';
                 var is_date = $(elem).data("flag") == "datepicker" || $(elem).data("flag") == "date" || $(elem).data("flag") == "datetimepicker";
                 var date_format = $(elem).data("format") || "yyyy-mm-dd";
+                console.log(value);
+                console.log(date_format);
                 if (is_date)
                     value = formatDate(value, date_format);
                 if (is_radio) {

@@ -35,4 +35,11 @@ public class MediaController {
         return "views/media/unlink";
     }
 
+
+    @GetMapping(value = "/edit")
+    private String edit(String id, HttpServletRequest request) {
+        request.setAttribute("id", id);
+        return "views/media/edit";
+    }
+
 }

@@ -21,4 +21,8 @@ public class FilmController {
         request.setAttribute("dataUrl", "api/film/all");
         return "views/film/list";
     }
+
+
+
+
 }

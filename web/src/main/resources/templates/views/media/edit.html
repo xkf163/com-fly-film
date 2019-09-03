@@ -1,0 +1,159 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">新增编辑Media</h5>
+</div>
+
+<div class="modal-body">
+
+    <form id="media-form" name="media-form" class="form-horizontal">
+        <input type="hidden" name="id">
+        <input type="hidden" name="version">
+        <input type="hidden" name="deleted">
+
+        <div class="box-body">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="nameChn" class="col-sm-3 control-label">片名（中）</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="nameChn" name="nameChn" placeholder="片名（中）">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="nameEng" class="col-sm-3 control-label">片名（英）</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="nameEng" name="nameEng" placeholder="片名（中）">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="diskNo" class="col-sm-3 control-label">盘符</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="diskNo" name="diskNo" placeholder="盘符">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="diskName" class="col-sm-3 control-label">盘名</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="diskName" name="diskName" placeholder="盘名">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="fullPath" class="col-sm-1 control-label">全路径</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="fullPath" name="fullPath" placeholder="全路径">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- /.box-body -->
+        <div class="box-footer text-right">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+
+</div>
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+    var id="${id?default(0)}";
+    $(function() {
+        //初始化控件
+        form=$("#media-form").form();
+        //数据校验
+        $("#media-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    ajaxPost(basePath+'/media/save', params, function(data, status) {
+                        if(data.success){
+                            if(id!="0"){//更新
+                                modals.hideWin(winId);
+                                userTable.reloadRowData(id);
+                            }else{//新增
+                                //modals.info("数据保存成功");
+                                modals.hideWin(winId);
+                                userTable.reloadData();
+                            }
+                        }
+                    });
+                });
+            },
+            fields : {
+                name : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入姓名'
+                        }
+                    }
+                },
+                sex : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择性别'
+                        }
+                    }
+                },
+                birthday : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入出生日期'
+                        },
+                        date : {
+                            format : $(this).data("format"),
+                            message : '请输入有效日期'
+                        }
+                    }
+                },
+                loginName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入登录名'
+                        }
+                    }
+                },
+                email:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入邮件',
+                        },
+                        emailAddress:{
+                            message:'非法的邮件格式',
+                        }
+
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        //回填id
+        if(id!="0"){
+            ajaxPost(basePath+"/api/media/get",{id:id},function(data){
+                console.log("-----------")
+                console.log(data);
+                form.initFormData(data);
+            })
+        }
+    });
+
+
+    function resetForm(){
+        form.clearForm();
+        $("#media-form").data('bootstrapValidator').resetForm();
+    }
+</script>
