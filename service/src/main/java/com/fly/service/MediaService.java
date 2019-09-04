@@ -18,5 +18,6 @@ public interface MediaService {
 
     Media findOne(Long id);
 
+    void save(Media media);
 
 }

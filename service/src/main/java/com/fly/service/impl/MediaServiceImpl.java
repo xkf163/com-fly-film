@@ -214,6 +214,12 @@ public class MediaServiceImpl implements MediaService {
     }
 
 
+    @Override
+    public void save(Media media){
+        mediaRepository.save(media);
+    }
+
+
     public static boolean isNumeric(String str) {
         String bigStr;
         try {

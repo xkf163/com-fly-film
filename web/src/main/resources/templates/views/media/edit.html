@@ -12,6 +12,36 @@
 
         <div class="box-body">
             <div class="row">
+                <div class="form-group">
+                    <label for="name" class="col-sm-1 control-label">文件（夹）名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="名称">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="fullPath" class="col-sm-1 control-label">全路径</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="fullPath" name="fullPath" placeholder="全路径">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="year" class="col-sm-3 control-label">年代</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="year" name="year" placeholder="年代">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="film.id" class="col-sm-3 control-label">关联的Film</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="film.id" name="film.id" placeholder="关联的Film的Id">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="form-group col-md-6">
                     <label for="nameChn" class="col-sm-3 control-label">片名（中）</label>
                     <div class="col-sm-8">
@@ -25,7 +55,16 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="pcName" class="col-sm-3 control-label">PC名</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="pcName" name="pcName" placeholder="PC名">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                </div>
+            </div>
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="diskNo" class="col-sm-3 control-label">盘符</label>
@@ -40,11 +79,47 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
-                <div class="form-group">
-                    <label for="fullPath" class="col-sm-1 control-label">全路径</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="fullPath" name="fullPath" placeholder="全路径">
+                <div class="form-group col-md-6">
+                    <label for="mediaSizeGB" class="col-sm-3 control-label">占用磁盘空间（GB）</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="mediaSizeGB" name="mediaSizeGB" placeholder="占用磁盘空间（单位GB）">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="mediaSize" class="col-sm-3 control-label">占用磁盘空间（字节）</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="mediaSize" name="mediaSize" >
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="gatherDate" class="col-sm-3 control-label">资源下载时间</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control"  data-flag="date"  data-format="yyyy-mm-dd hh:ii:ss" id="gatherDate" name="gatherDate" placeholder="资源下载时间">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="modifiedDate" class="col-sm-3 control-label">资源修改时间</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control"  data-flag="date"  data-format="yyyy-mm-dd hh:ii:ss" id="modifiedDate" name="modifiedDate" placeholder="资源修改时间">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="whetherFolder" class="col-sm-3 control-label">是文件夹?</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="whetherFolder" name="whetherFolder" placeholder="是文件夹?<">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="whetherAlive" class="col-sm-3 control-label">路径是否存在?</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="whetherAlive" name="whetherAlive" placeholder="路径是否存在?">
                     </div>
                 </div>
             </div>
@@ -80,7 +155,7 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    ajaxPost(basePath+'/media/save', params, function(data, status) {
+                    ajaxPost(basePath+'/api/media/save', params, function(data, status) {
                         if(data.success){
                             if(id!="0"){//更新
                                 modals.hideWin(winId);

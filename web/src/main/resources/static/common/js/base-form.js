@@ -73,9 +73,7 @@
         if (form.find(':hidden[name="createDate"]').length == 0) {
             form.prepend('<input type="hidden" name="createDate" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">');
         }
-        if (form.find(':hidden[name="version"]').length == 0) {
-            form.prepend("<input type='hidden' name='version'>");
-        }
+
         if (form.find(':hidden[name="id"]').length == 0) {
             form.prepend("<input type='hidden' id='id' name='id'>");
         }
@@ -130,7 +128,7 @@
         var form = this.$element;
         if (form.find(this.datetimepickerElement).length > 0) {
             form.find(this.datetimepickerElement).datetimepicker({
-                format: $(this).data("format") ? $(this).data("format") : "yyyy-mm-dd hh:ii",
+                format: $(this).data("format") ? $(this).data("format") : "yyyy-mm-dd hh:ii:ss",
                 autoclose: true,
                 clearBtn: true,
                 language: 'zh-CN'
@@ -282,6 +280,7 @@
         // 设置datas属性 初始化为空对象，或空字符串
         elems.each(function (ind, elem) {
             var el_name = elem.name;
+            console.log(el_name);
             if (!el_name)
                 return;
             var assembly = function (name) {
