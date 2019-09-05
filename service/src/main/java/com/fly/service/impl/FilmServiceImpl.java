@@ -68,8 +68,6 @@ public class FilmServiceImpl implements FilmService {
         String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
         Sort sort = null;
         if (!StrUtil.isEmpty(sortInfo)) {
-            System.out.println("------------sortInfo--------------");
-            System.out.println(sortInfo);
             //判断排序类型及排序字段
             String[] sortArray = sortInfo.split(" ");
             System.out.println(sortArray);
@@ -77,7 +75,6 @@ public class FilmServiceImpl implements FilmService {
         }
 
         //4)dsl动态查询
-        System.out.println("----------------------------查询条件");
         List<Map<String, Object>> conditions = queryCondition.getConditions();
         String subjectMain = null;
         Short year = null;

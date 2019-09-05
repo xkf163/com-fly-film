@@ -306,7 +306,7 @@
             }
             if (value) {
                 if (typeof value == "string")
-                    value = value.replaceAll("\n", "\\n").replaceAll("\r", "\\r").replaceAll('\"', '\\"').replaceAll("\\\\", "\\\\\\\\");
+                    value = value.replaceAll("\\\\", "\\\\").replaceAll("\n", "\\n").replaceAll("\r", "\\r").replaceAll('\"', '\\"');
                 eval('datas.' + el_name + '="' + (is_ckbox ? (old_val ? (old_val + ',') : '') : '') + value + '"');
             }
         });

@@ -143,8 +143,10 @@
         <!-- /.box-body -->
         <div class="box-footer text-right">
             <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="saveToProcess">修改待确认</button>
             <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
-            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">保存</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="saveToFinish">保存并完成</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -154,6 +156,7 @@
     //tableId,queryId,conditionContainer
     var form =null;
     var id="${id?default(0)}";
+    var winId = "mediaWin";
     $(function() {
         //初始化控件
         form=$("#media-form").form();
@@ -166,19 +169,20 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function(validator, userform, submitButton) {
-                modals.confirm('确认保存？', function() {
+                modals.confirm('确认继续？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
                     var filmId = $("#filmId").val();
-                    ajaxPost(basePath+'/api/media/save?filmId='+filmId, params, function(data, status) {
-                        if(data.success){
+                    var submitType = $(submitButton).attr("data-btn-type");
+                    ajaxPost(basePath+'/api/media/'+submitType+'?filmId='+filmId, params, function(data, status) {
+                        if(data.msg == "success"){
                             if(id!="0"){//更新
                                 modals.hideWin(winId);
-                                userTable.reloadRowData(id);
+                                mediaTable.reloadRowData(id);
                             }else{//新增
                                 //modals.info("数据保存成功");
                                 modals.hideWin(winId);
-                                userTable.reloadData();
+                                mediaTable.reloadData();
                             }
                         }
                     });

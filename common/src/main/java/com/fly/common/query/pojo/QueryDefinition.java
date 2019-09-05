@@ -86,8 +86,7 @@ public class QueryDefinition implements ServletContextListener {
 
         // TODO 正式发布时，请注释该行代码
         //instance.update();
-        System.out.println("-----getQueryById.querys-------");
-        System.out.println(querys);
+
         return (Query) querys.get(queryId);
     }
 

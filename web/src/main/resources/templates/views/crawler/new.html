@@ -95,6 +95,7 @@
                 modals.confirm('确认开始？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
+                    console.log(params);
                     ajaxPost(basePath+'/crawler/start', params, function(data, status) {
                         if(data.success){
                             if(id!="0"){//更新

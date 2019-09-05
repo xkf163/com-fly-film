@@ -42,6 +42,11 @@ public class MediaController {
         return "views/media/edit";
     }
 
+    @GetMapping(value = "/deleted/2")
+    public String mediaInProcess(HttpServletRequest request) {
+        request.setAttribute("dataUrl", "api/media/deleted/2");
+        return "views/media/list";
+    }
 
 
 }

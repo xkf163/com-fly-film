@@ -1,6 +1,7 @@
 package com.fly.web.restcontroller;
 
 
+import com.fly.common.base.pojo.ResultBean;
 import com.fly.common.utils.EncryptUtil;
 import com.fly.common.utils.StrUtil;
 import com.fly.dao.FilmRepository;
@@ -47,6 +48,12 @@ public class RestMediaController {
     }
 
 
+    @PostMapping(value = "/deleted/2")
+    public Map<String, Object> mediaInProcess(String reqObj) throws Exception {
+        return mediaService.findByDeleted(reqObj);
+    }
+
+
     @PostMapping(value = "/get")
     private Media getMedia(String id) {
         return mediaService.findOne(Long.parseLong(id));
@@ -60,7 +67,7 @@ public class RestMediaController {
      * @return
      */
     @PostMapping(value = "/save")
-    private Media saveMedia(Media media, @RequestParam(name = "filmId", required = false ,defaultValue = "0" ) Long filmId) {
+    private ResultBean<Media> saveMedia(Media media, @RequestParam(name = "filmId", required = false ,defaultValue = "0" ) Long filmId) {
 
         Film film = null;
         if (filmId > 0){
@@ -70,8 +77,53 @@ public class RestMediaController {
         media.setUpdateDate(new Date());
         mediaService.save(media);
 
-        return mediaService.findOne(media.getId());
+        return new ResultBean<>(media);
     }
 
+
+    /**
+     *
+     * @param media
+     * @param filmId 关联的Film对象
+     * @return
+     */
+    @PostMapping(value = "/saveToProcess")
+    private ResultBean<Media> saveMediaToProcess(Media media, @RequestParam(name = "filmId", required = false ,defaultValue = "0" ) Long filmId) {
+        Film film = null;
+        if (filmId > 0){
+            film = filmService.findOne(filmId);
+        }
+        media.setFilm(film);
+        media.setUpdateDate(new Date());
+
+        //2表示更改待更改完成状态（需要确认后再变回0状态），1表示删除状态，0表示正常状态，
+        media.setDeleted(2);
+        mediaService.save(media);
+
+        return new ResultBean<>(media);
+    }
+
+
+
+    /**
+     *
+     * @param media
+     * @param filmId 关联的Film对象
+     * @return
+     */
+    @PostMapping(value = "/saveToFinish")
+    private ResultBean<Media> saveMediaToFinish(Media media, @RequestParam(name = "filmId", required = false ,defaultValue = "0" ) Long filmId) {
+        Film film = null;
+        if (filmId > 0){
+            film = filmService.findOne(filmId);
+        }
+        media.setFilm(film);
+        media.setUpdateDate(new Date());
+
+        //2表示更改待更改完成状态（需要确认后再变回0状态），1表示删除状态，0表示正常状态，
+        media.setDeleted(0);
+        mediaService.save(media);
+        return new ResultBean<>(media);
+    }
 
 }

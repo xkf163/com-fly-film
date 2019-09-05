@@ -56,6 +56,8 @@ public class CrawlerServiceImpl implements CrawlerService {
         if(dbFilmDouBanNoList.contains(tempString)){
             System.out.println("--->!!! Film 豆瓣编号"+tempString+"在数据库已存在，不加入保存队列。");
             return null; //数据库已存在该Film则返回空
+        }else{
+            dbFilmDouBanNoList.add(tempString);
         }
 
         //2)集数<span class="pl">集数:</span><br>
@@ -199,6 +201,8 @@ public class CrawlerServiceImpl implements CrawlerService {
         if(dbPersonDouBanNoList.contains(p.getDouBanNo())) {
             System.out.println("--->!!!Person豆瓣编号"+p.getDouBanNo()+"在数据库已存在，不加入保存队列");
             return null; //数据库已存在该Film则返回空
+        }else {
+            dbPersonDouBanNoList.add(p.getDouBanNo());
         }
 
         //2)姓名
