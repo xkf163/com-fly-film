@@ -197,6 +197,7 @@ function ajaxPost(url, params, callback) {
         url: url,
         data: params,
         dataType: 'json',
+        traditional:true,
         headers: headers,
         //contentType : 'application/json',
         success: function (data, status) {

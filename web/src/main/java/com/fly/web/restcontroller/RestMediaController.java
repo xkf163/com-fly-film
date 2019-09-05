@@ -53,12 +53,23 @@ public class RestMediaController {
     }
 
 
+    /**
+     *
+     * @param media
+     * @param filmId 关联的Film对象
+     * @return
+     */
     @PostMapping(value = "/save")
-    private Media saveMedia(Media media) {
-        System.out.println("---------------------------------");
-        System.out.println(media.getFilm().getId());
+    private Media saveMedia(Media media, @RequestParam(name = "filmId", required = false ,defaultValue = "0" ) Long filmId) {
+
+        Film film = null;
+        if (filmId > 0){
+            film = filmService.findOne(filmId);
+        }
+        media.setFilm(film);
         media.setUpdateDate(new Date());
         mediaService.save(media);
+
         return mediaService.findOne(media.getId());
     }
 

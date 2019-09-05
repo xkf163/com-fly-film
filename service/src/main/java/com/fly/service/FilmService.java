@@ -20,4 +20,6 @@ public interface FilmService {
     void save(Film film);
 
     List<String> findAllDouBanNo();
+
+    Film findOne(Long id);
 }

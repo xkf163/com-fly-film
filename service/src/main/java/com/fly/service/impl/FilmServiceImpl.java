@@ -159,11 +159,14 @@ public class FilmServiceImpl implements FilmService {
 
     }
 
-
+    @Override
+    public Film findOne(Long id) {
+        return filmRepository.findOne(id);
+    }
 
     /*
-        是否未数字
-         */
+            是否未数字
+             */
     public static boolean isNumeric(String str) {
         String bigStr;
         try {

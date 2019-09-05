@@ -70,9 +70,9 @@
         if (form.find('[name="deleted"]').length == 0) {
             form.prepend("<input type='hidden' name='deleted' value='0'>");
         }
-        if (form.find(':hidden[name="createDate"]').length == 0) {
-            form.prepend('<input type="hidden" name="createDate" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">');
-        }
+        // if (form.find(':hidden[name="createDate"]').length == 0) {
+        //     form.prepend('<input type="hidden" name="createDate" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">');
+        // }
 
         if (form.find(':hidden[name="id"]').length == 0) {
             form.prepend("<input type='hidden' id='id' name='id'>");
@@ -306,11 +306,11 @@
             }
             if (value) {
                 if (typeof value == "string")
-                    value = value.replaceAll("\n", "\\n").replaceAll("\r", "\\r").replaceAll('\"', '\\"');
+                    value = value.replaceAll("\n", "\\n").replaceAll("\r", "\\r").replaceAll('\"', '\\"').replaceAll("\\\\", "\\\\\\\\");
                 eval('datas.' + el_name + '="' + (is_ckbox ? (old_val ? (old_val + ',') : '') : '') + value + '"');
             }
         });
-        console.log("--------------------------------");
+        console.log("---------------getFormSimpleData-----------------");
         console.log(datas);
         return datas;
     }
