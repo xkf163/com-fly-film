@@ -1,0 +1,148 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">Star表单</h5>
+</div>
+
+<div class="modal-body">
+
+    <form id="star-form" name="star-form" class="form-horizontal">
+        <input type="hidden" name="id">
+        <input type="hidden" name="deleted">
+        <input type="hidden" name="name">
+
+        <div class="box-body">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="nameExtend" class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="nameExtend" name="nameExtend" placeholder="姓名">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="douBanNo" class="col-sm-3 control-label">豆瓣编号</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="douBanNo" name="douBanNo" placeholder="豆瓣编号">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+
+                <div class="form-group col-md-6">
+                    <label for="personId" class="col-sm-3 control-label">关联的Person</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="personId"  placeholder="关联的Person的Id" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="asDirector" class="col-sm-3 control-label">导演作品</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="asDirector" name="asDirector" placeholder="导演作品">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="asDirectorNumber" class="col-sm-3 control-label">导演作品数</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="asDirectorNumber" name="asDirectorNumber" placeholder="导演作品数量">
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="asActor" class="col-sm-3 control-label">演绎作品</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="asActor" name="asActor" placeholder="演绎作品">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="asActorNumber" class="col-sm-3 control-label">演绎作品数</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="asActorNumber" name="asActorNumber" placeholder="演绎作品数量">
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="asWriter" class="col-sm-3 control-label">编剧作品</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="asWriter" name="asWriter" placeholder="编辑作品">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="asWriterNumber" class="col-sm-3 control-label">编剧作品数</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="asWriterNumber" name="asWriterNumber" placeholder="编辑作品数" readonly>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="createDate" class="col-sm-3 control-label">条目创建时间</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control"  data-flag="date"  data-format="yyyy-mm-dd hh:ii:ss" id="createDate" name="createDate" placeholder="条目创建时间" readonly>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="updateDate" class="col-sm-3 control-label">条目更新时间</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control"  data-flag="date"  data-format="yyyy-mm-dd hh:ii:ss" id="updateDate" name="updateDate" placeholder="条目更新时间" readonly>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- /.box-body -->
+        <div class="box-footer text-right">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="saveToProcess">修改待确认</button>
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">保存</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="saveToFinish">确认并完成</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+
+</div>
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+    var id="${id?default(0)}";
+    var winId = "starWin";
+
+
+
+    $(function() {
+        //初始化控件
+        form=$("#star-form").form();
+
+        form.initComponent();
+        //回填id
+        if(id!="0"){
+            ajaxPost(basePath+"/api/star/get",{id:id},function(data){
+                form.initFormData(data);
+                var personId  = eval('data.person.id');
+                $("#personId").val(personId);
+            })
+        }
+
+    });
+
+
+    function resetForm(){
+        form.clearForm();
+        $("#star-form").data('bootstrapValidator').resetForm();
+    }
+</script>

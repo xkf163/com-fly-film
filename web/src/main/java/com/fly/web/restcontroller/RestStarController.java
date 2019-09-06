@@ -1,5 +1,6 @@
 package com.fly.web.restcontroller;
 
+import com.fly.entity.Star;
 import com.fly.service.StarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,19 @@ public class RestStarController {
 
     @Autowired
     StarService starService;
-    @PostMapping(value = "/all")
 
+
+    @PostMapping(value = "/all")
     public Map<String, Object> personAll(String reqObj) throws Exception {
         return starService.findAll(reqObj);
     }
+
+
+    @PostMapping(value = "/get")
+    private Star getStar(String id) {
+        return starService.findOne(Long.parseLong(id));
+    }
+
+
 
 }

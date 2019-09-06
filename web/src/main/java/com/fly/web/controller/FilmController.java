@@ -22,7 +22,11 @@ public class FilmController {
         return "views/film/list";
     }
 
-
+    @GetMapping(value = "/edit")
+    private String filmEdit(String id, HttpServletRequest request) {
+        request.setAttribute("id", id);
+        return "views/film/film_edit";
+    }
 
 
 }

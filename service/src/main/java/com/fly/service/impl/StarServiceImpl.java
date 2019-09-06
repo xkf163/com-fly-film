@@ -91,6 +91,11 @@ public class StarServiceImpl implements StarService {
     }
 
     @Override
+    public Star findOne(Long id) {
+        return starRepository.findOne(id);
+    }
+
+    @Override
     public Star findByDouBanNo(String douBanNo) {
         return starRepository.findByDouBanNo(douBanNo);
     }

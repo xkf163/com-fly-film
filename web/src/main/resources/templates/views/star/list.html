@@ -1,6 +1,6 @@
 
 <div class="page-content" >
-    <h5 class="pull-left">用户列表</h5>
+    <h5 class="pull-left">影人列表</h5>
     <div class="dataTables_filter" id="searchDiv">
         <input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true"/>
         <div class="btn-group">
@@ -25,11 +25,11 @@
 
 <script>
     //tableId,queryId,conditionContainer
-    var userTable;
+    var starTable;
     var dataUrl ="${dataUrl}";
     $(function() {
         //init table and fill data
-        userTable = new CommonTable("star_list", dataUrl, "searchDiv");
+        starTable = new CommonTable("star_list", dataUrl, "searchDiv");
     });
 
 </script>

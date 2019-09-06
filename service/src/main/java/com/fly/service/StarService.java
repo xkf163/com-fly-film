@@ -19,4 +19,6 @@ public interface StarService {
     Star findByDouBanNo(String douBanNo);
 
     Star save(Star star);
+
+    Star findOne(Long id);
 }

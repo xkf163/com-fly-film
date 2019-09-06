@@ -19,4 +19,12 @@ public class StarController {
         request.setAttribute("dataUrl", "api/star/all");
         return "views/star/list";
     }
+
+
+    @GetMapping(value = "/edit")
+    private String starEdit(String id, HttpServletRequest request) {
+        request.setAttribute("id", id);
+        return "views/star/star_edit";
+    }
+
 }

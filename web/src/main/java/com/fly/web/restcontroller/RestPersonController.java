@@ -1,5 +1,7 @@
 package com.fly.web.restcontroller;
 
+import com.fly.entity.Media;
+import com.fly.entity.Person;
 import com.fly.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,12 @@ public class RestPersonController {
     @PostMapping(value = "/all")
     public Map<String, Object> personAll(String reqObj) throws Exception {
         return personService.findAll(reqObj);
+    }
+
+
+    @PostMapping(value = "/get")
+    private Person getPerson(String id) {
+        return personService.findOne(Long.parseLong(id));
     }
 
 

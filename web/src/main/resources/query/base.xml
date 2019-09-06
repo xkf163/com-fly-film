@@ -36,20 +36,21 @@
 		   pageSize="20"  widthType="px" order="createDate asc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameExtend" header="姓名中英" width="200"  operator="like"  align="left" />
-		<column key="birthDay" header="生日" width="60"  operator="eq"  allowSort="true"/>
+		<column key="nameExtend" header="姓名" width="200"  operator="like"  align="left" />
 		<column key="birthPlace" header="出生地" width="40"   align="left"  operator="like"  allowSort="true"/>
+		<column key="birthDay" header="生日" width="60"  operator="like"  allowSort="true"/>
 		<column key="job" header="职业" operator="like" width="80"   align="left" allowSort="true"/>
 		<column key="createDate" header="爬取时间" operator="like" width="50" allowSort="true" />
 	</query>
 
 	<!-- Star -->
 	<query id="star_list" key="id" tableName="人物列表" className="com.fly.entity.Star"
-		   pageSize="20"  widthType="px" order="id asc">
+		   pageSize="20"  widthType="px" order="asActorNumber asc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="name" header="姓名" width="120"  operator="like"  align="left" />
-		<column key="nameExtend" header="姓名全" width="200"  operator="like"  align="left" />
+		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left" />
+		<column key="person.birthPlace" header="出生地" width="100"   align="left"  operator="like"  allowSort="true" />
+		<column key="person.birthDay" header="出生日" width="200"  operator="like"  align="left" />
 		<column key="asDirectorNumber" header="导演作品数" width="100" align="left"  allowSort="true" />
 		<column key="asActorNumber" header="演绎作品数" align="center" width="100"  allowSort="true"/>
 		<column key="asWriterNumber" header="编剧作品数" align="center" width="100"  allowSort="true"/>

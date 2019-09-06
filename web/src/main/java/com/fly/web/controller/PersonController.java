@@ -19,4 +19,12 @@ public class PersonController {
         request.setAttribute("dataUrl", "api/person/all");
         return "views/person/list";
     }
+
+
+    @GetMapping(value = "/edit")
+    private String personEdit(String id, HttpServletRequest request) {
+        request.setAttribute("id", id);
+        return "views/person/person_edit";
+    }
+
 }
