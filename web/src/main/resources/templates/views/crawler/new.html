@@ -1,88 +1,106 @@
+<style>
+    .form-group{
+        margin-bottom: 5px !important;
+    }
+
+
+</style>
+
 <div class="page-content">
 
     <div class="page-header">
         <h1>爬虫配置 </h1>
     </div><!-- /.page-header -->
 
-    <div class="row">
-        <div class="col-xs-12">
-
-            <div class="col-xs-12 col-sm-6 col-md-4">
+    <div class="page-body">
 
 
-                <form id="crawler-form" method="crawler-form" class="form-horizontal">
-                    <div class="form-group">
-                        <label for="url">起始页面地址：(回车换行)</label>
-                        <textarea  rows = "5" class="form-control" id="url" name="url" value="https://movie.douban.com/subject/10512661/" />
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-6 col-xs-6 form-group">
-                            <label for="thread">线程数：</label>
-                            <input type="text" class="form-control" id="thread" name="thread" value="1" />
-                        </div>
-                        <div  class="col-md-6 col-xs-6 form-group pull-right">
-                            <label for="thread">批量保存临界值: </label>
-                            <input type="text" class="form-control" id="batchNumber" name="batchNumber" value="10" />
-                        </div>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="1"  id="homepage" name="homepage"> 首页进入?
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="1"  id="mutil" name="mutil"> 延伸爬取?
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="1"  id="filmOnly" name="filmOnly"> 只爬取电影?
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="1"  id="personOnly" name="personOnly"> 只爬取影人?
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="1"  id="directorEmpty" name="directorEmpty"> 导演可为空?
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="1"  id="actorEmpty" name="actorEmpty"> 演员可为空?
-                        </label>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="row">
+                        <form id="crawler-form" method="crawler-form" class="form-horizontal">
+                            <div class="form-group">
+                                <label for="url">起始页面地址：(回车换行)</label>
+                                <textarea  rows = "5" class="form-control" id="url" name="url" value="https://movie.douban.com/subject/10512661/" />
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-xs-6 form-group">
+                                    <label for="thread">线程数：</label>
+                                    <input type="text" class="form-control" id="thread" name="thread" value="1" />
+                                </div>
+                                <div  class="col-md-6 col-xs-6 form-group pull-right">
+                                    <label for="thread">批量保存临界值: </label>
+                                    <input type="text" class="form-control" id="batchNumber" name="batchNumber" value="10" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class=" col-md-6 col-xs-6 form-group">
+                                    <input type="checkbox" data-flag="icheck" class="square-grey" value="1"  id="homepage" name="homepage">&nbsp;&nbsp;首页进入?
+                                </div>
+                                <div class="col-md-6 col-xs-6 form-group pull-right">
+                                        <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="mutil" name="mutil">&nbsp;&nbsp;延伸爬取?
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class=" form-group col-md-6 col-xs-6 ">
+                                        <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="filmOnly" name="filmOnly">&nbsp;&nbsp;只爬取电影?
+                                </div>
+                                <div class=" form-group col-md-6 col-xs-6 pull-right">
+                                        <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="personOnly" name="personOnly">&nbsp;&nbsp;只爬取影人?
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group col-md-6 col-xs-6 ">
+                                        <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="directorEmpty" name="directorEmpty">&nbsp;&nbsp;导演可为空?
+                                </div>
+                                <div class="form-group col-md-6 col-xs-6  pull-right">
+                                        <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="actorEmpty" name="actorEmpty">&nbsp;&nbsp;演员可为空?
+                                </div>
+                            </div>
+                            <div class="form-group pull-right">
+                                <!--以下两种方式提交验证,根据所需选择-->
+                                <button type="submit" class="btn btn-success" data-btn-type="save">开爬</button>
+                                <button type="button" class="btn btn-danger" onclick="endCrawler();" data-btn-type="end">终止</button>
+                            </div>
+                        </form>
                     </div>
 
-                    <br>
-                        <!--以下两种方式提交验证,根据所需选择-->
-                        <button type="submit" class="btn btn-primary" data-btn-type="save">开爬</button>
-                        <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" onclick="endCrawler();" data-btn-type="end">终止</button>
-                </form>
+
+                    <div class="row">
+                        <h3 class="header smaller lighter blue">关联配置</h3>
+                        <form id="relevance-form" method="relevance-form" class="form-horizontal">
+                            <div class="form-group" style="line-height: 35px">
+                                <input type="checkbox" value="1"   data-flag="icheck" class="square-blue"   id="relevantAll" name="relevantAll">&nbsp;&nbsp;关联全部?（默认只执行未关联的Media）
+                                <button type="submit" class="btn btn-white btn-info btn-bold  pull-right"  data-btn-type="save">
+                                    <i class="ace-icon fa fa-chain bigger-120 blue"></i>
+                                    关联
+                                </button>
+                                <!--<button type="submit" class="btn btn-purple pull-right" data-btn-type="save">关联</button>-->
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-8">
+                    table
+                </div>
+
 
 
             </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-8">
-                table
-            </div>
-
-
-
-            </div>
-            </div>
+    </div>
 </div>
 
 <script>
     //tableId,queryId,conditionContainer
-    var form =null;
+    var crawlerform =null;
+    var relevanceform =null;
+    var winId = "user-win";
     var id="${id?default(0)}";
     $(function() {
         //初始化控件
-        form=$("#crawler-form").form();
+        crawlerform=$("#crawler-form").form();
         //数据校验
         $("#crawler-form").bootstrapValidator({
             message : '请输入有效值',
@@ -94,13 +112,13 @@
             submitHandler : function(validator, userform, submitButton) {
                 modals.confirm('确认开始？', function() {
                     //Save Data，对应'submit-提交'
-                    var params = form.getFormSimpleData();
-                    console.log(params);
+                    var params = crawlerform.getFormSimpleData();
                     ajaxPost(basePath+'/crawler/start', params, function(data, status) {
-                        if(data.success){
+                        if(data.msg == "success"){
                             if(id!="0"){//更新
                                 modals.hideWin(winId);
                                 //seriesTable.reloadRowData(id);
+
                             }else{//新增
                                 //modals.info("数据保存成功");
                                 modals.hideWin(winId);
@@ -111,6 +129,48 @@
                 });
             }
         });
+        crawlerform.initComponent();
+
+        //初始化控件
+        relevanceform=$("#relevance-form").form();
+        //数据校验
+        $("#relevance-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认开始关联？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = relevanceform.getFormSimpleData();
+                    $.ajaxSetup({
+                        async: true
+                    });
+                    ajaxPost(basePath+'/relevance/start', params, function(data, status) {
+                        if(data.msg == "success"){
+                            if(id!="0"){//更新
+                                modals.hideWin(winId);
+                                //seriesTable.reloadRowData(id);
+
+                            }else{//新增
+                                //modals.info("数据保存成功");
+                                modals.hideWin(winId);
+                                // seriesTable.reloadData();
+                                $("#url").val(data.data);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+        relevanceform.initComponent();
+
+
+
+
+
 
     });
 

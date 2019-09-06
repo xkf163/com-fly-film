@@ -209,7 +209,7 @@ public class MediaServiceImpl implements MediaService {
 
 
     @Override
-    public Map<String, Object> findByDeleted(String reqObj) throws Exception {
+    public Map<String, Object> findByDeleted(String reqObj,Integer deleted) throws Exception {
 
         //用于接收返回数据(配置、分页、数据)
         Map<String, Object> map = new HashMap<>();
@@ -240,7 +240,7 @@ public class MediaServiceImpl implements MediaService {
 
         QMedia media = QMedia.media;
         //再次搜索：带分页
-        Predicate predicate = media.deleted.eq(2);
+        Predicate predicate = media.deleted.eq(deleted);
 
         Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);
         List<Column> columnCarrier = query.getColumnList();

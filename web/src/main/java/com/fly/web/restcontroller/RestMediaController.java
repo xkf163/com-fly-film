@@ -48,11 +48,12 @@ public class RestMediaController {
     }
 
 
-    @PostMapping(value = "/deleted/2")
-    public Map<String, Object> mediaInProcess(String reqObj) throws Exception {
-        return mediaService.findByDeleted(reqObj);
-    }
 
+
+    @PostMapping(value = "/deleted/{deleted}")
+    public Map<String, Object> mediaInTrash(String reqObj,@PathVariable Integer deleted) throws Exception {
+        return mediaService.findByDeleted(reqObj,deleted);
+    }
 
     @PostMapping(value = "/get")
     private Media getMedia(String id) {

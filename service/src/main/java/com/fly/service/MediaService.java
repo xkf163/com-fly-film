@@ -16,7 +16,7 @@ public interface MediaService {
 
     Map<String, Object> findUnlink(String reqObj) throws Exception;
 
-    Map<String, Object> findByDeleted(String reqObj) throws Exception ;
+    Map<String, Object> findByDeleted(String reqObj,Integer deleted) throws Exception ;
 
     Media findOne(Long id);
 

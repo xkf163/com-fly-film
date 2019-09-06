@@ -163,6 +163,7 @@ public class DouBanProcessor implements PageProcessor {
                 //1)把页面中的相关人物URL加入到爬取队列中
                 crawlerService.addTargetRequests(page, "div.subject.clearfix" , URL_PERSON,"/celebrity/(\\d+)/" , dbPersonDouBanNoList , "csspath", "Person");
             }else{
+                System.out.println("--->!!! Film Skip");
                 page.setSkip(true);
             }
 
@@ -217,7 +218,7 @@ public class DouBanProcessor implements PageProcessor {
             //crawlerService.addTargetRequests(page, "//*[@id=\"wrapper\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath");
 
         }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
-            //System.out.println(page.getHtml());
+            System.out.println("---------入口：豆瓣首页----------");
             crawlerService.addTargetRequests(page, "//*[@id=\"content\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath", "Film");
 
             //3)入口是豆瓣主页

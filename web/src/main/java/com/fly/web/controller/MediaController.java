@@ -2,6 +2,7 @@ package com.fly.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,11 +43,10 @@ public class MediaController {
         return "views/media/edit";
     }
 
-    @GetMapping(value = "/deleted/2")
-    public String mediaInProcess(HttpServletRequest request) {
-        request.setAttribute("dataUrl", "api/media/deleted/2");
+    @GetMapping(value = "/deleted/{deleted}")
+    public String mediaInProcess(HttpServletRequest request,@PathVariable Integer deleted) {
+        request.setAttribute("dataUrl", "api/media/deleted/"+deleted);
         return "views/media/list";
     }
-
 
 }

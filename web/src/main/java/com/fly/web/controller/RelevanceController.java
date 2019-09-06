@@ -1,5 +1,6 @@
 package com.fly.web.controller;
 
+import com.fly.common.base.pojo.ResultBean;
 import com.fly.crawler.entity.Crawler;
 import com.fly.pojo.Relevance;
 import com.fly.service.RelevanceService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 
 
 @Controller
@@ -28,8 +30,8 @@ public class RelevanceController {
 
     @PostMapping(value = "/start")
     @ResponseBody
-    public void relevantStart(Relevance relevance) {
-        relevanceService.relevantFilmForMedia(relevance);
+    public ResultBean<String> relevantStart(Relevance relevance) {
+        return relevanceService.relevantFilmForMedia(relevance);
     }
 
 

@@ -1,5 +1,6 @@
 package com.fly.service.impl;
 
+import com.fly.common.base.pojo.ResultBean;
 import com.fly.dao.FilmRepository;
 import com.fly.dao.MediaRepository;
 import com.fly.entity.*;
@@ -41,7 +42,11 @@ public class RelevanceServiceImpl implements RelevanceService {
      */
     @Override
     @Transactional
-    public void relevantFilmForMedia(Relevance relevance) {
+    public ResultBean<String> relevantFilmForMedia(Relevance relevance) {
+
+        String personDoubanUrl;
+        String personDoubanUrlPre = "https://movie.douban.com/celebrity/";
+        List<String> personNotFindDoubanUrlList = new ArrayList<>();
 
         List<Media> filmNotFindMediaList = new ArrayList<>();
         List<Media> needUpdateMediaList = new ArrayList<>();
@@ -134,6 +139,8 @@ public class RelevanceServiceImpl implements RelevanceService {
                         Person person = personService.findByDouBanNo(douBanNo);
                         if (person == null) {
                             System.out.println("-----------Person is not find-----------" + douBanNo);
+                            personDoubanUrl = personDoubanUrlPre+ douBanNo +"/";
+                            personNotFindDoubanUrlList.add(personDoubanUrl);
                             continue;
                         }
                         Star star = new Star();
@@ -191,6 +198,8 @@ public class RelevanceServiceImpl implements RelevanceService {
                         Person person = personService.findByDouBanNo(douBanNo);
                         if (person == null) {
                             System.out.println("-----------Person is not find-----------" + douBanNo);
+                            personDoubanUrl = personDoubanUrlPre+ douBanNo +"/";
+                            personNotFindDoubanUrlList.add(personDoubanUrl);
                             continue;
                         }
                         //new
@@ -301,6 +310,10 @@ public class RelevanceServiceImpl implements RelevanceService {
         size  = starSavedList.size();
         System.out.println("------starSavedList:::"+size);
 
+
+       String[] doubanListArray = personNotFindDoubanUrlList.toArray(new String[personNotFindDoubanUrlList.size()]);
+       String doubanListString = StringUtils.join(doubanListArray,"\n");
+        return new ResultBean<>(doubanListString);
     }
 
 
