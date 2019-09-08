@@ -15,4 +15,6 @@ public class Crawler {
     String filmOnly = "0";
     String personOnly ="0";
 
+    int sleepTime = 10000;
+
 }

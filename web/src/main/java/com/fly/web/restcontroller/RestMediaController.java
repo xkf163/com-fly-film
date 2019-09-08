@@ -36,6 +36,11 @@ public class RestMediaController {
         return mediaService.findAll(reqObj);
     }
 
+    @PostMapping(value = "/list")
+    public Map<String, Object> mediaAllOfStar(String reqObj) throws Exception {
+        return mediaService.findAllOfStar(reqObj);
+    }
+
     @PostMapping(value = "/duplicate")
     public Map<String, Object> mediaDuplicate(String reqObj) throws Exception {
         return mediaService.findDuplicate(reqObj);

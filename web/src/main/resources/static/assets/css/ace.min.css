@@ -5792,7 +5792,7 @@ body.mob-safari .sidebar.sidebar-fixed {
 }
 
 .footer {
-    padding-top: 75px;
+    padding-top: 45px;
     height: 0;
     width: 0
 }
@@ -12135,10 +12135,11 @@ th {
 .table>thead>tr {
     color: #707070;
     font-weight: 400;
-    background: repeat-x #F2F2F2;
+    background: repeat-x #F8F8F8;
+    /* 190907去掉ace默认样式
     background-image: -webkit-linear-gradient(top, #F8F8F8 0, #ECECEC 100%);
     background-image: -o-linear-gradient(top, #F8F8F8 0, #ECECEC 100%);
-    background-image: linear-gradient(to bottom, #F8F8F8 0, #ECECEC 100%);
+    background-image: linear-gradient(to bottom, #F8F8F8 0, #ECECEC 100%);*/
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8', endColorstr='#ffececec', GradientType=0)
 }
 
@@ -16650,7 +16651,7 @@ div.dataTables_scrollFoot table {
 }
 
 .dataTables_wrapper .row:last-child {
-    border-bottom: 1px solid #e0e0e0;
+    /*border-bottom: 1px solid #e0e0e0;*/
 }
 
 .dataTables_wrapper .row:last-child >div {
@@ -16673,8 +16674,7 @@ div.dataTables_scrollFoot table {
 .dataTable>thead>tr>th[class*=sort]:after {
     float: right;
     display: inline;
-    content: "\f0dc";
-    font-family: FontAwesome;
+    font-family: 'Glyphicons Halflings';
     font-size: 13px;
     font-weight: 400;
     color: #555
@@ -16691,7 +16691,7 @@ div.dataTables_scrollFoot table {
 }
 
 .dataTable>thead>tr>th[class*=sorting_] {
-    color: #307ECC
+    /*color: #307ECC*/
 }
 
 .dataTable>thead>tr>th.sorting_asc,
@@ -16704,14 +16704,12 @@ div.dataTables_scrollFoot table {
 }
 
 .dataTable>thead>tr>th.sorting_desc:after {
-    content: "\f0dd";
-    top: -6px;
+    content: "\e156";
     color: #307ECC
 }
 
 .dataTable>thead>tr>th.sorting_asc:after {
-    content: "\f0de";
-    top: 4px;
+    content: "\e155";
     color: #307ECC
 }
 

@@ -20,11 +20,21 @@ public class StarController {
         return "views/star/list";
     }
 
+    @GetMapping(value = "/list")
+    private String starList( HttpServletRequest request) {
+        request.setAttribute("dataStarUrl", "api/star/all");
+        request.setAttribute("dataMediaUrl", "api/media/list");
+        return "views/star/star_list";
+    }
+
 
     @GetMapping(value = "/edit")
     private String starEdit(String id, HttpServletRequest request) {
         request.setAttribute("id", id);
         return "views/star/star_edit";
     }
+
+
+
 
 }

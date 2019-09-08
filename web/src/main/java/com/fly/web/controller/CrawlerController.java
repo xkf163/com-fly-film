@@ -65,6 +65,9 @@ public class CrawlerController {
         douBanProcessor.dbPersonDouBanNoList = personService.findAllDouBanNo();
         //批量保存临界值
         douBanProcessor.setBatchNumber(Integer.parseInt(crawler.getBatchNumber()));
+
+        douBanProcessor.getSite().setSleepTime( crawler.getSleepTime()) ;
+
         //是延伸爬
         if("1".equals(crawler.getMutil())){
             douBanProcessor.setSingleCrawler(false);

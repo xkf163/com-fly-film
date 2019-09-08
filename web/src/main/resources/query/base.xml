@@ -24,21 +24,35 @@
 		<column key="nameEng" header="片名（英）" width="150"  operator="like"  align="left" />
 		<column key="year" header="年代" width="60"  operator="eq"  allowSort="true"/>
 		<column key="diskName" header="盘名" width="40"  operator="like"  allowSort="true"/>
+		<column key="diskNo" header="盘符" width="40"  operator="like"  allowSort="true"/>
 		<column key="fullPath" header="全路径" operator="like" align="left"  allowSort="true" />
-		<column key="mediaSizeGB" header="大小(GB)" align="left" width="60"  allowSort="true"/>
+		<column key="mediaSizeGB" header="大小(GB)" align="left" width="40"  allowSort="true"/>
 		<column key="gatherDate" header="下载时间" operator="like" align="left"  width="100" allowSort="true"/>
 		<!-- <column key="whetherFolder" header="文件夹" width="30"  render="1=是,0=否" /> -->
 	</query>
 
+	<!-- Media -->
+	<query id="media_star_list" key="id" tableName="影音列表" className="com.fly.entity.Media"
+		   pageSize="20"  widthType="px" order="year asc">
+		<column key="rowIndex" header="序号" width="20" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="nameChn" header="片名(中)" width="150"  operator="like"  align="left" />
+		<column key="nameEng" header="片名（英）" width="150"  operator="like"  align="left" />
+		<column key="year" header="年代" width="60"  operator="eq"  allowSort="true"/>
+		<column key="film.doubanRating" header="豆分" width="40"  operator="eq"  allowSort="true"/>
+		<column key="mediaSizeGB" header="大小(GB)" align="left" width="40"  allowSort="true"/>
+<!--		<column key="gatherDate" header="下载时间" operator="like" align="left"  width="100" allowSort="true"/>-->
+		<!-- <column key="whetherFolder" header="文件夹" width="30"  render="1=是,0=否" /> -->
+	</query>
 
 	<!-- Person -->
 	<query id="person_list" key="id" tableName="人物列表" className="com.fly.entity.Person"
 		   pageSize="20"  widthType="px" order="createDate asc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameExtend" header="姓名" width="200"  operator="like"  align="left" />
-		<column key="birthPlace" header="出生地" width="40"   align="left"  operator="like"  allowSort="true"/>
+		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left" />
 		<column key="birthDay" header="生日" width="60"  operator="like"  allowSort="true"/>
+		<column key="birthPlace" header="出生地" width="40"   align="left"  operator="like"  allowSort="true"/>
 		<column key="job" header="职业" operator="like" width="80"   align="left" allowSort="true"/>
 		<column key="createDate" header="爬取时间" operator="like" width="50" allowSort="true" />
 	</query>
@@ -57,6 +71,21 @@
 		<column key="person.job" header="职业" align="left" width="100"  operator="like" />
 	</query>
 
+
+	<!-- Star -->
+	<query id="star_media_list" key="id" tableName="人物列表" className="com.fly.entity.Star"
+		   pageSize="20"  widthType="px" order="asActorNumber desc">
+		<column key="rowIndex" header="序号" width="20" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left" />
+		<column key="person.birthDay" header="出生日" width="100"  operator="like"  align="left"  allowSort="true" />
+<!--		<column key="person.birthPlace" header="出生地" width="100"   align="left"  operator="like"  allowSort="true" />-->
+		<column key="asDirectorNumber" header="导演数" width="30" align="center"  allowSort="true" />
+		<column key="asActorNumber" header="演绎数" align="center" width="30"  allowSort="true"/>
+		<column key="asWriterNumber" header="编剧数" align="center" width="30"  allowSort="true"/>
+
+<!--		<column key="person.job" header="职业" align="left" width="100"  operator="like" />-->
+	</query>
 
 	<!-- Series -->
 	<query id="series_list" key="id" tableName="系列列表" className="com.fly.entity.Series"

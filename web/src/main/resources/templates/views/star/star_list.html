@@ -1,0 +1,184 @@
+
+	<div class="page-content" >
+
+		<div class="page-body">
+		<div class="row">
+		
+			<!-- /.col -->
+			<div class="col-md-6" style="padding-left: 0px;padding-right: 0px;">
+				<div class="box box-primary">
+					<div >
+						<div id="starName" class="col-md-5" style="padding-left:0px; font-size: 26px;font-weight: lighter;color: #2679B5;">影人合集</div>
+						<div class="dataTables_filter col-md-7" id="searchDiv" style="margin-left: 0px;margin-right: 0px;padding-right: 0px;">
+							<input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true" />
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" 	data-btn-type="search">查询</button>
+							</div>
+						</div>
+					</div>
+					<div class="box-body">
+						<table id="star_media_list" class="table table-bordered table-hover">
+						</table>
+					</div>
+					<!-- /.box-body -->
+				</div>
+			</div>
+
+
+			<div class="col-md-6" style="padding-right: 0px;">
+				<div class="box box-primary">
+					<div class="dataTables_filter" id="searchDiv_starMedia" style="margin-left: 0px; margin-right: 0px; padding-right: 0px;">
+
+						<input type="hidden"  name="starId" value="-1" id="starId"/>
+						<input placeholder="请输入片名" name="name" class="form-control" type="search" likeOption="true" />
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" 	data-btn-type="search">查询</button>
+						</div>
+						<div class="col-md-2 pull-right"  style="padding-right: 0px;">
+							<select class="form-control" name="propName" id="propName" style="font-weight: bold;color: #2679B5;">
+								<option value="getAsDirector">导演作品</option>
+								<option value="getAsActor">演绎作品</option>
+								<option value="getAsWriter">编剧作品</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="box-body">
+					<table id="media_star_list" class="table table-bordered table-hover">
+					</table>
+				</div>
+			</div>
+
+
+		</div>
+		</div>
+	</div>
+
+	<script>
+		//tableId,queryId,conditionContainer
+		var starTable,starMediaTable;
+		var winId="starWin";
+		var dataStarUrl ="${dataStarUrl}";
+		var dataMediaUrl ="${dataMediaUrl}";
+		$(function() { 
+			//init table and fill data
+			var star_config={
+					lengthChange:false,
+					pagingType:'simple_numbers',
+					rowClick:function(row,isSelected){  
+						$("#starId").val(isSelected?row.id:"-1");
+						$("#starName").text();
+						if(isSelected)
+							$("#starName").text(row.name);
+						    //$("#searchDiv_starMedia").prepend("<h5 id='starName' class='pull-left'>【"+row.name+"】</h5>");
+						starMediaTable.reloadData();   
+					}
+			}
+			starTable = new CommonTable("star_media_list", dataStarUrl, "searchDiv",star_config);
+
+			var config={
+				lengthChange:false,
+				pagingType:'simple_numbers'
+			}
+
+			//init star film table
+			starMediaTable=new CommonTable("media_star_list",dataMediaUrl,"searchDiv_starMedia",config);
+			  
+			//默认选中第一行 
+			setTimeout(function(){starTable.selectFirstRow(true)},100);
+			//make right table button on the same row
+			 
+			//button event   
+			$('button[data-btn-type]').click(function() {
+				var action = $(this).attr('data-btn-type');
+				var rowId=starTable.getSelectedRowId();
+				switch (action) {
+				case 'add':
+                       modals.openWin({
+                       	winId:winId,
+                       	title:'新增角色',
+                       	width:'600px',
+                       	url:basePath+"/role/edit"
+                       	/*, hideFunc:function(){
+                       		modals.info("hide me");
+                       	},
+                       	showFunc:function(){
+                       		modals.info("show me");
+                       	} */
+                       });                        
+					break;
+				case 'edit':
+					if(!rowId){
+						modals.info('请选择要编辑的行');
+						return false;
+					}
+					modals.openWin({
+                       	winId:winId,
+                       	title:'编辑角色【'+starTable.getSelectedRowData().name+'】',
+                       	width:'600px',
+                       	url:basePath+"/role/edit?id="+rowId
+                       }); 
+				   break;
+				case 'delete':
+					if(!rowId){
+						modals.info('请选择要删除的行');
+						return false;
+					}
+					modals.confirm("是否要删除该行数据？",function(){
+						ajaxPost(basePath+"/role/delete/"+rowId,null,function(data){
+							if(data.success){
+								//modals.correct("已删除该数据");
+								starTable.reloadData();
+							}else{  
+								//setTimeout(function(){modals.info(data.message)},2000);
+								modals.info(data.message); 
+							}  
+						});  
+					})
+					break;					
+				case 'selectUserRole':
+					if(!rowId){
+						modals.info('请选择角色');
+						return;
+					}
+					modals.openWin({
+						winId:'userRoleWin',
+						width:1000,
+						title:'角色【'+starTable.getSelectedRowData().name+'】绑定用户',
+						url:basePath+'/userrole/select?roleId='+rowId, 
+					    hideFunc:function(){starMediaTable.reloadData();}
+					})
+					break;
+				case 'deleteUserRole':
+					var rowId_ur=starMediaTable.getSelectedRowId();
+					if(!rowId_ur){
+						modals.info("请选择要删除的用户");
+						return false;
+					}
+					modals.confirm("是否要删除该行数据",function(){
+						ajaxPost(basePath+"/userrole/delete",{ids:rowId_ur},function(data){
+							if(data.success){
+								starMediaTable.reloadData();
+							}else{ 
+								modals.info(data.message);
+							}
+						})
+					});
+					break;
+				}
+
+			});
+			//form_init();
+
+			//绑定select onchange事件
+			$("#propName").change(function(){
+				starMediaTable.table.page('first').draw(false);
+				// 执行查询的回调函数
+				if (starMediaTable.searchButton.data("callback")) {
+					eval(starMediaTable.searchButton.data("callback"));
+				}
+			})
+
+		})
+
+	</script>

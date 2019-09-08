@@ -44,17 +44,18 @@ public class RelevanceServiceImpl implements RelevanceService {
     @Transactional
     public ResultBean<String> relevantFilmForMedia(Relevance relevance) {
 
-        String personDoubanUrl;
-        String personDoubanUrlPre = "https://movie.douban.com/celebrity/";
-        List<String> personNotFindDoubanUrlList = new ArrayList<>();
 
+        String personDoubanUrl , personDoubanUrlPre = "https://movie.douban.com/celebrity/";
+        List<String> personNotFindDoubanUrlList = new ArrayList<>();
         List<Media> filmNotFindMediaList = new ArrayList<>();
         List<Media> needUpdateMediaList = new ArrayList<>();
         List<Star> needUpdateStarList = new ArrayList<>(); //需要更新的star
         List<Star> starSavedList = new ArrayList<>();
         //Map<String,String> starNeedSaveMap = new HashMap<>(); //filmId 和 star doubanNo
 
+        //前台传递的参数，是否遍历全库media
         String relevantAll = relevance.getRelevantAll();
+
         //提取所有符合条件的media条目
         QMedia qMedia = QMedia.media;
         List<Media> mediaList;
@@ -65,13 +66,15 @@ public class RelevanceServiceImpl implements RelevanceService {
             mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.eq(0).and(qMedia.film.isNull()));
         }
 
-        List<String> starDouBanNoList = starService.findAllDouBanNo();
+        //数据库中已存在的person编号
+        List<String> starDouBanNoAllList = starService.findAllDouBanNo();
 
-        System.out.println(mediaList.size());
-
+        int ind = 1;
         for(Media media : mediaList){
 
-            System.out.println("-----------media.getNameChn()------------"+media.getNameChn());
+            System.out.println("-----"+ind+"------media.getNameChn()------------"+media.getNameChn());
+            ind++;
+
             //1)为Media关联Film，并加入更新List
             Film film = null;
             film = findConnectedFilmForMedia(media);
@@ -85,7 +88,6 @@ public class RelevanceServiceImpl implements RelevanceService {
             }
             needUpdateMediaList.add(media);
 
-            System.out.println("----------film.getId()-------------"+film.getId());
 
             //2）为当前匹配到的Film中的导演和演员Person转化为Star（或更新Star）
             String filmId = String.valueOf(media.getId());
@@ -106,7 +108,7 @@ public class RelevanceServiceImpl implements RelevanceService {
             if (ddno_array != null) {
                 for (String douBanNo : ddno_array) {
                     //找star表，看是否存在，不存在则新建，存在即asdirect加上此filmid（先判断有无此filmid）
-                    if (starDouBanNoList.contains(douBanNo)) {
+                    if (starDouBanNoAllList.contains(douBanNo)) {
                         Star star = starService.findByDouBanNo(douBanNo);
                         //判断当前filmid是否已存在当前star的asdirect字段中
                         //不存在add进去，并更新number
@@ -138,9 +140,13 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //根据Person信息创建new star
                         Person person = personService.findByDouBanNo(douBanNo);
                         if (person == null) {
+
                             System.out.println("-----------Person is not find-----------" + douBanNo);
                             personDoubanUrl = personDoubanUrlPre+ douBanNo +"/";
-                            personNotFindDoubanUrlList.add(personDoubanUrl);
+                            if (!personNotFindDoubanUrlList.contains(personDoubanUrl)){
+                                personNotFindDoubanUrlList.add(personDoubanUrl);
+                            }
+
                             continue;
                         }
                         Star star = new Star();
@@ -156,7 +162,9 @@ public class RelevanceServiceImpl implements RelevanceService {
                         starService.save(star);
 
                         starSavedList.add(star);
-                        starDouBanNoList = starService.findAllDouBanNo();
+
+                        //加入，防止重复加入
+                        starDouBanNoAllList.add(douBanNo);
 
                     }
 
@@ -166,7 +174,7 @@ public class RelevanceServiceImpl implements RelevanceService {
             if (adno_array != null) {
                 for (String douBanNo : adno_array) {
 
-                    if (starDouBanNoList.contains(douBanNo)) {
+                    if (starDouBanNoAllList.contains(douBanNo)) {
                         Star star = starService.findByDouBanNo(douBanNo);
                         //判断当前filmid是否已存在当前star的asdirect字段中
                         //不存在add进去，并更新number
@@ -197,9 +205,13 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //new
                         Person person = personService.findByDouBanNo(douBanNo);
                         if (person == null) {
+
                             System.out.println("-----------Person is not find-----------" + douBanNo);
                             personDoubanUrl = personDoubanUrlPre+ douBanNo +"/";
-                            personNotFindDoubanUrlList.add(personDoubanUrl);
+                            if (!personNotFindDoubanUrlList.contains(personDoubanUrl)){
+                                personNotFindDoubanUrlList.add(personDoubanUrl);
+                            }
+
                             continue;
                         }
                         //new
@@ -215,7 +227,9 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //新建star保存
                         starService.save(star);
                         starSavedList.add(star);
-                        starDouBanNoList = starService.findAllDouBanNo();
+
+                        //加入，防止重复加入
+                        starDouBanNoAllList.add(douBanNo);
 
                     }
                 }
@@ -224,7 +238,7 @@ public class RelevanceServiceImpl implements RelevanceService {
             if (sdno_array != null) {
                 for (String douBanNo : sdno_array) {
 
-                    if (starDouBanNoList.contains(douBanNo)) {
+                    if (starDouBanNoAllList.contains(douBanNo)) {
                         Star star = starService.findByDouBanNo(douBanNo);
                         //判断当前filmid是否已存在当前star的asdirect字段中
                         //不存在add进去，并更新number
@@ -255,7 +269,13 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //new
                         Person person = personService.findByDouBanNo(douBanNo);
                         if (person == null) {
+
                             System.out.println("-----------Person is not find-----------" + douBanNo);
+                            personDoubanUrl = personDoubanUrlPre+ douBanNo +"/";
+                            if (!personNotFindDoubanUrlList.contains(personDoubanUrl)){
+                                personNotFindDoubanUrlList.add(personDoubanUrl);
+                            }
+
                             continue;
                         }
                         //new
@@ -271,7 +291,9 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //新建star保存
                         starService.save(star);
                         starSavedList.add(star);
-                        starDouBanNoList = starService.findAllDouBanNo();
+
+                        //加入，防止重复加入
+                        starDouBanNoAllList.add(douBanNo);
 
                     }
                 }
@@ -283,9 +305,11 @@ public class RelevanceServiceImpl implements RelevanceService {
         }
 
 
+        System.out.println("----------mediaAllList:::"+mediaList.size());
+
         //3 批量更新
         int size  = needUpdateMediaList.size();
-        System.out.println("------needUpdateMediaList:::"+size);
+        System.out.println("----------needUpdateMediaList:::"+size);
         for (int i=0; i<size; i++){
             Media media = needUpdateMediaList.get(i);
             entityManager.merge(media);
@@ -295,7 +319,7 @@ public class RelevanceServiceImpl implements RelevanceService {
             }
         }
         size  = needUpdateStarList.size();
-        System.out.println("-------needUpdateStarList:::"+size);
+        System.out.println("----------needUpdateStarList:::"+size);
         for (int i=0; i<size; i++){
             Star star = needUpdateStarList.get(i);
             entityManager.merge(star);
@@ -305,15 +329,17 @@ public class RelevanceServiceImpl implements RelevanceService {
             }
         }
         size  = filmNotFindMediaList.size();
-        System.out.println("------filmNotFindMediaList:::"+size);
+        System.out.println("----------filmNotFindMediaList:::"+size);
 
         size  = starSavedList.size();
-        System.out.println("------starSavedList:::"+size);
+        System.out.println("----------starSavedList:::"+size);
 
+        size  = personNotFindDoubanUrlList.size();
+        System.out.println("----------personNotFindStarList:::"+size);
 
        String[] doubanListArray = personNotFindDoubanUrlList.toArray(new String[personNotFindDoubanUrlList.size()]);
        String doubanListString = StringUtils.join(doubanListArray,"\n");
-        return new ResultBean<>(doubanListString);
+       return new ResultBean<>(doubanListString);
     }
 
 

@@ -8,11 +8,9 @@ import com.fly.common.query.entity.QueryCondition;
 import com.fly.common.query.util.QueryUtil;
 import com.fly.common.utils.StrUtil;
 import com.fly.dao.MediaRepository;
-import com.fly.entity.Film;
-import com.fly.entity.Media;
-import com.fly.entity.QFilm;
-import com.fly.entity.QMedia;
+import com.fly.entity.*;
 import com.fly.service.MediaService;
+import com.fly.service.StarService;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -28,10 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author:xukangfeng
@@ -43,6 +38,9 @@ public class MediaServiceImpl implements MediaService {
 
     @Autowired
     MediaRepository mediaRepository;
+
+    @Autowired
+    StarService starService;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -206,6 +204,91 @@ public class MediaServiceImpl implements MediaService {
 
         return map;
     }
+
+
+
+    @Override
+    public Map<String, Object> findAllOfStar(String reqObj) throws Exception {
+        //用于接收返回数据(配置、分页、数据)
+        Map<String, Object> map = new HashMap<>();
+        QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
+
+        // 分页信息
+        PageInfo pageInfo = QueryUtil.getPageInfo(queryCondition);
+        //获取Query配置
+        Query query = QueryUtil.getQuery(queryCondition);
+
+
+        int pageNum = pageInfo.getPageNum();
+        int pageSize = pageInfo.getPageSize();
+
+
+        //排序信息
+        String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
+        //String sortInfo = "gatherDate desc";
+        Sort sort = null;
+        if (!StrUtil.isEmpty(sortInfo)) {
+            //判断排序类型及排序字段
+            String[] sortArray = sortInfo.split(" ");
+            //System.out.println(sortArray);
+            sort = "asc".equals(sortArray[1]) ? new Sort(Sort.Direction.ASC, sortArray[0]) : new Sort(Sort.Direction.DESC, sortArray[0]);
+        }
+
+        Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
+
+        //4)dsl动态查询
+        List<Map<String, Object>> conditions = queryCondition.getConditions();
+        String name = null ,starId = "0", propName = null;
+        if (!"".equals(conditions.get(0).get("value"))){
+            starId = (String) conditions.get(0).get("value");
+        }
+        if (!"".equals(conditions.get(1).get("value"))){
+            name =  (String) conditions.get(1).get("value");
+        }
+        if (!"".equals(conditions.get(2).get("value"))){
+            propName =  (String) conditions.get(2).get("value");
+        }
+
+        System.out.println(starId);
+
+        Class starClass = Star.class;
+        Star star = starService.findOne(Long.valueOf(starId));
+
+        QMedia media = QMedia.media;
+        Predicate predicate = media.isNotNull().or(media.isNull());
+        String[] mediasArray = new String[]{};
+       if (star == null){
+       }else{
+
+           String medias = (String) starClass.getDeclaredMethod(propName).invoke(star);
+           System.out.println(medias);
+
+           if (medias == null){
+               predicate = media.id.stringValue().eq("-1");
+           }else{
+               mediasArray = medias.split(",");
+               //再次搜索：带分页
+               predicate = media.id.stringValue().in(Arrays.asList(mediasArray));
+           }
+
+       }
+       predicate = name == null ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(name).or(media.nameEng.like(name)));
+
+
+
+
+
+
+        Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);
+        List<Column> columnCarrier = query.getColumnList();
+
+        map.put("pageCarrier", pageCarrier);
+        map.put("columnCarrier", columnCarrier);
+
+        return map;
+    }
+
+
 
 
     @Override

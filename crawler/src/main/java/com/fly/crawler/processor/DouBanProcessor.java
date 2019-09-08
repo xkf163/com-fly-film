@@ -64,13 +64,15 @@ public class DouBanProcessor implements PageProcessor {
     //批量保存临界个数
     public int batchNumber = 10;
 
+    public static int sleepTime = 10000;
+
     @Autowired
     CrawlerService crawlerService;
 
     private Site site = Site
             .me()
-            .setSleepTime(10000)
-            .setRetryTimes(3)
+            .setSleepTime(sleepTime)
+            .setRetryTimes(1)
             .setTimeOut(6000)
             .setCharset("utf-8")
             .setDomain("movie.douban.com")
