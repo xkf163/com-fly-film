@@ -14,10 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(value = "/person")
 public class PersonController {
+
     @GetMapping(value = "/all")
     public String personAll(HttpServletRequest request) {
         request.setAttribute("dataUrl", "api/person/all");
         return "views/person/list";
+    }
+
+
+    @GetMapping(value = "/list")
+    private String personFilmList( HttpServletRequest request) {
+        request.setAttribute("dataPersonUrl", "api/person/all");
+        request.setAttribute("dataFilmUrl", "api/film/list");
+        return "views/person/person_list";
     }
 
 

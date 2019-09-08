@@ -17,6 +17,8 @@ public interface FilmService {
 
     Film findBySubjectAndDoubanNo(Film film);
 
+    Map<String, Object> filmAllOfPerson(String reqObj) throws Exception ;
+
     void save(Film film);
 
     List<String> findAllDouBanNo();

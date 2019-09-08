@@ -14,4 +14,9 @@ public class IndexController {
         return "framework";
     }
 
+    @GetMapping(value = "/dashboard")
+    public String dashboard(){
+        return "views/dashboard/dashboard";
+    }
+
 }

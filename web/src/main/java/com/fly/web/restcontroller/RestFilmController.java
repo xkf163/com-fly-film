@@ -27,6 +27,12 @@ public class RestFilmController {
         return filmService.findAll(reqObj);
     }
 
+
+    @PostMapping(value = "/list")
+    public Map<String, Object> filmAllOfPerson(String reqObj) throws Exception {
+        return filmService.filmAllOfPerson(reqObj);
+    }
+
     @PostMapping(value = "/get")
     private Film getFilm(String id) {
         return filmService.findOne(Long.parseLong(id));

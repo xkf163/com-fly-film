@@ -12,6 +12,7 @@ import com.fly.entity.*;
 import com.fly.service.FilmService;
 
 
+import com.fly.service.PersonService;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,9 @@ public class FilmServiceImpl implements FilmService {
     @PersistenceContext
     EntityManager entityManager;
 
+
+    @Autowired
+    PersonService personService;
 
     /*
     Datatables 返回所有Film列表
@@ -84,6 +89,7 @@ public class FilmServiceImpl implements FilmService {
         if (!"".equals(conditions.get(1).get("value"))){
             year = isNumeric(conditions.get(1).get("value").toString()) ?  Short.parseShort(conditions.get(1).get("value").toString()) : 9999;
         }
+
         QFilm film = QFilm.film;
         //初始化组装条件(类似where 1=1)
         Predicate predicate = film.isNotNull().or(film.isNull());
@@ -125,6 +131,82 @@ public class FilmServiceImpl implements FilmService {
             }
         }
     }
+
+
+
+
+    @Override
+    public Map<String, Object> filmAllOfPerson(String reqObj) throws Exception {
+        //用于接收返回数据(配置、分页、数据)
+        Map<String, Object> map = new HashMap<>();
+        QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
+
+        // 分页信息
+        PageInfo pageInfo = QueryUtil.getPageInfo(queryCondition);
+        //获取Query配置
+        Query query = QueryUtil.getQuery(queryCondition);
+
+        int pageNum = pageInfo.getPageNum();
+        int pageSize = pageInfo.getPageSize();
+
+        //排序信息
+        String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
+        //String sortInfo = "gatherDate desc";
+        Sort sort = null;
+        if (!StrUtil.isEmpty(sortInfo)) {
+            //判断排序类型及排序字段
+            String[] sortArray = sortInfo.split(" ");
+            //System.out.println(sortArray);
+            sort = "asc".equals(sortArray[1]) ? new Sort(Sort.Direction.ASC, sortArray[0]) : new Sort(Sort.Direction.DESC, sortArray[0]);
+        }
+
+        Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
+
+        //4)dsl动态查询
+        List<Map<String, Object>> conditions = queryCondition.getConditions();
+
+        String subjectMain = null ,personId = "0", propName = null;
+        if (!"".equals(conditions.get(0).get("value"))){
+            personId = (String) conditions.get(0).get("value");
+        }
+        if (!"".equals(conditions.get(1).get("value"))){
+            subjectMain =  (String) conditions.get(1).get("value");
+        }
+        if (!"".equals(conditions.get(2).get("value"))){
+            propName =  (String) conditions.get(2).get("value");
+        }
+
+        System.out.println(personId);
+
+        QFilm film = QFilm.film;
+
+        Person person = personService.findOne(Long.valueOf(personId));
+        Predicate predicate = film.id.stringValue().eq("-1");
+        if (person != null){
+            String personDoubanNo = person.getDouBanNo();
+            personDoubanNo = "%"+personDoubanNo+"%";
+            System.out.println(personDoubanNo);
+            System.out.println(propName);
+            if("directors".equals(propName)){
+                predicate = film.directors.like(personDoubanNo);
+            }else if("actors".equals(propName)){
+                predicate = film.actors.like(personDoubanNo);
+            }else{
+                predicate = film.screenWriter.like(personDoubanNo);
+            }
+        }
+
+        predicate = subjectMain == null ? predicate : ExpressionUtils.and(predicate,film.subjectMain.like(subjectMain));
+
+        Page<Film> pageCarrier = filmRepository.findAll(predicate , pageable);
+        List<Column> columnCarrier = query.getColumnList();
+
+        map.put("pageCarrier", pageCarrier);
+        map.put("columnCarrier", columnCarrier);
+
+        return map;
+    }
+
 
 
 

@@ -11,6 +11,8 @@ import com.fly.dao.PersonRepository;
 import com.fly.entity.*;
 import com.fly.service.PersonService;
 
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -68,8 +70,19 @@ public class PersonServiceImpl implements PersonService {
         }
 
 
+        //4)dsl动态查询
+        List<Map<String, Object>> conditions = queryCondition.getConditions();
+        String nameExtend = null;
+        if (!"".equals(conditions.get(0).get("value"))){
+            nameExtend = (String) conditions.get(0).get("value");
+        }
+
+        QPerson person = QPerson.person;
+        Predicate predicate = person.isNotNull().or(person.isNull());
+        predicate = nameExtend == null ? predicate : ExpressionUtils.and(predicate,person.nameExtend.like(nameExtend));
+
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
-        Page<Person> pageCarrier = personRepository.findAll( pageable);
+        Page<Person> pageCarrier = personRepository.findAll( predicate ,pageable);
         List<Column> columnCarrier = query.getColumnList();
 
         map.put("pageCarrier", pageCarrier);

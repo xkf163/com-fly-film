@@ -380,9 +380,9 @@
 
 				<ul class="nav nav-list">
 					<li class="active">
-						<a href="#" >
+						<a href="#" data-url="/dashboard" >
 							<i class="menu-icon fa fa-tachometer"></i>
-							<span class="menu-text"> 仓库概况</span>
+							<span class="menu-text"> 仓库总览</span>
 						</a>
 
 						<b class="arrow"></b>
@@ -553,7 +553,14 @@
 
 								<b class="arrow"></b>
 							</li>
+							<li class="">
+								<a href="#" data-url="/person/list">
+									<i class="menu-icon fa fa-caret-right"></i>
+									人物合集
+								</a>
 
+								<b class="arrow"></b>
+							</li>
 
 						</ul>
 					</li>
@@ -665,7 +672,7 @@
 		<script type="text/javascript">
             $(function(){
                 //首页默认加载
-                //loadPage("/dashboard");
+                loadPage("/dashboard");
                 $("a[data-url]").click(function(evt){
                     loadPage($(this).data("url"));
                     $("ul.nav-list li").removeClass("active");
