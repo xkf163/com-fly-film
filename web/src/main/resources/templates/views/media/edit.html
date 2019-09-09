@@ -19,9 +19,30 @@
                 </div>
             </div>
             <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="pcName" class="col-sm-3 control-label">PC名</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="pcName" name="pcName" placeholder="PC名">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="diskName" class="col-sm-3 control-label">盘名</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="diskName" name="diskName" placeholder="盘名">
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="diskNo" class="col-sm-3 control-label">盘符</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="diskNo" name="diskNo" placeholder="盘名">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="form-group">
-                    <label for="fullPath" class="col-sm-2 control-label">全路径</label>
-                    <div class="col-sm-9">
+                    <label for="fullPath" class="col-sm-1 control-label">全路径</label>
+                    <div class="col-sm-10">
                         <input type="text" class="form-control" id="fullPath" name="fullPath" placeholder="全路径">
                     </div>
                 </div>
@@ -55,26 +76,7 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label for="pcName" class="col-sm-3 control-label">PC名</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="pcName" name="pcName" placeholder="PC名">
-                    </div>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="diskNo" class="col-sm-3 control-label">盘符</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="diskNo" name="diskNo" placeholder="盘符">
-                    </div>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="diskName" class="col-sm-3 control-label">盘名</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="diskName" name="diskName" placeholder="盘名">
-                    </div>
-                </div>
-            </div>
+
 
             <div class="row">
                 <div class="form-group col-md-6">
@@ -143,6 +145,7 @@
         <!-- /.box-body -->
         <div class="box-footer text-right">
             <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-danger" data-btn-type="delete">删除</button>
             <button type="submit" class="btn btn-primary" data-btn-type="saveToProcess">修改待确认</button>
             <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
             <button type="submit" class="btn btn-primary" data-btn-type="save">保存</button>

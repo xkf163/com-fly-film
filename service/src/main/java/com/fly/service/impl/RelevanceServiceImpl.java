@@ -60,14 +60,15 @@ public class RelevanceServiceImpl implements RelevanceService {
         QMedia qMedia = QMedia.media;
         List<Media> mediaList;
         if("1".equals(relevantAll)){
-            mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.eq(0));
+            mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1));
         }else{
             //只处理未关联film的Media
-            mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.eq(0).and(qMedia.film.isNull()));
+            mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1).and(qMedia.film.isNull()));
         }
 
         //数据库中已存在的person编号
         List<String> starDouBanNoAllList = starService.findAllDouBanNo();
+
 
         int ind = 1;
         for(Media media : mediaList){
@@ -361,7 +362,7 @@ public class RelevanceServiceImpl implements RelevanceService {
         QFilm qFilm = QFilm.film;
         Predicate[] predicateArray = new Predicate[2];
         predicateArray[0] = qFilm.subject.trim().eq(media.getNameChn().trim()).and(qFilm.year.eq(media.getYear()));
-        predicateArray[1] = (qFilm.subjectOther.trim().contains(media.getNameChn().trim()).or(qFilm.subjectOther.trim().contains(media.getNameEng().trim())).or(qFilm.subjectMain.contains(media.getNameChn().trim()))).and(qFilm.year.eq(media.getYear()));
+        predicateArray[1] = (qFilm.subjectOther.trim().contains(media.getNameChn().trim()).or(qFilm.subjectOther.trim().contains(media.getNameEng().trim())).or(qFilm.subject.contains(media.getNameChn().trim()))).and(qFilm.year.eq(media.getYear()));
 
         List<Film> films = (List<Film>) filmRepository.findAll(predicateArray[0]);
         if(films.size()== 1){
@@ -384,11 +385,11 @@ public class RelevanceServiceImpl implements RelevanceService {
             }
             return f;
         }else {
+            Film f = null;
             films = (List<Film>) filmRepository.findAll(predicateArray[1]);
             if(films.size()==1){
                 return films.get(0);
             }else if(films.size()>1){
-                Film f = null;
                 for(Film film : films){
                     String nameEng = media.getNameEng();
                     String nameChn = media.getNameChn();
@@ -405,6 +406,8 @@ public class RelevanceServiceImpl implements RelevanceService {
                 }
                 return f;
             }
+
+            return f;
         }
 
 
@@ -429,7 +432,6 @@ public class RelevanceServiceImpl implements RelevanceService {
 //            }
 //        }
 
-        return null;
 
     }
 

@@ -53,8 +53,6 @@ public class RestMediaController {
     }
 
 
-
-
     @PostMapping(value = "/deleted/{deleted}")
     public Map<String, Object> mediaInTrash(String reqObj,@PathVariable Integer deleted) throws Exception {
         return mediaService.findByDeleted(reqObj,deleted);
@@ -81,6 +79,30 @@ public class RestMediaController {
         }
         media.setFilm(film);
         media.setUpdateDate(new Date());
+        mediaService.save(media);
+
+        return new ResultBean<>(media);
+    }
+
+
+
+    /**
+     *
+     * @param media
+     * @param filmId 关联的Film对象
+     * @return
+     */
+    @PostMapping(value = "/delete")
+    private ResultBean<Media> deleteMedia(Media media, @RequestParam(name = "filmId", required = false ,defaultValue = "0" ) Long filmId) {
+        Film film = null;
+        if (filmId > 0){
+            film = filmService.findOne(filmId);
+        }
+        media.setFilm(film);
+        media.setUpdateDate(new Date());
+
+        //2表示更改待更改完成状态（需要确认后再变回0状态），1表示删除状态，0表示正常状态，
+        media.setDeleted(1);
         mediaService.save(media);
 
         return new ResultBean<>(media);
@@ -131,5 +153,8 @@ public class RestMediaController {
         mediaService.save(media);
         return new ResultBean<>(media);
     }
+
+
+
 
 }

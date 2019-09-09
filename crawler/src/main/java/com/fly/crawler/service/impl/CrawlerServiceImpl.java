@@ -38,7 +38,6 @@ public class CrawlerServiceImpl implements CrawlerService {
 
 
 
-
     /*
     解析爬虫返回的页面数据，提取出film字段数据
      */

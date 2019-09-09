@@ -84,7 +84,7 @@ public class MediaServiceImpl implements MediaService {
 
         QMedia media = QMedia.media;
         //初始化组装条件(类似where 1=1)
-        Predicate predicate = media.isNotNull().or(media.isNull());
+        Predicate predicate = media.deleted.ne(1);
         //执行动态条件拼装
         predicate = nameChn == null ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(nameChn));
         predicate = year == null ? predicate : ExpressionUtils.and(predicate,media.year.eq(year));
@@ -138,7 +138,7 @@ public class MediaServiceImpl implements MediaService {
         QMedia media = QMedia.media;
         //查询语句动态准备
         List<Predicate> criteria = new ArrayList<>();
-        criteria.add(media.deleted.eq(0));
+        criteria.add(media.deleted.ne(1));
 
 
 
@@ -150,7 +150,7 @@ public class MediaServiceImpl implements MediaService {
                 .having(media.nameChn.count().gt(1))
                 .fetch();
         //再次搜索：带分页
-        Predicate predicate = media.nameChn.in(listRepeat).and(media.deleted.eq(0));
+        Predicate predicate = media.nameChn.in(listRepeat).and(media.deleted.ne(1));
 
         Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);
         List<Column> columnCarrier = query.getColumnList();
@@ -194,7 +194,7 @@ public class MediaServiceImpl implements MediaService {
 
         QMedia media = QMedia.media;
         //再次搜索：带分页
-        Predicate predicate = media.film.isNull().and(media.deleted.eq(0));
+        Predicate predicate = media.film.isNull().and(media.deleted.ne(1));
 
         Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);
         List<Column> columnCarrier = query.getColumnList();
