@@ -13,6 +13,8 @@ import com.fly.entity.QFilm;
 import com.fly.entity.QStar;
 import com.fly.entity.Star;
 import com.fly.service.StarService;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -67,8 +69,19 @@ public class StarServiceImpl implements StarService {
         }
 
 
+        //4)dsl动态查询
+        List<Map<String, Object>> conditions = queryCondition.getConditions();
+        String name = null ;
+        if (!"".equals(conditions.get(0).get("value"))){
+            name =  (String) conditions.get(0).get("value");
+        }
+
+        QStar star = QStar.star;
+        Predicate predicate = star.deleted.eq(0);
+        predicate = name == null ? predicate : ExpressionUtils.and(predicate,star.name.like(name));
+
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
-        Page<Star> pageCarrier = starRepository.findAll( pageable);
+        Page<Star> pageCarrier = starRepository.findAll(predicate , pageable);
         List<Column> columnCarrier = query.getColumnList();
 
         map.put("pageCarrier", pageCarrier);
