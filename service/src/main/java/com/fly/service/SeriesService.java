@@ -12,4 +12,5 @@ import java.util.Map;
 public interface SeriesService {
     Map<String, Object> findAll(String reqObj) throws Exception;
     void save(Series series);
+    Series findOne(Long id);
 }

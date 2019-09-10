@@ -41,6 +41,16 @@ public class RestMediaController {
         return mediaService.findAllOfStar(reqObj);
     }
 
+    @PostMapping(value = "/series")
+    public Map<String, Object> mediaAllOfSeries(String reqObj) throws Exception {
+        return mediaService.findAllOfSeries(reqObj);
+    }
+
+    @PostMapping(value = "/series/unselect")
+    public Map<String, Object> mediaAllOfSeriesUnselect(String reqObj) throws Exception {
+        return mediaService.findAllOfSeriesUnselect(reqObj);
+    }
+
     @PostMapping(value = "/duplicate")
     public Map<String, Object> mediaDuplicate(String reqObj) throws Exception {
         return mediaService.findDuplicate(reqObj);
@@ -153,6 +163,8 @@ public class RestMediaController {
         mediaService.save(media);
         return new ResultBean<>(media);
     }
+
+
 
 
 

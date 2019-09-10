@@ -49,4 +49,17 @@ public class MediaController {
         return "views/media/list";
     }
 
+    /**
+     * Media选择
+     *
+     * @return
+     */
+    @GetMapping( value = "/select")
+    private String select(String seriesId, HttpServletRequest request) {
+
+        request.setAttribute("seriesId", seriesId);
+        return "views/media/seriesmedia_select";
+    }
+
+
 }

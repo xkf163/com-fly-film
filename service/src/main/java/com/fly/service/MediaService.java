@@ -20,6 +20,10 @@ public interface MediaService {
 
     Map<String, Object> findAllOfStar(String reqObj) throws Exception ;
 
+    Map<String, Object> findAllOfSeries(String reqObj) throws Exception ;
+
+    Map<String, Object> findAllOfSeriesUnselect(String reqObj) throws Exception ;
+
     Media findOne(Long id);
 
     void save(Media media);

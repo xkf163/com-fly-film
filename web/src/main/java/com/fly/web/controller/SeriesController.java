@@ -30,8 +30,9 @@ public class SeriesController {
 
     @GetMapping(value = "/all")
     public String seriesAll(HttpServletRequest request) {
-        request.setAttribute("dataUrl", "api/series/all");
-        return "views/series/list";
+        request.setAttribute("dataSeriesUrl", "api/series/all");
+        request.setAttribute("dataMediaUrl", "api/media/series");
+        return "views/series/series_list";
     }
 
 
@@ -48,24 +49,7 @@ public class SeriesController {
 
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/save")
-    @ResponseBody
-    private Result saveUser(Series series, HttpServletRequest request) {
-        if ( StrUtil.isEmpty( String.valueOf(series.getId()) ) ) {
 
-            seriesService.save(series);
-
-        } else {
-            Series old=this.getSeries(series.getId());
-//            BeanUtils.copyProperties(user,oldUser,"password");
-//            if(!oldUser.getLoginName().equals(user.getLoginName())){
-//                oldUser.setPassword(EncryptUtil.getPassword(initPassword,user.getLoginName()));
-//            }
-//            oldUser.setUpdateDateTime(new Date());
-//            userService.update(oldUser);
-        }
-        return new Result(true);
-    }
 
 
 

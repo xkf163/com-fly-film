@@ -1,20 +1,20 @@
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
-	<h5 class="modal-title">新增系列</h5>
+	<h5 class="modal-title">Series表单</h5>
 </div>
 
 <div class="modal-body">
 
 	<form id="series-form" name="user-form" class="form-horizontal">
 		<input type="hidden" name="id">
-		<input type="hidden" name="createDate" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">
-
+		<input type="hidden" name="deleted">
+		<input type="hidden" name="createDate">
 		<div class="box-body">
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="name" class="col-sm-3 control-label">姓名</label>
+					<label for="name" class="col-sm-3 control-label">系列名</label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" id="name" name="name" placeholder="姓名">
+						<input type="text" class="form-control" id="name" name="name" placeholder="系列名">
 					</div>
 				</div>
 
@@ -33,7 +33,7 @@
 		<div class="box-footer text-right">
 			<!--以下两种方式提交验证,根据所需选择-->
 			<button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
-			<button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+			<button type="submit" class="btn btn-success" data-btn-type="save">保存</button>
 		</div>
 		<!-- /.box-footer -->
 	</form>
@@ -58,15 +58,15 @@
 				modals.confirm('确认保存？', function() {
 					//Save Data，对应'submit-提交'
 					var params = form.getFormSimpleData();
-					ajaxPost(basePath+'/series/save', params, function(data, status) {
-						if(data.success){
+					ajaxPost(basePath+'/api/series/save', params, function(data, status) {
+						if(data.msg == "success"){
 							if(id!="0"){//更新
 								modals.hideWin(winId);
-							    seriesTable.reloadRowData(id);
+								seriesTable.reloadRowData(id);
 							}else{//新增
 								 //modals.info("数据保存成功");
 								 modals.hideWin(winId);
-								 seriesTable.reloadData();
+								seriesTable.reloadData();
 							}
 						}				 
 					});
@@ -78,7 +78,7 @@
 		form.initComponent();
 		//回填id		
 		if(id!="0"){
-			ajaxPost(basePath+"/user/get",{id:id},function(data){
+			ajaxPost(basePath+"/api/series/get",{id:id},function(data){
 				form.initFormData(data);
 			})
 		} 

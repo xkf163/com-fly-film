@@ -86,6 +86,12 @@ public class SeriesServiceImpl implements SeriesService {
 
     }
 
+
+    @Override
+    public Series findOne(Long id) {
+        return seriesRepository.findOne(id);
+    }
+
     @Override
     public void save(Series series) {
         seriesRepository.save(series);
