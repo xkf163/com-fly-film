@@ -45,6 +45,24 @@ public class RestSeriesController {
     }
 
 
+    @PostMapping(value = "/update")
+    private ResultBean<Series> updateSeries(String medias, String mediasLength, String seriesId) {
 
+        if ("".equals(seriesId)){
+            return new ResultBean<>();
+        }
+
+        Series series = seriesService.findOne(Long.parseLong(seriesId));
+        if (series ==  null){
+            return new ResultBean<>();
+        }
+
+
+        series.setUpdateDate(new Date());
+        series.setAsMedias(medias);
+        series.setAsMediaNumber(Integer.parseInt(mediasLength));
+        seriesService.save(series);
+        return new ResultBean<>(series);
+    }
 
 }

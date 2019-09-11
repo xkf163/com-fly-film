@@ -134,23 +134,21 @@
 			//绑定角色到用户
 			$("#btn_add_ur").click(function(){
                 var rows=unselectedTable.getSelectedRowsData();
-                var urlist=[]; 
+                var medialist=[];
                 //console.log(JSON.stringify(rows));                 
                 if(!rows){ 
-                	modals.info("请选择要绑定该角色的用户");
+                	modals.info("请选择要绑定该系列的Media");
                 	return;
                 }
-                $.each(rows,function(index,row){                	
-                	var urObj={};
-                	var user={}; 
-                	user.id=row.id;
-                	user.version=row.version;
-                	urObj.user=user;
-                	urObj.roleId=roleId;
-                	urlist.push(urObj);
+                $.each(rows,function(index,row){
+                    medialist.push(row.id);
                 });
-                ajaxPost(basePath+"/userrole/save",{"urlist":JSON.stringify(urlist)},function(data){
-                	if(data.success){                		
+
+                var mediasLength = medialist.length;
+                var medias = medialist.join(",");
+
+                ajaxPost(basePath+"/api/series/update",{"medias":medias,"mediasLength":mediasLength,"seriesId":roleId},function(data){
+                	if(data.msg == "success"){
                 		selectedTable.reloadData();
                 		unselectedTable.reloadRowData();                		
                 	}

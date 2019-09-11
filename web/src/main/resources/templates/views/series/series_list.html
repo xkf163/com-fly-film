@@ -5,16 +5,16 @@
 		<div class="row">
 		
 			<!-- /.col -->
-			<div class="col-xs-12 col-md-6" style="padding-left: 0px;padding-right: 0px;">
+			<div class="col-xs-12 col-md-5" style="padding-left: 0px;padding-right: 0px;">
 				<div class="">
 					<div class="col-xs-12">
-						<div id="seriesName" class="col-md-5" style="padding-left:0px; font-size: 26px;font-weight: lighter;color: #2679B5;">影音系列</div>
-						<div class="dataTables_filter col-md-7" id="searchDiv" style="margin-left: 0px;margin-right: 0px;padding-right: 0px;">
-							<input placeholder="请输入系列名" name="name" class="form-control" type="search" likeOption="true" />
+						<div id="seriesName" class="col-md-4" style="padding-left:0px; font-size: 26px;font-weight: lighter;color: #2679B5;">影音系列</div>
+						<div class="dataTables_filter col-md-8" id="searchDiv" style="margin-left: 0px;margin-right: 0px;padding-right: 0px;">
+							<input placeholder="请输入系列名" name="name" class="form-control col-xs-1" type="search" likeOption="true" />
 							<div class="btn-group">
-								<button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
-								<button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
-								<button type="button" class="btn btn-default" data-btn-type="add">新增</button>
+								<button type="button" class="btn btn-primary" data-btn-type="search"><i class="fa fa-search"></i></button>
+								<button type="button" class="btn btn-default" data-btn-type="reset"><i class="fa fa-mail-reply"></i></button>
+								<button type="button" class="btn btn-default" data-btn-type="add"><i class="fa fa-plus"></i></button>
 							</div>
 						</div>
 					</div>
@@ -26,7 +26,7 @@
 				</div>
 			</div>
 
-			<div class="col-xs-12 col-md-6" style="padding-right: 0px;">
+			<div class="col-xs-12 col-md-7" style="padding-right: 0px;">
 				<div class="">
 					<div class="dataTables_filter" id="searchDiv_starMedia" style="margin-left: 0px; margin-right: 0px; padding-right: 0px;">
 
@@ -141,7 +141,7 @@
 						width:1200,
 						title:'系列【'+seriesTable.getSelectedRowData().name+'】绑定Media',
 						url:basePath+'/media/select?seriesId='+rowId,
-					    hideFunc:function(){seriesMediaTable.reloadData();}
+					    hideFunc:function(){seriesMediaTable.reloadData();seriesTable.reloadData();}
 					})
 					break;
 				case 'deleteUserRole':
