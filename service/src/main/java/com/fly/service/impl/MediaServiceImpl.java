@@ -221,7 +221,6 @@ public class MediaServiceImpl implements MediaService {
         //获取Query配置
         Query query = QueryUtil.getQuery(queryCondition);
 
-
         int pageNum = pageInfo.getPageNum();
         int pageSize = pageInfo.getPageSize();
 
@@ -237,7 +236,6 @@ public class MediaServiceImpl implements MediaService {
         }
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
-
         //4)dsl动态查询
         List<Map<String, Object>> conditions = queryCondition.getConditions();
         String name = null ,seriesId = "0";
@@ -248,8 +246,6 @@ public class MediaServiceImpl implements MediaService {
             name =  (String) conditions.get(1).get("value");
         }
 
-
-
         Series series = seriesService.findOne(Long.valueOf(seriesId));
 
         QMedia media = QMedia.media;
@@ -259,7 +255,6 @@ public class MediaServiceImpl implements MediaService {
         if (series == null){
             predicate = media.id.stringValue().eq("-1");
         }else{
-
             String medias = series.getAsMedias();
             System.out.println(medias);
             if (medias == null){
@@ -267,12 +262,10 @@ public class MediaServiceImpl implements MediaService {
             }else{
                 mediasArray = medias.split(",");
                 //再次搜索：带分页
-                predicate = media.id.stringValue().notIn(Arrays.asList(mediasArray));
+                predicate = media.id.stringValue().notIn(Arrays.asList(mediasArray)).and(media.deleted.ne(1));
             }
-
         }
         predicate = name == null ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(name).or(media.nameEng.like(name)));
-
 
         Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);
         List<Column> columnCarrier = query.getColumnList();

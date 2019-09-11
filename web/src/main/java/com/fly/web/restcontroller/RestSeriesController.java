@@ -59,8 +59,16 @@ public class RestSeriesController {
 
 
         series.setUpdateDate(new Date());
-        series.setAsMedias(medias);
-        series.setAsMediaNumber(Integer.parseInt(mediasLength));
+        if (series.getAsMedias() == null){
+            series.setAsMedias(medias);
+            series.setAsMediaNumber(Integer.parseInt(mediasLength));
+        }else {
+            medias = series.getAsMedias()+","+medias;
+            String[] a = medias.split(",");
+            series.setAsMedias(medias);
+            series.setAsMediaNumber(a.length);
+        }
+
         seriesService.save(series);
         return new ResultBean<>(series);
     }
