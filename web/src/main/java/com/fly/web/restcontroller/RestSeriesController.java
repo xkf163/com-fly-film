@@ -6,12 +6,12 @@ import com.fly.common.utils.StrUtil;
 import com.fly.entity.Media;
 import com.fly.entity.Series;
 import com.fly.service.SeriesService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -72,5 +72,42 @@ public class RestSeriesController {
         seriesService.save(series);
         return new ResultBean<>(series);
     }
+
+
+    @PostMapping(value = "/reduce")
+    private ResultBean<Series> reduceSeries(String medias, String mediasLength, String seriesId) {
+        if ("".equals(seriesId)){
+            return new ResultBean<>();
+        }
+
+        Series series = seriesService.findOne(Long.parseLong(seriesId));
+        if (series ==  null){
+            return new ResultBean<>();
+        }
+
+        String oldMedias = series.getAsMedias();
+        String[] oldMediasArray = oldMedias.split(",");
+        List<String> oldMediasList = new ArrayList<String>(Arrays.asList(oldMediasArray));
+
+        String[] removeMediaArray = medias.split(",");
+        List<String> removeMediasList = new ArrayList<String>(Arrays.asList(removeMediaArray));
+
+        for ( int i = 0; i < oldMediasList.size(); i++) {
+            String om = oldMediasList.get(i);
+            if (removeMediasList.contains(om)) {
+                oldMediasList.remove(om);  // ok
+                i--; // 因为位置发生改变，所以必须修改i的位置
+            }
+        }
+
+        series.setAsMediaNumber(oldMediasList.size());
+        series.setAsMedias(StringUtils.join(oldMediasList.toArray(), ","));
+        series.setUpdateDate(new Date());
+
+        seriesService.save(series);
+
+        return new ResultBean<>(series);
+    }
+
 
 }

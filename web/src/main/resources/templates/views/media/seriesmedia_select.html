@@ -160,17 +160,18 @@
 			$("#btn_remove_ur").click(function(){
 				var rows=selectedTable.getSelectedRowsData();
 				if(!rows){
-					modals.info("请选择要解绑的用户");
+					modals.info("请选择要解绑的Media");
 					return;
 				}
 				var idArr=[];
 				$.each(rows,function(index,row){
 					idArr.push(row.id);
 				})
-				ajaxPost(basePath+"/userrole/delete",{"ids":idArr.join(",")},function(data){
-					if(data.success){
+                var mediasLength = idArr.length;
+				ajaxPost(basePath+"/api/series/reduce",{"medias":idArr.join(","),"mediasLength":mediasLength,"seriesId":roleId},function(data){
+					if(data.msg == "success"){
 						unselectedTable.reloadRowData();
-                		selectedTable.reloadData();                		
+                		selectedTable.reloadData();
 					}
 				})
 			})

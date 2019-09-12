@@ -65,6 +65,17 @@
         var that = this;
 
         var columns = [];
+
+        //190912mod:行展开和折叠功能
+        if(tableId.indexOf("media_list") != -1){
+            var obj = {};
+            obj["class"] = "details-control text-center";
+            obj["orderable"] = false;
+            obj["data"] = null;
+            obj["defaultContent"] = "";
+            columns.push(obj);
+        }
+
         for (var i = 0; i < this.data.columnCarrier.length; i++) {
             var column = this.data.columnCarrier[i];
             var obj = {};
@@ -89,6 +100,9 @@
             }
             columns.push(obj);
         }
+
+        console.log(columns);
+
         // alert(JSON.stringify(columns));
         //var allowPaging = this.data.query.allowPaging;
         var allowPaging = true;
@@ -361,6 +375,34 @@
                 url: basePath+_url
             });
         });
+
+
+        // Array to track the ids of the details displayed rows
+        var detailRows = [];
+
+        $('#' + this.tableId + ' tbody').on( 'click', 'tr td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = _this.table.row( tr );
+            var idx = $.inArray( tr.attr('id'), detailRows );
+
+            if ( row.child.isShown() ) {
+                tr.removeClass( 'details' );
+                row.child.hide();
+
+                // Remove from the 'open' array
+                detailRows.splice( idx, 1 );
+            }
+            else {
+                tr.addClass( 'details' );
+                row.child( format( row.data() ) ).show();
+
+                // Add to the 'open' array
+                if ( idx === -1 ) {
+                    detailRows.push( tr.attr('id') );
+                }
+            }
+        } );
+
 
     }
 
