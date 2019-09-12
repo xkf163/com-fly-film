@@ -327,7 +327,7 @@
 
         //行单选
         if (oSettings.oInit.singleSelect == true) {
-            $('#' + this.tableId + ' tbody').on('click', 'tr', function () {
+            $('#' + this.tableId + ' tbody').on('click', 'tr[role="row"]', function () {
                 if (!$(this).hasClass('selected')) {
                     _this.table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
@@ -363,7 +363,7 @@
 
 
         //增加双击行事件 190903
-        $('#' + this.tableId + ' tbody').on('dblclick','tr',function() {
+        $('#' + this.tableId + ' tbody').on('dblclick','tr[role="row"]',function() {
             var _id = _this.getSelectedRowData().id;
             var _obj = _this.tableId.substring(0,_this.tableId.indexOf("_"));
             var _url = "/"+_obj+"/edit?id="+_id;

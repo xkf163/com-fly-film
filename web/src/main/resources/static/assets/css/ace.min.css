@@ -16822,11 +16822,11 @@ div.dt-button-background {
 }
 
 .dataTable>tbody>tr.selected>td {
-    background-color: lightslategrey;
+    background-color: MintCream;
 }
 
 .dataTable>tbody>tr.selected:hover>td {
-    background-color: #438EB9;
+    background-color: MintCream;
 }
 
 div.dataTables_processing {

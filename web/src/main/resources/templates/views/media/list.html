@@ -1,25 +1,27 @@
 <style>
 
     td.details-control:after {
-        content: "\e133" !important;
-        font-family: 'Glyphicons Halflings';
+        content: "\f0fe" !important;
+        font-family: FontAwesome;
         color: #438EB9;
         font-size: 15px;
         font-weight: 400;
         cursor: pointer;
     }
 
-    tr.selected td.details-control:after {
-        color: #fff;
-    }
+
 
     tr.details td.details-control:after {
-        content: "\e134" !important;
-        font-family: 'Glyphicons Halflings';
-        color: #fff;
+        content: "\f146" !important;
+        font-family: FontAwesome;
+        color: #438EB9;
         font-size: 15px;
         font-weight: 400;
     }
+    tr.selected td.details-control:after {
+        color: #2B7DBC;
+    }
+
 
 </style>
 <div class="page-content" >
@@ -57,7 +59,7 @@
     });
 
     function format ( d ) {
-        return 'PC名: '+d.pcName+'  '+'盘名: '+d.diskName+'  '+'存放路径：'+ d.diskNo + d.fullPath;
+        return d.diskNo + ":" +d.fullPath;
     }
 
 </script>
