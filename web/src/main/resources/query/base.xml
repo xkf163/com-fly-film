@@ -152,7 +152,7 @@
 
 	<!-- Series -->
 	<query id="series_list" key="id" tableName="系列列表" className="com.fly.entity.Series"
-		   pageSize="20"  widthType="px" order="id asc">
+		   pageSize="20"  widthType="px" order="id desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="name" header="系列名称" width="120"  operator="like"  align="left" />

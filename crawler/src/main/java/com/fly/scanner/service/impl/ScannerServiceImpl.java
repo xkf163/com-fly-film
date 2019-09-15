@@ -101,11 +101,12 @@ public class ScannerServiceImpl implements ScannerService {
             Media media1  = oldMediaEntriesList.get(i);
             media1.setDeleted(1);
             media1.setUpdateDate(new Date());
-            entityManager.persist(media1);
-            if (i % 50 == 0 || i==(size-1)) { // 每1000条数据执行一次，或者最后不足1000条时执行
-                entityManager.flush();
-                entityManager.clear();
-            }
+            mediaRepository.save(media1);
+//            entityManager.persist(media1);
+//            if (i % 50 == 0 || i==(size-1)) { // 每1000条数据执行一次，或者最后不足1000条时执行
+//                entityManager.flush();
+//                entityManager.clear();
+//            }
         }
 
 
@@ -116,11 +117,12 @@ public class ScannerServiceImpl implements ScannerService {
         size =  newMediaEntriesList.size();
         for (int i = 0; i < size; i++) {
             Media media1  = newMediaEntriesList.get(i);
-            entityManager.persist(media1);
-            if (i % 50 == 0 || i==(size-1)) { // 每1000条数据执行一次，或者最后不足1000条时执行
-                entityManager.flush();
-                entityManager.clear();
-            }
+            mediaRepository.save(media1);
+//            entityManager.persist(media1);
+//            if (i % 50 == 0 || i==(size-1)) { // 每1000条数据执行一次，或者最后不足1000条时执行
+//                entityManager.flush();
+//                entityManager.clear();
+//            }
         }
 
 

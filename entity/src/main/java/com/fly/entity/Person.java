@@ -22,6 +22,10 @@ public class Person extends BaseEntity implements Serializable {
 
     private String nameExtend;
 
+    private String nameCnOther;
+
+    private String nameEnOther;
+
     //@JsonIgnore
     //@Column(columnDefinition = "TEXT")
     //private String info;
@@ -35,6 +39,9 @@ public class Person extends BaseEntity implements Serializable {
     private String gender;
     private String birthDay;
     private String birthPlace;
+
+    private String deathDay;
+
     private String job;
     private String imdbNo;
 

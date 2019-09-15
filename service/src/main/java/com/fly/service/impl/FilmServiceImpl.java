@@ -83,12 +83,15 @@ public class FilmServiceImpl implements FilmService {
         List<Map<String, Object>> conditions = queryCondition.getConditions();
         String subjectMain = null;
         Short year = null;
-        if (!"".equals(conditions.get(0).get("value"))){
-            subjectMain = (String) conditions.get(0).get("value");
+       if (conditions !=null && conditions.size()> -1) {
+            if (!"".equals(conditions.get(0).get("value"))){
+                subjectMain = (String) conditions.get(0).get("value");
+            }
+            if (!"".equals(conditions.get(1).get("value"))){
+                year = isNumeric(conditions.get(1).get("value").toString()) ?  Short.parseShort(conditions.get(1).get("value").toString()) : 9999;
+            }
         }
-        if (!"".equals(conditions.get(1).get("value"))){
-            year = isNumeric(conditions.get(1).get("value").toString()) ?  Short.parseShort(conditions.get(1).get("value").toString()) : 9999;
-        }
+
 
         QFilm film = QFilm.film;
         //初始化组装条件(类似where 1=1)

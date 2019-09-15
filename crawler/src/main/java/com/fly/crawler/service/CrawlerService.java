@@ -11,7 +11,7 @@ import java.util.List;
 public interface CrawlerService {
 
 
-    Film extractFilm(Page page, List<String> dbFilmDouBanNoList);
+    Film extractFilm(Page page, List<String> dbFilmDouBanNoList, boolean ratingAllowEmpty);
 
     Person extractPerson(Page page, List<String> dbPersonDouBanNoList);
 

@@ -3,6 +3,28 @@
         margin-bottom: 5px !important;
     }
 
+    .scroll-box {
+        height:375px;
+        border:2px solid #000;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: #F8F8F8;
+    }
+    .scroll-box ul {
+        list-style:none;
+        width:100%;
+        height:100%;
+        margin-left: 10px;
+    }
+    .scroll-box ul li {
+        width:100%;
+        height:20px;
+        box-sizing:border-box;
+        line-height:20px;
+        text-align:left;
+        color: #000;
+        overflow-x: hidden;
+    }
 
 </style>
 
@@ -23,20 +45,20 @@
                                 <label for="url">起始页面地址：(回车换行)</label>
                                 <textarea  rows = "5" class="form-control" id="url" name="url" value="https://movie.douban.com/subject/10512661/" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group hidden">
                                 <div class="col-md-6 col-xs-6 form-group">
                                     <label for="thread">线程数：</label>
-                                    <input type="text" class="form-control" id="thread" name="thread" value="1" />
+                                    <input type="text" class="form-control " id="thread" name="thread" value="1" />
                                 </div>
                                 <div  class="col-md-6 col-xs-6 form-group pull-right">
                                     <label for="thread">批量保存临界值: </label>
-                                    <input type="text" class="form-control" id="batchNumber" name="batchNumber" value="10" />
+                                    <input type="text" class="form-control " id="batchNumber" name="batchNumber" value="10" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-6 col-xs-6 form-group">
                                     <label for="thread">间隔时间（毫秒）：</label>
-                                    <input type="text" class="form-control" id="sleepTime" name="sleepTime" value=10000 />
+                                    <input type="text" class="form-control" id="sleepTime" name="sleepTime" value=20000 />
                                 </div>
 
                             </div>
@@ -62,6 +84,22 @@
                                 </div>
                                 <div class="form-group col-md-6 col-xs-6  pull-right">
                                         <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="actorEmpty" name="actorEmpty">&nbsp;&nbsp;演员可为空?
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group col-md-6 col-xs-6 ">
+                                    <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="loginIn" name="loginIn">&nbsp;&nbsp;登录账号？
+                                </div>
+                                <div class="form-group col-md-6 col-xs-6  pull-right">
+                                    <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="ratingEmpty" name="ratingEmpty">&nbsp;&nbsp;豆分可为空？
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group col-md-6 col-xs-6 ">
+                                    <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="patchBirthday" name="patchBirthday">Person patchBirthday？
+                                </div>
+                                <div class="form-group col-md-6 col-xs-6  pull-right">
+                                    <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="patchNameOther" name="patchNameOther">Person patchNameOther？
                                 </div>
                             </div>
                             <div class="form-group pull-right">
@@ -90,7 +128,16 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-6 col-md-8">
-                    table
+                    <div class="row">
+                    <div class="form-group">
+                        <label style="margin-left: 30px;">运行日志：</label><input type="checkbox" data-flag="icheck" class="square-green pull-right"  value="1"  id="refresh" name="refresh" >
+                        <div class="scroll-box" style="margin-left: 30px;">
+                            <ul>
+                            </ul>
+                        </div>
+                    </div>
+
+                    </div>
                 </div>
 
 
@@ -152,9 +199,9 @@
                 modals.confirm('确认开始关联？', function() {
                     //Save Data，对应'submit-提交'
                     var params = relevanceform.getFormSimpleData();
-                    $.ajaxSetup({
-                        async: true
-                    });
+                    // $.ajaxSetup({
+                    //     async: true
+                    // });
                     ajaxPost(basePath+'/relevance/start', params, function(data, status) {
                         if(data.msg == "success"){
                             if(id!="0"){//更新
@@ -166,9 +213,12 @@
                                 modals.hideWin(winId);
                                 // seriesTable.reloadData();
                                 $("#url").val(data.data);
+                                $("#refresh").iCheck('uncheck');
+                                modals.alert("完成关联。")
                             }
                         }
-                    });
+                    }, true);
+
                 });
             }
         });
@@ -178,8 +228,46 @@
 
 
 
+        setInterval(function () {
+
+            if ($("#refresh").is(':checked')) {
+                $.ajax({
+                    type: "post",
+                    url: "/relevance/log",
+                    cache:false,
+                    async:true,
+                    success: function(result){
+                        if (result.length > 0) {
+                            $ul = $(".scroll-box ul");
+                            $("<li>"+result+"</li>").prependTo($ul);
+
+
+                        }
+
+                    }
+                });
+            }
+
+        }, 100);
+
+
+
+        $(document).find('[data-flag="icheck"]').each(function () {
+            var cls = $(this).attr("class") ? $(this).attr("class") : "square-green";
+            $(this).iCheck(
+                {
+                    checkboxClass: 'icheckbox_' + cls,
+                    radioClass: 'iradio_' + cls
+                }
+            ).on('ifChanged', function (e) {
+                //var field = $(this).attr('name');
+            });
+        });
+
 
     });
+
+
 
     
     function endCrawler() {

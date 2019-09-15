@@ -35,5 +35,5 @@ spring:
     charset: UTF-8
     cache: false
 server:
-  port: 8080
+  port: 80
 

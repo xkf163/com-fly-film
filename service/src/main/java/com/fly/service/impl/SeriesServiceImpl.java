@@ -13,6 +13,7 @@ import com.fly.entity.QSeries;
 import com.fly.entity.Series;
 import com.fly.service.SeriesService;
 
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -72,12 +73,18 @@ public class SeriesServiceImpl implements SeriesService {
         //初始化组装条件(类似where 1=1)
         Predicate predicate = series.isNotNull().or(series.isNull());
         //执行动态条件拼装
-        //predicate = subjectMain == null ? predicate : ExpressionUtils.and(predicate,film.subjectMain.like(subjectMain));
-        //predicate = year == null ? predicate : ExpressionUtils.and(predicate,film.year.eq(year));
+        //4)dsl动态查询
+        List<Map<String, Object>> conditions = queryCondition.getConditions();
+        String name = null ;
+        if (!"".equals(conditions.get(0).get("value"))){
+            name =  (String) conditions.get(0).get("value");
+        }
+
+        predicate = name == null ? predicate : ExpressionUtils.and(predicate,series.name.like(name));
+
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize , sort);
-
-        Page<Series> pageCarrier = seriesRepository.findAll(pageable);
+        Page<Series> pageCarrier = seriesRepository.findAll(predicate , pageable);
 
         map.put("pageCarrier", pageCarrier);
         map.put("columnCarrier", columnCarrier);

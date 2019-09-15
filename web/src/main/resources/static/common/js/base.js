@@ -107,11 +107,10 @@ function deleteEmptyProp(obj) {
     return obj;
 }
 
-function ajaxPost(url, params, callback) {
+function ajaxPostBAK(url, params, callback ) {
     var result = null;
     var headers = {};
     //headers['CSRFToken'] = jQuery("#csrftoken").val();
-
     console.log("before remove empty prop:");
     console.log(params);
     if (params && typeof params == "object") {
@@ -178,22 +177,27 @@ function ajaxPost(url, params, callback) {
     return result;
 }
 
-function ajaxPost(url, params, callback) {
+function ajaxPost(url, params, callback,async) {
     var result = null;
     var headers = {};
-    headers['CSRFToken'] = jQuery("#csrftoken").val();
+   // headers['CSRFToken'] = jQuery("#csrftoken").val();
 
-    console.log("before remove empty prop:");
+    if (typeof async == "undefined"){
+        async = false;
+    }
+    // console.log("---------------async");
+    // console.log(async);
+    console.log("ajaxPost before remove empty prop:");
     console.log(params);
     if (params && typeof params == "object") {
         params = deleteEmptyProp(params);
     }
-    console.log("after remove empty prop:");
+    console.log("ajaxPost after remove empty prop:");
     console.log(params);
 
     jQuery.ajax({
         type: 'post',
-        async: false,
+        async: async,
         url: url,
         data: params,
         dataType: 'json',

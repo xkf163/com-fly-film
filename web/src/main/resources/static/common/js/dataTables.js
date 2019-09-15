@@ -67,7 +67,7 @@
         var columns = [];
 
         //190912mod:行展开和折叠功能
-        if(tableId.indexOf("media_list") != -1){
+        if(tableId == "media_list"){
             var obj = {};
             obj["class"] = "details-control text-center";
             obj["orderable"] = false;
@@ -376,10 +376,8 @@
             });
         });
 
-
         // Array to track the ids of the details displayed rows
         var detailRows = [];
-
         $('#' + this.tableId + ' tbody').on( 'click', 'tr td.details-control', function () {
             var tr = $(this).closest('tr');
             var row = _this.table.row( tr );

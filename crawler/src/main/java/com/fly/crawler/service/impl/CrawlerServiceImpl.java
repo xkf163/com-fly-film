@@ -42,7 +42,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     解析爬虫返回的页面数据，提取出film字段数据
      */
     @Override
-    public Film extractFilm(Page page , List<String> dbFilmDouBanNoList) {
+    public Film extractFilm(Page page , List<String> dbFilmDouBanNoList , boolean ratingAllowEmpty) {
 
         //System.out.println("extracFilm");
         Html pageHtml = page.getHtml();
@@ -74,13 +74,20 @@ public class CrawlerServiceImpl implements CrawlerService {
         //5、6）豆瓣评分及评分人数
         Selectable selectableRating = pageHtml.xpath("//div[@typeof='v:Rating']");
         PlainText object = (PlainText) selectableRating.xpath("//strong/text()");
-        if (null != object && !"".equals(object.getFirstSourceText())) {
+
+        f.setDoubanRating(null);
+        if (null != object && null != object.getFirstSourceText() && !"".equals(object.getFirstSourceText())) {
             f.setDoubanRating(Float.parseFloat(selectableRating.xpath("//strong/text()").toString()));
             f.setDoubanSum(Long.parseLong(selectableRating.xpath("//span[@property='v:votes']/text()").toString()));
         }
         if(f.getDoubanRating() == null){
-            System.out.println("--->!!! film 豆瓣编号"+f.getDoubanNo()+"豆瓣评分为空值，不加入保存队列");
-            return null; //数据库已存在该Film则返回空
+            f.setDoubanRating(0.0f);
+            f.setDoubanSum(0l);
+            if (!ratingAllowEmpty){
+                System.out.println("--->!!! film 豆瓣编号"+f.getDoubanNo()+"豆瓣评分为空值，不加入保存队列");
+                return null; //允许豆分为空则忽略
+            }
+
         }
 
 
@@ -229,8 +236,24 @@ public class CrawlerServiceImpl implements CrawlerService {
         p.setNameExtend(page.getResultItems().get("nameExtend").toString());
         p.setIntroduce(page.getResultItems().get("introduce").toString());
         //p.setInfo(page.getResultItems().get("info").toString());
+        p.setBirthDay(birthday.trim());
+        if ("".equals(birthday)){
+            birthday = StringUtils.join( selectableInfo.regex("<li> <span>生卒日期</span>: (.*)至.*</li>").all().toArray(),",");
+            String deathDay = StringUtils.join( selectableInfo.regex("<li> <span>生卒日期</span>: .*至(.*)</li>").all().toArray(),",");
+            p.setBirthDay(birthday.trim());
+            p.setDeathDay(deathDay.trim());
+        }
 
-        p.setBirthDay(birthday);
+        String nameCNMore = StringUtils.join( selectableInfo.regex("<li> <span>更多中文名</span>: (.*) </li>").all().toArray(),"/");
+        String nameENMore = StringUtils.join( selectableInfo.regex("<li> <span>更多外文名</span>: (.*) </li>").all().toArray(),"/");
+
+        System.out.println("------name -- more--------");
+        System.out.println(nameCNMore);
+        System.out.println(nameENMore);
+
+        p.setNameCnOther(nameCNMore);
+        p.setNameEnOther(nameENMore);
+
         p.setJob(profession);
         p.setGender(gender);
         p.setImdbNo(imdbNo);

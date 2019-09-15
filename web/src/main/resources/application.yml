@@ -1,11 +1,6 @@
 spring:
   profiles:
-    active: pro
-
-
-
-
-
+    active: dem
 
 
 

@@ -73,8 +73,10 @@ public class PersonServiceImpl implements PersonService {
         //4)dsl动态查询
         List<Map<String, Object>> conditions = queryCondition.getConditions();
         String nameExtend = null;
-        if (!"".equals(conditions.get(0).get("value"))){
-            nameExtend = (String) conditions.get(0).get("value");
+        if (conditions!=null && conditions.size()>-1){
+            if (!"".equals(conditions.get(0).get("value"))){
+                nameExtend = (String) conditions.get(0).get("value");
+            }
         }
 
         QPerson person = QPerson.person;

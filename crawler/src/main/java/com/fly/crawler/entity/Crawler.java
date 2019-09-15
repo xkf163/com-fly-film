@@ -17,4 +17,11 @@ public class Crawler {
 
     int sleepTime = 10000;
 
+    String loginIn = "0";
+    String ratingEmpty = "0";
+
+
+//    String patchBirthday = "0"; //补丁： 出生日期 死亡日期
+//    String patchNameOther = "0";//补丁 ： 中文又名 外文又名
+
 }

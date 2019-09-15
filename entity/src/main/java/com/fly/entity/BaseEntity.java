@@ -25,4 +25,6 @@ public class BaseEntity {
 
     private Integer deleted = 0; //删除标记
 
+    private String  deleteMemo; //删除原因
+
 }

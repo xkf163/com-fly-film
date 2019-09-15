@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * Created by F on 2017/6/27.
  */
 @Repository
-public interface SeriesRepository extends JpaRepository<Series,Long>, QueryDslPredicateExecutor<Film> {
+public interface SeriesRepository extends JpaRepository<Series,Long>, QueryDslPredicateExecutor<Series> {
 }
