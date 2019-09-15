@@ -68,9 +68,6 @@ public class RelevanceServiceImpl implements RelevanceService {
 
         long startTime=System.currentTimeMillis();   //获取开始时间
 
-
-
-
         String personDoubanUrl , personDoubanUrlPre = "https://movie.douban.com/celebrity/";
         List<String> personNotFindDoubanUrlList = new ArrayList<>();
         List<Media> filmNotFindMediaList = new ArrayList<>();
@@ -103,8 +100,7 @@ public class RelevanceServiceImpl implements RelevanceService {
 
         //数据库中已存在的person编号
         //List<String> starDouBanNoAllList = starService.findAllDouBanNo();
-
-
+        Film film,oldFilm;
         int ind = 1;
         for(Media media : mediaList){
 
@@ -113,10 +109,13 @@ public class RelevanceServiceImpl implements RelevanceService {
             ind++;
 
             //1)为Media关联Film，并加入更新List
-            Film film = null;
+            oldFilm = media.getFilm();
+            film = null;
             film = findConnectedFilmForMedia(media);
-            media.setFilm(film);
-            media.setUpdateDate(new Date());
+            if (oldFilm != film){
+                media.setFilm(film);
+                media.setUpdateDate(new Date());
+            }
             if(film == null){
                 filmNotFindMediaList.add(media);
                 continue;
@@ -181,7 +180,7 @@ public class RelevanceServiceImpl implements RelevanceService {
                             star.setAsDirectorNumber(1);
                         }
                         star.setUpdateDate(new Date());
-                        starService.save(star);
+                        //starService.save(star);
 
                         //star是地址引用，故若已添加，不需再次添加
                         if (!needUpdateStarList.contains(star)) {
@@ -257,7 +256,7 @@ public class RelevanceServiceImpl implements RelevanceService {
 
                         }
                         star.setUpdateDate(new Date());
-                        starService.save(star);
+                        //starService.save(star);
 
                         //star是地址引用，故若已添加，不需再次添加
                         if (!needUpdateStarList.contains(star)) {
@@ -328,7 +327,7 @@ public class RelevanceServiceImpl implements RelevanceService {
 
                         }
                         star.setUpdateDate(new Date());
-                        starService.save(star);
+                        //starService.save(star);
 
                         //star是地址引用，故若已添加，不需再次添加
                         if (!needUpdateStarList.contains(star)) {
@@ -380,14 +379,14 @@ public class RelevanceServiceImpl implements RelevanceService {
         }
         size  = needUpdateStarList.size();
         System.out.println("----------needUpdateStarList:::"+size);
-//        for (int i=0; i<size; i++){
-//            Star star = needUpdateStarList.get(i);
-//            entityManager.merge(star);
-//            if(i % 50 == 0 || i==size-1){
-//                entityManager.flush();
-//                entityManager.clear();
-//            }
-//        }
+        for (int i=0; i<size; i++){
+            Star star = needUpdateStarList.get(i);
+            entityManager.merge(star);
+            if(i % 50 == 0 || i==size-1){
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
         size  = filmNotFindMediaList.size();
         System.out.println("----------filmNotFindMediaList:::"+size);
 
