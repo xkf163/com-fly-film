@@ -207,7 +207,7 @@ public class CrawlerServiceImpl implements CrawlerService {
         page.putField("name", pageHtml.xpath("//title/text()").regex("(.*)\\s*\\(豆瓣\\)").toString());
         page.putField("doubanNo", page.getUrl().regex("https://movie\\.douban\\.com/celebrity/(\\d+)/").toString());
 
-        if("".equals(page.getResultItems().get("name"))){
+        if("".equals(page.getResultItems().get("name").toString().trim())){
             return null;
         }
         Person p  = new Person();

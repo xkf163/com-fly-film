@@ -18,6 +18,7 @@ public interface MediaService {
 
     Map<String, Object> findByDeleted(String reqObj,Integer deleted) throws Exception ;
 
+
     Map<String, Object> findAllOfStar(String reqObj) throws Exception ;
 
     Map<String, Object> findAllOfSeries(String reqObj) throws Exception ;
@@ -27,5 +28,7 @@ public interface MediaService {
     Media findOne(Long id);
 
     void save(Media media);
+
+    void delete(Media media);
 
 }

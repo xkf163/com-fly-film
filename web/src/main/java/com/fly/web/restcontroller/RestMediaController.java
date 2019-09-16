@@ -68,6 +68,10 @@ public class RestMediaController {
         return mediaService.findByDeleted(reqObj,deleted);
     }
 
+
+
+
+
     @PostMapping(value = "/get")
     private Media getMedia(String id) {
         return mediaService.findOne(Long.parseLong(id));
@@ -115,6 +119,13 @@ public class RestMediaController {
         media.setDeleted(1);
         mediaService.save(media);
 
+        return new ResultBean<>(media);
+    }
+
+
+    @PostMapping(value = "/destroy")
+    public ResultBean<Media> mediaDestroy(Media media, @RequestParam(name = "filmId", required = false ,defaultValue = "0" ) Long filmId) throws Exception {
+        mediaService.delete(media);
         return new ResultBean<>(media);
     }
 

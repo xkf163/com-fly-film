@@ -438,7 +438,6 @@ public class MediaServiceImpl implements MediaService {
 
 
 
-
     @Override
     public Map<String, Object> findByDeleted(String reqObj,Integer deleted) throws Exception {
 
@@ -491,6 +490,12 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public void save(Media media){
         mediaRepository.save(media);
+    }
+
+
+    @Override
+    public void delete(Media media){
+        mediaRepository.delete(media);
     }
 
 
