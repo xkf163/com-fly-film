@@ -132,7 +132,7 @@ public class DouBanProcessor implements PageProcessor {
                 String douBanNo = f.getDoubanNo();
                 if (!filmDouBanNoQueue.contains(douBanNo)){
 
-                    runningLog  = ind+"、"+f.getSubject();
+                    runningLog  = ind+"、"+f.getSubject()+ " - " +page.getUrl();
                     ind++;
 
                     filmSaveQueue.add(f);
@@ -156,6 +156,7 @@ public class DouBanProcessor implements PageProcessor {
                 //1)把页面中的相关人物URL加入到爬取队列中
                 crawlerService.addTargetRequests(page, "div.subject.clearfix" , URL_PERSON,"/celebrity/(\\d+)/" , dbPersonDouBanNoList , "csspath", "Person");
             }else{
+                runningLog  = "--跳过----Film不符合爬取规则----"+page.getUrl();
                 System.out.println("--->!!! Film Skip");
                 page.setSkip(true);
             }
@@ -174,6 +175,10 @@ public class DouBanProcessor implements PageProcessor {
                 //doubanno不存在 filmDouBanNoQueue 中才能加入保存队列，防止重复加入
                 String douBanNo = p.getDouBanNo();
                 if (!personDouBanNoQueue.contains(douBanNo)){
+
+                    runningLog  = ind+"、"+p.getName()+ " - " +page.getUrl();
+                    ind++;
+
                     personSaveQueue.add(p);
                     personDouBanNoQueue.add(douBanNo);
                 }
@@ -196,7 +201,9 @@ public class DouBanProcessor implements PageProcessor {
                 crawlerService.addTargetRequests(page, "//*[@id=\"partners\"]/div[@class=\"bd\"]/ul[@class=\"list-s\"]/li/div[@class=\"pic\"]" ,URL_PERSON, "/celebrity/(\\d+)/" , dbPersonDouBanNoList , "xpath", "Person");
 
             }else {
+                runningLog  = "--跳过----Person不符合爬取规则----"+page.getUrl();
                 page.setSkip(true);
+
             }
 
 
@@ -209,6 +216,8 @@ public class DouBanProcessor implements PageProcessor {
 
         }else if(page.getUrl().regex(URL_HOMEPAGE).match()){
             System.out.println("---------入口：豆瓣首页----------");
+            runningLog  = "-开始----------------入口：豆瓣首页-------------------";
+
             crawlerService.addTargetRequests(page, "//*[@id=\"content\"]", URL_FILM, "/subject/(\\d+)/"  , dbFilmDouBanNoList , "xpath", "Film");
 
             //3)入口是豆瓣主页
@@ -224,6 +233,7 @@ public class DouBanProcessor implements PageProcessor {
 
         }else {
             System.out.println("--URL不符合Rule--"+page.getUrl());
+            runningLog  = "--跳过----URL不符合Rule----"+page.getUrl();
         }
 
 

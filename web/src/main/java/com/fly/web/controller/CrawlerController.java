@@ -170,6 +170,8 @@ public class CrawlerController {
         if (spider != null){
             spider.stop();
         }
+        douBanProcessor.ind = 1;
+        douBanProcessor.runningLog = "";
 
         return "views/crawler/new";
 
@@ -181,6 +183,7 @@ public class CrawlerController {
     @PostMapping(value = "/log")
     @ResponseBody
     public String crawlerLog() {
+
         return douBanProcessor.runningRecord();
     }
 

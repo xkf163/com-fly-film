@@ -51,12 +51,17 @@ public class CrawlerServiceImpl implements CrawlerService {
         Selectable filmInfoWrap = pageHtml.xpath("//div[@id='info']");
 
 
+        //1）片名
+        page.putField("subject", pageHtml.xpath(xPathMap.get("subject")).toString());
+
+
+
         String tempString;
         //1）豆瓣编号
         tempString = page.getUrl().regex("/subject/(\\d+)/").toString();
         if(dbFilmDouBanNoList.contains(tempString)){
             System.out.println("--->!!! Film 豆瓣编号"+tempString+"在数据库已存在，不加入保存队列。");
-            douBanProcessor.runningLog  = douBanProcessor.ind+" --->!!! Film 豆瓣编号"+tempString+"在数据库已存在，不加入保存队列。";
+            douBanProcessor.runningLog  = douBanProcessor.ind+"、[F]"+page.getResultItems().get("subject")+" ;豆瓣编号"+tempString+"在数据库已存在，不加入保存队列。";
             douBanProcessor.ind++;
             return null; //数据库已存在该Film则返回空
         }else{
@@ -68,10 +73,15 @@ public class CrawlerServiceImpl implements CrawlerService {
                 " <br>").toString();
         if (null != episodeNumber && !"".equals(episodeNumber)) {
             System.out.println("--->!!! Film 豆瓣编号"+tempString+"是电视剧，不加入保存队列。");
+            douBanProcessor.runningLog  = douBanProcessor.ind+"、[F]"+page.getResultItems().get("subject")+" ;豆瓣编号"+tempString+"是电视剧，不加入保存队列。";
+            douBanProcessor.ind++;
             return null; //如果是电视剧保存
         }
 
         Film f = new Film();
+        //1）片名
+        f.setSubject(page.getResultItems().get("subject"));
+
         //1）豆瓣编号
         f.setDoubanNo(tempString);
 
@@ -89,15 +99,15 @@ public class CrawlerServiceImpl implements CrawlerService {
             f.setDoubanSum(0l);
             if (!ratingAllowEmpty){
                 System.out.println("--->!!! film 豆瓣编号"+f.getDoubanNo()+"豆瓣评分为空值，不加入保存队列");
+                douBanProcessor.runningLog  = douBanProcessor.ind+"、[F] "+page.getResultItems().get("subject")+" ;豆瓣编号"+f.getDoubanNo()+"豆瓣评分为空值，不加入保存队列";
+                douBanProcessor.ind++;
                 return null; //允许豆分为空则忽略
             }
 
         }
 
 
-        //1）片名
-        page.putField("subject", pageHtml.xpath(xPathMap.get("subject")).toString());
-        f.setSubject(page.getResultItems().get("subject"));
+
         //2）导演
         f.setDirectors(StringUtils.join(filmInfoWrap.xpath("//a[@rel='v:directedBy']/@href").regex("/celebrity/(\\d+)/").all().toArray(), ","));
         //3）演员
@@ -200,8 +210,8 @@ public class CrawlerServiceImpl implements CrawlerService {
         if("".equals(page.getResultItems().get("name"))){
             return null;
         }
-
         Person p  = new Person();
+
         //1)豆瓣编号
         p.setDouBanNo(page.getResultItems().get("doubanNo"));
         if("".equals(p.getDouBanNo())) {
@@ -210,6 +220,8 @@ public class CrawlerServiceImpl implements CrawlerService {
 
         if(dbPersonDouBanNoList.contains(p.getDouBanNo())) {
             System.out.println("--->!!!Person豆瓣编号"+p.getDouBanNo()+"在数据库已存在，不加入保存队列");
+            douBanProcessor.runningLog  = douBanProcessor.ind+"、[P] "+page.getResultItems().get("name")+" ;豆瓣编号"+p.getDouBanNo()+"在数据库已存在，不加入保存队列";
+            douBanProcessor.ind++;
             return null; //数据库已存在该Film则返回空
         }else {
             dbPersonDouBanNoList.add(p.getDouBanNo());
@@ -251,9 +263,6 @@ public class CrawlerServiceImpl implements CrawlerService {
         String nameCNMore = StringUtils.join( selectableInfo.regex("<li> <span>更多中文名</span>: (.*) </li>").all().toArray(),"/");
         String nameENMore = StringUtils.join( selectableInfo.regex("<li> <span>更多外文名</span>: (.*) </li>").all().toArray(),"/");
 
-        System.out.println("------name -- more--------");
-        System.out.println(nameCNMore);
-        System.out.println(nameENMore);
 
         p.setNameCnOther(nameCNMore);
         p.setNameEnOther(nameENMore);

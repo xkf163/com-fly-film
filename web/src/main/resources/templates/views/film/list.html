@@ -92,14 +92,8 @@
         });
 
 
-
-
-
-
-
-
-
-        setInterval(function () {
+        window.clearInterval(int);
+        int = setInterval(function () {
            if ($("#refresh").is(':checked')) {
                refreshAuto();
            }else{

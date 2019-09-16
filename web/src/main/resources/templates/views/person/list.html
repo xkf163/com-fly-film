@@ -41,7 +41,8 @@
         //init table and fill data
         personTable = new CommonTable("person_list", dataUrl, "searchDiv");
 
-        setInterval(function () {
+        window.clearInterval(int);
+        int = setInterval(function () {
             if ($("#refresh").is(':checked')) {
                 refreshAuto();
             }else{
@@ -67,9 +68,7 @@
     });
 
 
-
     function refreshAuto() {
-        console.log("refresh table");
         personTable.reloadData();
     }
 
