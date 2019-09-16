@@ -128,7 +128,7 @@
 		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left" />
 		<column key="person.birthPlace" header="出生地" width="100"   align="left"  operator="like"  allowSort="true" />
 		<column key="person.birthDay" header="出生日" width="200"  operator="like"  align="left" />
-		<column key="asDirectorNumber" header="导演作品数" width="100" align="left"  allowSort="true" />
+		<column key="asDirectorNumber" header="导演作品数" width="100" align="center"  allowSort="true" />
 		<column key="asActorNumber" header="演绎作品数" align="center" width="100"  allowSort="true"/>
 		<column key="asWriterNumber" header="编剧作品数" align="center" width="100"  allowSort="true"/>
 		<column key="person.job" header="职业" align="left" width="100"  operator="like" />

@@ -63,53 +63,7 @@ public class CrawlerController {
     @ResponseBody
     public void running(Crawler crawler) throws JMException {
 
-        /*
-
-        //使用 selenium 来模拟用户的登录获取cookie信息
-
-
-        System.out.println("-------login douban");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://accounts.douban.com/passport/login?source=movie");
-
-        driver.findElement(By.className("account-tab-account")).click();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        driver.findElement(By.id("username")).clear();
-
-        //在******中填你的用户名
-        driver.findElement(By.id("username")).sendKeys("572571573@qq.com");
-
-        driver.findElement(By.id("password")).clear();
-        //在*******填你密码
-        driver.findElement(By.id("password")).sendKeys("xkf1634925447");
-
-        //模拟点击登录按钮
-        driver.findElement(By.className("btn-account")).click();
-
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-//        //获取cookie信息
-        Set<Cookie> cookies = driver.manage().getCookies();
-        driver.close();
-
-        DouBanProcessor douBanProcessor = new DouBanProcessor();
-
-*/
         //System.out.println(crawler.toString());
-
-       // DouBanProcessor douBanProcessor = new DouBanProcessor();
-       // douBanProcessor.directorAllowEmpty = crawler.getDirectorEmpty();
-       // douBanProcessor.actorAllowEmpty = crawler.getActorEmpty();
 
         douBanProcessor.dbFilmDouBanNoList = filmService.findAllDouBanNo();
         douBanProcessor.dbPersonDouBanNoList = personService.findAllDouBanNo();
@@ -223,15 +177,11 @@ public class CrawlerController {
 
 
 
-    @GetMapping(value = "/patch")
+
+    @PostMapping(value = "/log")
     @ResponseBody
-    public void pacth(Crawler crawler) throws JMException {
-
-
-
+    public String crawlerLog() {
+        return douBanProcessor.runningRecord();
     }
-
-
-
 
 }

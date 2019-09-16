@@ -14,13 +14,7 @@ import us.codecraft.webmagic.selector.Selectable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 
 /**
@@ -80,6 +74,17 @@ public class DouBanProcessor implements PageProcessor {
     public static int sleepTime = 10000;
 
 
+
+    public static int ind = 1;
+    public static String runningLog = "";
+
+    public String runningRecord(){
+        String ret = runningLog;
+        runningLog = "";
+        return ret;
+    }
+
+
     @Autowired
     CrawlerService crawlerService;
 
@@ -126,6 +131,10 @@ public class DouBanProcessor implements PageProcessor {
                 //doubanno不存在 filmDouBanNoQueue 中才能加入保存队列，防止重复加入
                 String douBanNo = f.getDoubanNo();
                 if (!filmDouBanNoQueue.contains(douBanNo)){
+
+                    runningLog  = ind+"、"+f.getSubject();
+                    ind++;
+
                     filmSaveQueue.add(f);
                     filmDouBanNoQueue.add(douBanNo);
                 }
@@ -152,8 +161,6 @@ public class DouBanProcessor implements PageProcessor {
             }
 
         }else if(page.getUrl().regex(URL_PERSON).match()){
-
-
             //3种情况
             //1)personOnly = false; filmOnly = false
             //2)personOnly = true; filmOnly = false
@@ -162,7 +169,6 @@ public class DouBanProcessor implements PageProcessor {
             if (!filmOnly){
                 p = crawlerService.extractPerson(page, dbPersonDouBanNoList);
             }
-
 
             if (p != null){
                 //doubanno不存在 filmDouBanNoQueue 中才能加入保存队列，防止重复加入
@@ -219,10 +225,6 @@ public class DouBanProcessor implements PageProcessor {
         }else {
             System.out.println("--URL不符合Rule--"+page.getUrl());
         }
-
-
-
-
 
 
        //批量保存，而不是抓一个就保存一次

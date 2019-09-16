@@ -37,6 +37,8 @@ public class CrawlerServiceImpl implements CrawlerService {
     }
 
 
+    @Autowired
+    DouBanProcessor douBanProcessor;
 
     /*
     解析爬虫返回的页面数据，提取出film字段数据
@@ -54,6 +56,8 @@ public class CrawlerServiceImpl implements CrawlerService {
         tempString = page.getUrl().regex("/subject/(\\d+)/").toString();
         if(dbFilmDouBanNoList.contains(tempString)){
             System.out.println("--->!!! Film 豆瓣编号"+tempString+"在数据库已存在，不加入保存队列。");
+            douBanProcessor.runningLog  = douBanProcessor.ind+" --->!!! Film 豆瓣编号"+tempString+"在数据库已存在，不加入保存队列。";
+            douBanProcessor.ind++;
             return null; //数据库已存在该Film则返回空
         }else{
             dbFilmDouBanNoList.add(tempString);

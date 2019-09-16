@@ -6,9 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import com.fly.common.base.pojo.ResultBean;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.fly.entity.QMedia.media;
 
 /**
  * @Author:xukangfeng
@@ -36,6 +41,26 @@ public class RestFilmController {
     @PostMapping(value = "/get")
     private Film getFilm(String id) {
         return filmService.findOne(Long.parseLong(id));
+    }
+
+
+    /**
+     *
+     * @param film
+     * @return
+     */
+    @PostMapping(value = "/save")
+    private ResultBean<Film> saveFilm(Film film) {
+
+        Long id = film.getId();
+        if (id == null ){
+            film.setCreateDate(new Date());
+        }
+
+        film.setUpdateDate(new Date());
+        filmService.save(film);
+
+        return new ResultBean<>(film);
     }
 
 }

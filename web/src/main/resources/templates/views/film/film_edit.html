@@ -8,19 +8,19 @@
     <form id="film-form" name="film-form" class="form-horizontal">
         <input type="hidden" name="id">
         <input type="hidden" name="deleted">
-        <input type="hidden" name="subject">
+        <input type="hidden" name="createDate">
         <div class="box-body">
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="subjectMain" class="col-sm-2 control-label">片名</label>
+                    <label for="subject" class="col-sm-2 control-label">片名</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="subjectMain" name="subjectMain" placeholder="片名">
+                        <input type="text" class="form-control" id="subject" name="subject" placeholder="片名">
                     </div>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="country" class="col-sm-3 control-label">国家/地区</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="country" name="country" placeholder="国家/地区">
+                    <label for="subjectMain" class="col-sm-2 control-label">片名全</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="subjectMain" name="subjectMain" placeholder="片名全">
                     </div>
                 </div>
             </div>
@@ -40,21 +40,27 @@
                     </div>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="doubanNo" class="col-sm-3 control-label">豆瓣编号</label>
+                    <label for="country" class="col-sm-3 control-label">国家/地区</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="doubanNo" name="doubanNo"  placeholder="豆瓣编号" >
+                        <input type="text" class="form-control" id="country" name="country" placeholder="国家/地区">
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="doubanRating" class="col-sm-3 control-label">豆瓣评分</label>
+                <div class="form-group col-md-4">
+                    <label for="doubanNo" class="col-sm-4 control-label">豆瓣编号</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="doubanNo" name="doubanNo"  placeholder="豆瓣编号" >
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="doubanRating" class="col-sm-4 control-label">豆分</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="doubanRating" name="doubanRating" placeholder="豆瓣评分">
                     </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="doubanSum" class="col-sm-3 control-label">豆瓣评分人数</label>
+                <div class="form-group col-md-4">
+                    <label for="doubanSum" class="col-sm-4 control-label">豆评人数</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="doubanSum" name="doubanSum" placeholder="豆瓣评分人数">
                     </div>
@@ -62,31 +68,22 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="imdbNo" class="col-sm-3 control-label">IMDB编号</label>
+                <div class="form-group col-md-4">
+                    <label for="imdbNo" class="col-sm-4 control-label">IMDB编号</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="imdbNo" name="imdbNo" placeholder="IMDB编号">
                     </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="imdbRating" class="col-sm-3 control-label">IMDB评分</label>
+                <div class="form-group col-md-4">
+                    <label for="imdbRating" class="col-sm-4 control-label">IMDB分</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="imdbRating" name="imdbRating" placeholder="IMDB评分">
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="directors" class="col-sm-3 control-label">导演</label>
+                <div class="form-group col-md-4">
+                    <label for="doubanSum" class="col-sm-4 control-label">IMDB评人数</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="directors" name="directors"  readonly>
-                    </div>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="screenWriter" class="col-sm-3 control-label">编剧</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="screenWriter" name="screenWriter" readonly >
+                        <input type="text" class="form-control" id="imdbSum" name="imdbSum" placeholder="IMDB评人数">
                     </div>
                 </div>
             </div>
@@ -105,6 +102,21 @@
                 </div>
             </div>
             <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="directors" class="col-sm-3 control-label">导演</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="directors" name="directors" >
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="screenWriter" class="col-sm-3 control-label">编剧</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="screenWriter" name="screenWriter" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="form-group">
                     <label for="actors" class="col-sm-1 control-label">演员</label>
                     <div class="col-sm-10">
@@ -120,17 +132,22 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row">
+                <label for="introduce" class="col-sm-1 control-label">简介</label>
+                <div class="col-sm-10">
+                    <textarea rows="4" class="form-control" id="introduce" name="introduce" placeholder="简介" />
+                </div>
+            </div>
 
         </div>
 
         <!-- /.box-body -->
-        <div class="box-footer text-right" style="display: none">
+        <div class="box-footer text-right">
             <!--以下两种方式提交验证,根据所需选择-->
-            <button type="submit" class="btn btn-primary" data-btn-type="saveToProcess">修改待确认</button>
+            <!--<button type="submit" class="btn btn-primary" data-btn-type="saveToProcess">修改待确认</button>-->
             <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
             <button type="submit" class="btn btn-primary" data-btn-type="save">保存</button>
-            <button type="submit" class="btn btn-primary" data-btn-type="saveToFinish">确认并完成</button>
+            <!--<button type="submit" class="btn btn-primary" data-btn-type="saveToFinish">确认并完成</button>-->
         </div>
         <!-- /.box-footer -->
     </form>
@@ -157,7 +174,7 @@
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
                     var submitType = $(submitButton).attr("data-btn-type");
-                    ajaxPost(basePath+'/api/film/'+submitType+'?filmId='+filmId, params, function(data, status) {
+                    ajaxPost(basePath+'/api/film/'+submitType, params, function(data, status) {
                         if(data.msg == "success"){
                             if(id!="0"){//更新
                                 modals.hideWin(winId);
