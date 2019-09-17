@@ -59,6 +59,22 @@ public class RelevanceServiceImpl implements RelevanceService {
     }
 
 
+    @Transactional
+    public Long initStarPropWithQueryDsl()
+    {
+        //querydsl查询实体
+        QStar qStar = QStar.star;
+
+        //00000000)初始化star中的 几个字段值 asActor asActorNumber asDirector asDirectorNumber asWriter asWriterNumber Person
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        Long a = jpaQueryFactory.update(qStar).set(qStar.asActor,"").set(qStar.asActorNumber,0).set(qStar.asDirector,"").set(qStar.asDirectorNumber,0).set(qStar.asWriter,"").set(qStar.asWriterNumber,0)
+                .setNull(qStar.person)
+                .where(qStar.deleted.ne(1)).execute();
+        return a;
+    }
+
+
+
     /**
      * 为Media关联Film
      */
@@ -79,7 +95,7 @@ public class RelevanceServiceImpl implements RelevanceService {
         //前台传递的参数，是否遍历全库media
         String relevantAll = relevance.getRelevantAll();
 
-        QStar qStar = QStar.star;
+
         //提取所有符合条件的media条目
         QMedia qMedia = QMedia.media;
         List<Media> mediaList;
@@ -91,11 +107,11 @@ public class RelevanceServiceImpl implements RelevanceService {
         }
 
 
-        //00000000)初始化star中的 几个字段值 asActor asActorNumber asDirector asDirectorNumber asWriter asWriterNumber Person
-        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
-        jpaQueryFactory.update(qStar).set(qStar.asActor,"").set(qStar.asActorNumber,0).set(qStar.asDirector,"").set(qStar.asDirectorNumber,0).set(qStar.asWriter,"").set(qStar.asWriterNumber,0)
-                .setNull(qStar.person)
-                .where(qStar.deleted.ne(1)).execute();
+        if (this.initStarPropWithQueryDsl()>0){
+            System.out.println("清空star表字段");
+        }
+
+
 
 
         //数据库中已存在的person编号
@@ -129,11 +145,11 @@ public class RelevanceServiceImpl implements RelevanceService {
             String writerDoubanNo = film.getScreenWriter();
             String[] ddno_array=null,adno_array=null,sdno_array=null;
 
-            if (directorsDoubanNo != null && !directorsDoubanNo.trim().equals(""))
+            if (directorsDoubanNo != null && !StringUtils.isEmpty(directorsDoubanNo))
                 ddno_array = directorsDoubanNo.split(",");
-            if (actorsDoubanNo != null && !actorsDoubanNo.trim().equals(""))
+            if (actorsDoubanNo != null && !StringUtils.isEmpty(actorsDoubanNo) )
                 adno_array = actorsDoubanNo.split(",");
-            if (writerDoubanNo != null && !writerDoubanNo.trim().equals(""))
+            if (writerDoubanNo != null && !StringUtils.isEmpty(writerDoubanNo) )
                 sdno_array = writerDoubanNo.split(",");
 
 
@@ -165,7 +181,7 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //判断当前filmid是否已存在当前star的asdirect字段中
                         //不存在add进去，并更新number
                         String[] asDArray;
-                        if (star.getAsDirector() != null) {
+                        if (star.getAsDirector() != null && !StringUtils.isEmpty(star.getAsDirector())) {
                             asDArray = star.getAsDirector().split(",");
                             if (asDArray != null && !Arrays.asList(asDArray).contains(mediaId)) {
                                 String[] asDArrayNew = new String[asDArray.length + 1];
@@ -239,7 +255,7 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //判断当前filmid是否已存在当前star的asdirect字段中
                         //不存在add进去，并更新number
                         String[] asAArray = null;
-                        if (star.getAsActor() != null) {
+                        if (star.getAsActor() != null  && !StringUtils.isEmpty(star.getAsActor())) {
                             asAArray = star.getAsActor().split(",");
                             if (asAArray != null && !Arrays.asList(asAArray).contains(mediaId)) {
                                 String[] asAArrayNew = new String[asAArray.length + 1];
@@ -310,7 +326,7 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //判断当前filmid是否已存在当前star的asdirect字段中
                         //不存在add进去，并更新number
                         String[] asAArray = null;
-                        if (star.getAsWriter() != null) {
+                        if (star.getAsWriter() != null && !StringUtils.isEmpty(star.getAsWriter())) {
                             asAArray = star.getAsWriter().split(",");
                             if (asAArray != null && !Arrays.asList(asAArray).contains(mediaId)) {
                                 String[] asAArrayNew = new String[asAArray.length + 1];
