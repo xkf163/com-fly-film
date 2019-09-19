@@ -1,0 +1,92 @@
+<style>
+
+    label {
+        float: left;
+        display: block;
+        width: 75px;
+        text-align: left;
+        padding: 7px 0 15px 5px;
+        margin: 0 0 2px;
+        font-weight: 400;
+    }
+
+    .editormd-file-input {
+        width: 75px;
+        height: 32px;
+        margin-left: 8px;
+        position: relative;
+        display: inline-block;
+    }
+
+    .editormd-file-input input[type=file] {
+        width: 75px;
+        height: 32px;
+        /*opacity: 0;*/
+        cursor: pointer;
+        background: #000;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .editormd-file-input input[type=button] {
+        color: #666;
+        min-width: 75px;
+        cursor: pointer;
+        background: #fff;
+        padding: 7px 10px;
+        border: 1px solid #ddd;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        -ms-border-radius: 3px;
+        -o-border-radius: 3px;
+        border-radius: 3px;
+        -webkit-transition: background 300ms ease-out;
+        -moz-transition: background 300ms ease-out;
+        transition: background 300ms ease-out;
+    }
+
+    .editormd-dialog-container {
+        position: relative;
+        padding: 20px;
+        line-height: 1.4;
+    }
+
+</style>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">Film表单</h5>
+</div>
+
+<div class="modal-body editormd-dialog-container">
+
+    <form action="/api/film/upload/${id}"  method="post" enctype="multipart/form-data" id="upload-form">
+        <input type="hidden"  name="id" value="${id}">
+        <label>图片地址</label><input type="text" data-url="">
+        <div class="editormd-file-input">
+            <input type="file" name="fileLogo" accept="image/*">
+
+        </div>
+
+        <input type="button" id="upload" value="本地上传">
+    </form>
+
+</div>
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+    var id="${id?default(0)}";
+    var winId = "filmWin";
+
+$(function () {
+    $("#upload").click(function () {
+        $("#upload-form").ajaxSubmit(function (data) {
+            modals.info(data.msg);
+        });
+    })
+})
+
+
+</script>

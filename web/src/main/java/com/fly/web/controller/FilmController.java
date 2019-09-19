@@ -29,4 +29,10 @@ public class FilmController {
     }
 
 
+    @GetMapping(value = "/logo")
+    private String uploadLogo(String id, HttpServletRequest request) {
+        request.setAttribute("id", id);
+        return "views/film/film_upload";
+    }
+
 }

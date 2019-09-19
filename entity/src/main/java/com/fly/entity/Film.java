@@ -81,4 +81,11 @@ public class Film extends BaseEntity implements Serializable{
     @Transient
     private String episodeNumber;
 
+
+    //@Lob 通常与@Basic同时使用，提高访问速度
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name=" film_logo", columnDefinition="longblob", nullable=true)
+    private byte[] FilmLogo;
+
 }

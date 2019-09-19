@@ -30,11 +30,11 @@
 
 	<!-- Media 影音管理/影音列表 -->
 	<query id="media_list" key="id" tableName="影音列表" className="com.fly.entity.Media"
-		pageSize="20"  widthType="px" order="gatherDate desc">
-		<column key="rowIndex" header="序号" width="30" allowSort="false" />
+		pageSize="10"  widthType="px" order="gatherDate desc">
+		<column key="rowIndex" header="序号" width="10px" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameChn" header="片名(中)" width="120"  operator="like"  align="left" />
-		<column key="nameEng" header="片名（英）" width="130"  operator="like"  align="left" />
+		<column key="nameChn" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderNameChn" />
+		<column key="name" header="片名" width="130"  operator="like"  align="left" />
 		<column key="year" header="年代" width="50"  operator="eq"  allowSort="true"/>
 		<column key="pcName" header="PC名" width="70"  operator="like"  align="left"  allowSort="true"/>
 		<column key="diskName" header="盘名" width="50"  operator="like"  allowSort="true"/>

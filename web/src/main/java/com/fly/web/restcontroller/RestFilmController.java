@@ -7,11 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import com.fly.common.base.pojo.ResultBean;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.fly.entity.QMedia.media;
 
@@ -58,9 +61,31 @@ public class RestFilmController {
         }
 
         film.setUpdateDate(new Date());
+
         filmService.save(film);
 
         return new ResultBean<>(film);
+    }
+
+
+    /**
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/upload/{filmId}")
+    private ResultBean<Film> uploadLogo(@PathVariable(name = "filmId", required = true) Long filmId,@RequestParam(name="fileLogo",required=false) MultipartFile fileLogo) throws IOException {
+        Film film = filmService.findOne(filmId);
+        if (fileLogo == null){
+            film.setFilmLogo(null);
+        }else {
+            film.setFilmLogo(fileLogo.getBytes());
+        }
+        film.setUpdateDate(new Date());
+        filmService.save(film);
+
+        return new ResultBean<>(film);
+
     }
 
 }

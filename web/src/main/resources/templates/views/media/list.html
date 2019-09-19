@@ -60,4 +60,17 @@
         return d.diskNo + ":" +d.fullPath;
     }
 
+    function fnRenderNameChn(value) {
+
+        return "<img width='50px' src='http://hbimg.b0.upaiyun.com/dd7502afc6d61b2de2acd81d9036b82ac76224f845340-WbI7YI_fw658'>";
+        if (value) {
+            var ret = value;
+            // ajaxPost(basePath + "/org/show/" + value, null, function (data) {
+            //     ret = data.data;
+            // })
+            return ret;
+        } else
+            return value;
+    }
+
 </script>

@@ -5,7 +5,7 @@
 
 <div class="modal-body">
 
-    <form id="film-form" name="film-form" class="form-horizontal">
+    <form id="film-form" name="film-form" class="form-horizontal" >
         <input type="hidden" name="id">
         <input type="hidden" name="deleted">
         <input type="hidden" name="createDate">
@@ -138,6 +138,11 @@
                     <textarea rows="4" class="form-control" id="introduce" name="introduce" placeholder="简介" />
                 </div>
             </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                   <button type="button" class="btn btn-sm btn-camera" data-btn-type="upload"><i class="fa fa-camera">&nbsp;上传/更改头像</i></button>
+                </div>
+            </div>
 
         </div>
 
@@ -241,7 +246,23 @@
                 form.initFormData(data);
             })
         }
+
+
+        $("[data-btn-type='upload']").click(function () {
+            uploadLogo();
+        })
+
     });
+
+    var logoWin = "logoWin";
+    function uploadLogo() {
+        modals.openWin({
+            winId: logoWin,
+            title: '上传海报',
+            width: '500px',
+            url: basePath + "/film/logo?id=" + id
+        });
+    }
 
 
     function resetForm(){
