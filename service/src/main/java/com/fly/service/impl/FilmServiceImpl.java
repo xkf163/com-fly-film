@@ -123,10 +123,13 @@ public class FilmServiceImpl implements FilmService {
         for (int i = 0; i < size; i++) {
             Film ff = films.get(i);
 
-            //Film film = findBySubjectAndDoubanNo(ff);
-            //if (null == film) {
+
+            if (null == ff.getId()) {
                 entityManager.persist(ff);
-           // }
+            }else{
+                entityManager.merge(ff);
+            }
+
 
             if (i % 10 == 0 || i == (size - 1)) { // 每10条数据执行一次，或者最后不足10条时执行
                 entityManager.flush();
@@ -239,6 +242,41 @@ public class FilmServiceImpl implements FilmService {
                     .fetch();
             return listDouBanNo;
 
+    }
+
+
+    @Override
+    public List<String> findAllUrlOfFilmWithoutLogo() {
+
+        QFilm qFilm = QFilm.film;
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<String> listDouBanNo = jpaQueryFactory.select(qFilm.doubanNo.prepend("https://movie.douban.com/subject/").append("/"))
+                .from(qFilm)
+                .where(qFilm.filmLogo.isNull().and(qFilm.doubanNo.isNotNull()))
+                .fetch();
+
+        return listDouBanNo;
+
+    }
+
+
+    @Override
+    public List<String> findAllUrlOfMediaFilmWithoutLogo() {
+        QMedia qMedia = QMedia.media;
+        //QFilm qFilm = QFilm.film;
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<String> listDouBanNo = jpaQueryFactory.select(qMedia.film.doubanNo.prepend("https://movie.douban.com/subject/").append("/"))
+                .from(qMedia)
+                .where(qMedia.film.isNotNull().and(qMedia.film.filmLogo.isNull()).and(qMedia.film.doubanNo.isNotNull()))
+                .where(qMedia.deleted.ne(1))
+                .fetch();
+
+        return listDouBanNo;
+    }
+
+    @Override
+    public Film findByDoubanNo(String doubanNo) {
+        return filmRepository.findByDoubanNo(doubanNo);
     }
 
     @Override

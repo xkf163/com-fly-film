@@ -137,6 +137,7 @@
                                     <i class="ace-icon fa fa-chain bigger-120 blue"></i>
                                     爬取海报
                                 </button>
+                                <input type="checkbox" data-flag="icheck" class="square-grey"  value="1"  id="refreshL" name="refreshL" >
                                 <!--<button type="submit" class="btn btn-purple pull-right" data-btn-type="save">关联</button>-->
                             </div>
 
@@ -241,7 +242,7 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function(validator, userform, submitButton) {
-                modals.confirm('确认开始关联？', function() {
+                modals.confirm('确认开始爬取海报？', function() {
                     //Save Data，对应'submit-提交'
                     var params = logoform.getFormSimpleData();
                     // $.ajaxSetup({
@@ -311,6 +312,23 @@
                 });
             }
 
+            if ($("#refreshL").is(':checked')) {
+                $.ajax({
+                    type: "post",
+                    url: "/crawler/logb",
+                    cache:false,
+                    async:true,
+                    success: function(result){
+                        if (result.length > 0) {
+                            $ul = $(".scroll-box ul");
+                            $("<li>"+result+"</li>").prependTo($ul);
+
+
+                        }
+
+                    }
+                });
+            }
 
         }, 100);
 

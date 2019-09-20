@@ -17,11 +17,17 @@ public interface FilmService {
 
     Film findBySubjectAndDoubanNo(Film film);
 
+    Film findByDoubanNo(String doubanNo);
+
     Map<String, Object> filmAllOfPerson(String reqObj) throws Exception ;
 
     void save(Film film);
 
     List<String> findAllDouBanNo();
+
+    List<String> findAllUrlOfFilmWithoutLogo() ;
+
+    List<String> findAllUrlOfMediaFilmWithoutLogo() ;
 
     Film findOne(Long id);
 }

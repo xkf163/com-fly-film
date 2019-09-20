@@ -40,7 +40,7 @@
     </div>
     <div class="row">
             <!-- PAGE CONTENT BEGINS -->
-            <table id="media_list" class="table table-bordered table-hover">
+            <table id="media_unlink_list" class="table table-bordered table-hover">
             </table>
             <!-- PAGE CONTENT ENDS -->
     </div><!-- /.row -->
@@ -53,7 +53,7 @@
     var dataUrl ="${dataUrl}";
     $(function() {
         //init table and fill data
-        mediaTable = new CommonTable("media_list", dataUrl, "searchDiv");
+        mediaTable = new CommonTable("media_unlink_list", dataUrl, "searchDiv");
     });
 
     function format ( d ) {

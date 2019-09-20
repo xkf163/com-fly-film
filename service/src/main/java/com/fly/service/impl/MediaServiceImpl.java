@@ -88,7 +88,7 @@ public class MediaServiceImpl implements MediaService {
 
         QMedia media = QMedia.media;
         //初始化组装条件(类似where 1=1)
-        Predicate predicate = media.deleted.ne(1);
+        Predicate predicate = media.deleted.ne(1).and(media.film.isNotNull());
         //执行动态条件拼装
         predicate = nameChn == null ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(nameChn));
         predicate = year == null ? predicate : ExpressionUtils.and(predicate,media.year.eq(year));

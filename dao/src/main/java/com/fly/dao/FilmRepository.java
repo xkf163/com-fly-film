@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FilmRepository extends JpaRepository<Film,Long>, QueryDslPredicateExecutor<Film> {
+    Film findByDoubanNo(String doubanNo);
 }

@@ -1,6 +1,7 @@
 package com.fly.crawler.service.impl;
 
 import com.fly.crawler.entity.Crawler;
+import com.fly.crawler.processor.DouBanLogoProcessor;
 import com.fly.crawler.processor.DouBanProcessor;
 import com.fly.crawler.service.CrawlerService;
 import com.fly.entity.Film;
@@ -44,6 +45,9 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     @Autowired
     DouBanProcessor douBanProcessor;
+
+    @Autowired
+    DouBanLogoProcessor douBanLogoProcessor;
 
     /*
     解析爬虫返回的页面数据，提取出film字段数据
@@ -236,6 +240,60 @@ public class CrawlerServiceImpl implements CrawlerService {
         //System.out.println(f);
         return f;
     }
+
+
+
+    @Override
+    public Film extractOnlyFilmLogo(Page page ) {
+
+        Html pageHtml = page.getHtml();
+
+        //1）从URL提取豆瓣编号
+        String doubanNo = page.getUrl().regex("/subject/(\\d+)/").toString();
+        //2）片名
+        page.putField("subject", pageHtml.xpath(xPathMap.get("subject")).toString());
+
+        Film f = filmService.findByDoubanNo(doubanNo);
+
+        //18海报图片保存
+        //*[@id="mainpic"]/a/img
+        String logo_url = page.getHtml().xpath("//div[@id='mainpic']").xpath("//*[@id=\"mainpic\"]/a/img/@src").toString();
+        System.out.println("--------------------logo--url");
+        System.out.println(logo_url);
+
+        try {
+            URL url = new URL(logo_url);
+            URLConnection con = url.openConnection();
+            inStream = con.getInputStream();
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int len = 0;
+            while((len = inStream.read(buf)) != -1){
+                outStream.write(buf,0,len);
+            }
+            inStream.close();
+            outStream.close();
+            byte[] a = outStream.toByteArray();
+            f.setFilmLogo(a);
+
+            douBanLogoProcessor.runningLog  = douBanLogoProcessor.ind+"、[F] "+page.getResultItems().get("subject")+" ;豆瓣编号"+doubanNo+" 海报图片爬取成功";
+            douBanLogoProcessor.ind++;
+
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        //条目创建（爬取）时间
+        f.setUpdateDate(new Date());
+
+
+        return f;
+    }
+
 
 
     @Override
