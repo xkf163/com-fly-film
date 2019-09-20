@@ -138,11 +138,6 @@
                     <textarea rows="4" class="form-control" id="introduce" name="introduce" placeholder="简介" />
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                   <button type="button" class="btn btn-sm btn-camera" data-btn-type="upload"><i class="fa fa-camera">&nbsp;上传/更改头像</i></button>
-                </div>
-            </div>
 
         </div>
 
@@ -157,7 +152,20 @@
         <!-- /.box-footer -->
     </form>
 
+    <br>
+    <div class="row">
+        <form action="/api/film/upload/${id}"  method="post" enctype="multipart/form-data" id="upload-form">
+            <input type="file" class="pull-left" name="fileLogo" accept="image/*">
+            <input type="button" id="upload" class="pull-right" value="上传">
+        </form>
+    </div>
+
+    <br>
+
+
 </div>
+
+
 <script>
     //tableId,queryId,conditionContainer
     var form =null;
@@ -248,21 +256,14 @@
         }
 
 
-        $("[data-btn-type='upload']").click(function () {
-            uploadLogo();
+        $("#upload").click(function () {
+            $("#upload-form").ajaxSubmit(function (data) {
+                modals.info(data.msg);
+            });
         })
 
     });
 
-    var logoWin = "logoWin";
-    function uploadLogo() {
-        modals.openWin({
-            winId: logoWin,
-            title: '上传海报',
-            width: '500px',
-            url: basePath + "/film/logo?id=" + id
-        });
-    }
 
 
     function resetForm(){
