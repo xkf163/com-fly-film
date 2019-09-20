@@ -86,6 +86,6 @@ public class Film extends BaseEntity implements Serializable{
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name=" film_logo", columnDefinition="longblob", nullable=true)
-    private byte[] FilmLogo;
+    private byte[] filmLogo;
 
 }

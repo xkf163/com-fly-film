@@ -121,14 +121,26 @@
 
                 <div class="col-xs-12 col-sm-6 col-md-8">
                     <div class="row">
-                    <div class="form-group">
-                        <label style="margin-left: 30px;">运行日志：</label><input type="checkbox" data-flag="icheck" class="square-grey"  value="1"  id="refreshC" name="refreshC" ><input type="checkbox" data-flag="icheck" class="square-green pull-right"  value="1"  id="refresh" name="refresh" >
-                        <div class="scroll-box" style="margin-left: 30px;">
-                            <ul>
-                            </ul>
+                        <div class="form-group">
+                            <label style="margin-left: 30px;">运行日志：</label><input type="checkbox" data-flag="icheck" class="square-grey"  value="1"  id="refreshC" name="refreshC" ><input type="checkbox" data-flag="icheck" class="square-green pull-right"  value="1"  id="refresh" name="refresh" >
+                            <div class="scroll-box" style="margin-left: 30px;">
+                                <ul>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <form id="logo-form" method="logo-form" class="form-horizontal">
+                            <div class="form-group" style="line-height: 35px;margin-left: 30px;">
+                                <input type="checkbox" value="1"   data-flag="icheck" class="square-blue"   id="forFilm" name="forFilm">&nbsp;&nbsp;爬取Film海报?（默认Media）
+                                <button type="submit" class="btn btn-white btn-info btn-bold  pull-right"  data-btn-type="save">
+                                    <i class="ace-icon fa fa-chain bigger-120 blue"></i>
+                                    爬取海报
+                                </button>
+                                <!--<button type="submit" class="btn btn-purple pull-right" data-btn-type="save">关联</button>-->
+                            </div>
 
+                        </form>
                     </div>
                 </div>
 
@@ -215,6 +227,49 @@
             }
         });
         relevanceform.initComponent();
+
+
+
+        //初始化控件
+        logoform=$("#logo-form").form();
+        //数据校验
+        $("#logo-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认开始关联？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = logoform.getFormSimpleData();
+                    // $.ajaxSetup({
+                    //     async: true
+                    // });
+                    ajaxPost(basePath+'/crawler/logo', params, function(data, status) {
+                        if(data.msg == "success"){
+                            if(id!="0"){//更新
+                                modals.hideWin(winId);
+                                //seriesTable.reloadRowData(id);
+
+                            }else{//新增
+                                //modals.info("数据保存成功");
+                                modals.hideWin(winId);
+                                // seriesTable.reloadData();
+                                //$("#url").val(data.data);
+                                //$("#refresh").iCheck('uncheck');
+                                modals.alert("完成爬取Logo。")
+                            }
+                        }
+                    }, true);
+
+                });
+            }
+        });
+        relevanceform.initComponent();
+
+
 
 
         window.clearInterval(int);

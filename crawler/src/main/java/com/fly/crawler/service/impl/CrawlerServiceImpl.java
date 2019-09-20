@@ -18,6 +18,10 @@ import us.codecraft.webmagic.selector.PlainText;
 import us.codecraft.webmagic.selector.Selectable;
 
 import javax.annotation.PostConstruct;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 
@@ -36,6 +40,7 @@ public class CrawlerServiceImpl implements CrawlerService {
         xPathMap.put("subject","//div[@id=\"content\"]/h1/span[1]/text()");
     }
 
+    public static InputStream inStream = null;
 
     @Autowired
     DouBanProcessor douBanProcessor;
@@ -190,6 +195,40 @@ public class CrawlerServiceImpl implements CrawlerService {
                 f.setSubjectOther(subject_temp);
             }
         }
+
+
+        //18海报图片保存
+        //*[@id="mainpic"]/a/img
+        String logo_url = pageHtml.xpath("//div[@id='mainpic']").xpath("//*[@id=\"mainpic\"]/a/img/@src").toString();
+        System.out.println("--------------------logo--url");
+        System.out.println(logo_url);
+
+        try {
+            URL url = new URL(logo_url);
+            URLConnection con = url.openConnection();
+            inStream = con.getInputStream();
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int len = 0;
+            while((len = inStream.read(buf)) != -1){
+                outStream.write(buf,0,len);
+            }
+            inStream.close();
+            outStream.close();
+            byte[] a = outStream.toByteArray();
+            f.setFilmLogo(a);
+
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+
+
 
         //条目创建（爬取）时间
         f.setCreateDate(new Date());

@@ -62,15 +62,12 @@
 
     function fnRenderNameChn(value) {
 
-        return "<img width='50px' src='http://hbimg.b0.upaiyun.com/dd7502afc6d61b2de2acd81d9036b82ac76224f845340-WbI7YI_fw658'>";
+        console.log(value);
+
         if (value) {
-            var ret = value;
-            // ajaxPost(basePath + "/org/show/" + value, null, function (data) {
-            //     ret = data.data;
-            // })
-            return ret;
+            return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
         } else
-            return value;
+            return "<img width='50px' src= 'https://c-ssl.duitang.com/uploads/item/201507/11/20150711135233_mv2Nr.thumb.700_0.jpeg' >";
     }
 
 </script>
