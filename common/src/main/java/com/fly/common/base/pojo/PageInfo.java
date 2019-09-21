@@ -8,7 +8,7 @@ public class PageInfo {
     public PageInfo() {
 
         pageNum = 1;
-        pageSize = 20;
+        pageSize = 10;
     }
 
     public PageInfo(Integer pageSize) {

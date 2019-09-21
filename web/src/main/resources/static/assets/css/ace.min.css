@@ -12132,6 +12132,11 @@ th {
     border-radius: 0 !important
 }
 
+.table>tbody>tr>td>img {
+    margin: -6px;
+}
+
+
 .table>thead>tr {
     color: #707070;
     font-weight: 400;

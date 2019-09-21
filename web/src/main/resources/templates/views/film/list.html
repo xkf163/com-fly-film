@@ -118,7 +118,24 @@
     });
 
 
+    function fnRenderFilmLogo(value) {
+        if (value) {
+            return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
+        } else
+            return "<img width='50px' src= '/assets/images/avatars/nologo.png' >";
+    }
 
+    function fnRenderReleaseDate(value) {
+
+        if (value) {
+            if (value.indexOf(",")){
+                return value.replace(/,/g,"<br>");
+            }
+        }
+
+        return value;
+
+    }
 
     function refreshAuto() {
         //console.log("refresh table");

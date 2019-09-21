@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class ScannerServiceImpl implements ScannerService {
 
     private static final String[] folderKeys  = new String[] {"720P","1080P","1080I","DTS","CMCT","TLF","CHD","HDS","HDSKY","FRDS","EPIC","HDAREA","ATOMS","TRUEHD","X264","X265","DVDRIP"};
-    private static final String[] filePostfix = new String[]{"MKV","TS","AVI"};
+    private static final String[] filePostfix = new String[]{"MKV","TS","AVI","MP4"};
 
     @Autowired
     MediaRepository mediaRepository;

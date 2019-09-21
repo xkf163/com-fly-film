@@ -101,7 +101,7 @@
             columns.push(obj);
         }
 
-        console.log(columns);
+        //console.log(columns);
 
         // alert(JSON.stringify(columns));
         //var allowPaging = this.data.query.allowPaging;
@@ -111,7 +111,7 @@
         this.table = $('#' + tableId).DataTable($.extend({
             "paging": allowPaging, // 分页
             "lengthChange": allowPaging, // 每页记录数可选项
-            "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "全部"]],
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "全部"]],
             "searching": false, // 过滤
             "ordering": true, // 排序
             "rowId": rowId,

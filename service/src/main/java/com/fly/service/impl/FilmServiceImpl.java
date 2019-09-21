@@ -269,6 +269,7 @@ public class FilmServiceImpl implements FilmService {
                 .from(qMedia)
                 .where(qMedia.film.isNotNull().and(qMedia.film.filmLogo.isNull()).and(qMedia.film.doubanNo.isNotNull()))
                 .where(qMedia.deleted.ne(1))
+                .orderBy(qMedia.gatherDate.desc())
                 .fetch();
 
         return listDouBanNo;

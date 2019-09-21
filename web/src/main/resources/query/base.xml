@@ -3,22 +3,25 @@
 	xsi:schemaLocation="http://www.example.org/query query.xsd ">
 
 	<!-- Film 豆瓣数据/电影列表-->
-	<query id="film_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="20"  widthType="px" order="createDate desc">
+	<query id="film_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="createDate desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
+		<column key="filmLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderFilmLogo" />
 		<column key="subject" header="片名" width="120"  align="left" />
 		<column key="year" header="年份" width="60"  operator="eq"  allowSort="true" />
 		<column key="country" header="国家/地区" width="80"  align="left" />
 		<column key="genre" header="类型" width="100"  align="left" />
 		<column key="doubanRating" header="豆瓣评分" width="30" allowSort="true"/>
 		<column key="runtime" header="时长" operator="like" width="30" allowSort="true" />
+		<column key="initialReleaseDate" header="发行时间" operator="like" align="left"  width="50"  fnRender="fnRenderReleaseDate" />
 		<column key="createDate" header="爬取时间" operator="like" width="50" allowSort="true" />
 	</query>
 
 	<!-- Film 豆瓣数据/人物合集（右表）-->
-	<query id="film_person_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="20"  widthType="px" order="year desc">
+	<query id="film_person_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="year desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
+		<column key="filmLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderFilmLogo" />
 		<column key="subject" header="片名" width="120"  align="left" />
 		<column key="year" header="年份" width="60"  operator="eq"  allowSort="true" />
 <!--		<column key="country" header="国家/地区" width="80"  align="left" />-->
@@ -86,11 +89,13 @@
 
 	<!-- Media 影音管理/系列合集/影人合集（右表）-->
 	<query id="media_star_list" key="id" tableName="影音列表" className="com.fly.entity.Media"
-		   pageSize="20"  widthType="px" order="year desc">
+		   pageSize="10"  widthType="px" order="year desc">
 		<column key="rowIndex" header="序号" width="20" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameChn" header="片名(中)" width="150"  operator="like"  align="left" />
-		<column key="nameEng" header="片名（英）" width="150"  operator="like"  align="left" />
+		<column key="film.filmLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderNameChn" />
+<!--		<column key="name" header="片名" width="130"  operator="like"  align="left" />-->
+		<column key="nameChn" header="片名(中)" width="120"  operator="like"  align="left" />
+		<column key="nameEng" header="片名（英）" width="120"  operator="like"  align="left" />
 		<column key="year" header="年代" width="60"  operator="eq"  allowSort="true"/>
 		<column key="film.doubanRating" header="豆分" width="40"  operator="eq"  allowSort="true"/>
 		<column key="mediaSizeGB" header="大小(GB)" align="left" width="40"  allowSort="true"/>
@@ -101,9 +106,10 @@
 
 	<!-- Media 影音管理/系列合集/影音系列（右表）-->
 	<query id="media_series_list" key="id" tableName="影音列表" className="com.fly.entity.Media"
-		   pageSize="20"  widthType="px" order="year desc">
+		   pageSize="10"  widthType="px" order="year desc">
 		<column key="rowIndex" header="序号" width="20" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
+		<column key="film.filmLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderNameChn" />
 		<column key="nameChn" header="片名(中)" width="150"  operator="like"  align="left" />
 		<column key="nameEng" header="片名（英）" width="150"  operator="like"  align="left" />
 		<column key="year" header="年代" width="60"  operator="eq"  allowSort="true"/>
@@ -115,7 +121,7 @@
 
 	<!-- Person 豆瓣数据/人物列表-->
 	<query id="person_list" key="id" tableName="人物列表" className="com.fly.entity.Person"
-		   pageSize="20"  widthType="px" order="createDate desc">
+		   pageSize="10"  widthType="px" order="createDate desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left" />
@@ -127,7 +133,7 @@
 
 	<!-- Person 豆瓣数据/人物合集（左表）-->
 	<query id="person_film_list" key="id" tableName="人物列表" className="com.fly.entity.Person"
-		   pageSize="20"  widthType="px" order="createDate desc">
+		   pageSize="10"  widthType="px" order="createDate desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left" />
@@ -139,7 +145,7 @@
 
 	<!-- Star 影音管理/影人列表-->
 	<query id="star_list" key="id" tableName="人物列表" className="com.fly.entity.Star"
-		   pageSize="20"  widthType="px" order="asActorNumber desc">
+		   pageSize="10"  widthType="px" order="asActorNumber desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left" />
@@ -154,7 +160,7 @@
 
 	<!-- Star -->
 	<query id="star_media_list" key="id" tableName="人物列表" className="com.fly.entity.Star"
-		   pageSize="20"  widthType="px" order="asActorNumber desc">
+		   pageSize="10"  widthType="px" order="asActorNumber desc">
 		<column key="rowIndex" header="序号" width="20" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left" />
@@ -169,7 +175,7 @@
 
 	<!-- Series -->
 	<query id="series_list" key="id" tableName="系列列表" className="com.fly.entity.Series"
-		   pageSize="20"  widthType="px" order="id desc">
+		   pageSize="10"  widthType="px" order="id desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="name" header="系列名称" width="120"  operator="like"  align="left" />
