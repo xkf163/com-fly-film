@@ -371,7 +371,7 @@
             modals.openWin({
                 winId:_winId,
                 title:'新增编辑',
-                width:'1000px',
+                width:'1200px',
                 url: basePath+_url
             });
         });

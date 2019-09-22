@@ -58,9 +58,13 @@ public class RestFilmController {
         Long id = film.getId();
         if (id == null ){
             film.setCreateDate(new Date());
+        }else{
+            Film f = filmService.findOne(id);
+            film.setFilmLogo(f.getFilmLogo());
+            film.setUpdateDate(new Date());
         }
 
-        film.setUpdateDate(new Date());
+
 
         filmService.save(film);
 
@@ -74,12 +78,12 @@ public class RestFilmController {
      * @return
      */
     @PostMapping(value = "/upload/{filmId}")
-    private ResultBean<Film> uploadLogo(@PathVariable(name = "filmId", required = true) Long filmId,@RequestParam(name="fileLogo",required=false) MultipartFile fileLogo) throws IOException {
+    private ResultBean<Film> uploadLogo(@PathVariable(name = "filmId", required = true) Long filmId,@RequestParam(name="filmLogo",required=false) MultipartFile filmLogo) throws IOException {
         Film film = filmService.findOne(filmId);
-        if (fileLogo == null){
+        if (filmLogo == null){
             film.setFilmLogo(null);
         }else {
-            film.setFilmLogo(fileLogo.getBytes());
+            film.setFilmLogo(filmLogo.getBytes());
         }
         film.setUpdateDate(new Date());
         filmService.save(film);

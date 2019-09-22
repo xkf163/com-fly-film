@@ -16,6 +16,8 @@ public interface PersonService {
 
     List<String> findAllDouBanNo();
 
+    List<String> findImportWithoutLogoList();
+
     void batchInsertAndUpdate(List<Person> persons);
 
     Person findByDouBanNo(String douBanNo);

@@ -138,16 +138,17 @@ public class DouBanProcessor implements PageProcessor {
                     filmSaveQueue.add(f);
                     filmDouBanNoQueue.add(douBanNo);
                 }
-                if(!filmOnly){
+                if(!this.singleCrawler && personOnly){
                     //1)把页面中的相关人物URL加入到爬取队列中
                     crawlerService.addTargetRequests(page, "div.subject.clearfix" , URL_PERSON,"/celebrity/(\\d+)/" , dbPersonDouBanNoList , "csspath", "Person");
                 }
-
                 //是否延伸爬
-                if(!this.singleCrawler && !personOnly){
+                if(!this.singleCrawler && filmOnly){
                     //2)把页面中的相关影片URL加入到爬取队列中
                     crawlerService.addTargetRequests(page, "//div[@class='recommendations-bd']/dl/dt" ,URL_FILM_FROM_SUBJECT_PAGE, "/subject/(\\d+)/" , dbFilmDouBanNoList , "xpath", "Film");
                 }
+
+
             }else if(f == null && !personOnly){
                 //2)把页面中的相关影片URL加入到爬取队列中
                 crawlerService.addTargetRequests(page, "//div[@class='recommendations-bd']/dl/dt" ,URL_FILM_FROM_SUBJECT_PAGE, "/subject/(\\d+)/" , dbFilmDouBanNoList , "xpath", "Film");
@@ -183,7 +184,7 @@ public class DouBanProcessor implements PageProcessor {
                     personDouBanNoQueue.add(douBanNo);
                 }
 
-                if(!filmOnly){
+                if(!this.singleCrawler && personOnly){
                     //合作2次以上的影人  · · · · ·
                     crawlerService.addTargetRequests(page, "//*[@id=\"partners\"]/div[@class=\"bd\"]/ul[@class=\"list-s\"]/li/div[@class=\"pic\"]" ,URL_PERSON, "/celebrity/(\\d+)/" , dbPersonDouBanNoList , "xpath", "Person");
                 }

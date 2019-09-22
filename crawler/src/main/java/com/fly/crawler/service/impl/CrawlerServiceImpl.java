@@ -297,12 +297,73 @@ public class CrawlerServiceImpl implements CrawlerService {
 
 
     @Override
+    public Person extractOnlyPersonLogo(Page page ) {
+
+        Html pageHtml = page.getHtml();
+        page.putField("name", pageHtml.xpath("//title/text()").regex("(.*)\\s*\\(豆瓣\\)").toString());
+        if(page.getResultItems().get("name") == null){
+            return null;
+        }
+        if("".equals(page.getResultItems().get("name").toString().trim())){
+            return null;
+        }
+
+        String doubanNo = page.getUrl().regex("https://movie\\.douban\\.com/celebrity/(\\d+)/").toString();
+        Person p = personService.findByDouBanNo(doubanNo);
+
+
+        //18海报图片保存
+        //*[@id="mainpic"]/a/img
+        String logo_url = page.getHtml().xpath("//div[@class='article']//div[@class='pic']/a/img/@src").toString();
+        System.out.println("--------------------face_logo--url");
+        System.out.println(logo_url);
+
+        try {
+            URL url = new URL(logo_url);
+            URLConnection con = url.openConnection();
+            inStream = con.getInputStream();
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int len = 0;
+            while((len = inStream.read(buf)) != -1){
+                outStream.write(buf,0,len);
+            }
+            inStream.close();
+            outStream.close();
+            byte[] a = outStream.toByteArray();
+            p.setFaceLogo(a);
+
+            douBanLogoProcessor.runningLog  = douBanLogoProcessor.ind+"、[P] "+p.getName()+" ;豆瓣编号"+doubanNo+" 海报图片爬取成功";
+            douBanLogoProcessor.ind++;
+
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        //条目创建（爬取）时间
+        p.setUpdateDate(new Date());
+
+        return p;
+    }
+
+    @Override
     public Person extractPerson(Page page, List<String> dbPersonDouBanNoList) {
         Html pageHtml = page.getHtml();
         //Selectable filmInfoWrap = pageHtml.xpath("//div[@id='info']");
 
         page.putField("name", pageHtml.xpath("//title/text()").regex("(.*)\\s*\\(豆瓣\\)").toString());
         page.putField("doubanNo", page.getUrl().regex("https://movie\\.douban\\.com/celebrity/(\\d+)/").toString());
+
+        if(page.getResultItems().get("name") == null){
+            System.out.println("--->!!!Person豆瓣编号"+page.getResultItems().get("doubanNo")+" 页面404");
+            douBanProcessor.runningLog  = douBanProcessor.ind+"、[P] ;豆瓣编号"+page.getResultItems().get("doubanNo")+"的人物页面404";
+            douBanProcessor.ind++;
+            return null;
+        }
 
         if("".equals(page.getResultItems().get("name").toString().trim())){
             return null;

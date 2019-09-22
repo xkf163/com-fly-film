@@ -11,7 +11,7 @@
 		<column key="year" header="年份" width="60"  operator="eq"  allowSort="true" />
 		<column key="country" header="国家/地区" width="80"  align="left" />
 		<column key="genre" header="类型" width="100"  align="left" />
-		<column key="doubanRating" header="豆瓣评分" width="30" allowSort="true"/>
+		<column key="doubanRating" header="豆分" width="30" allowSort="true"/>
 		<column key="runtime" header="时长" operator="like" width="30" allowSort="true" />
 		<column key="initialReleaseDate" header="发行时间" operator="like" align="left"  width="50"  fnRender="fnRenderReleaseDate" />
 		<column key="createDate" header="爬取时间" operator="like" width="50" allowSort="true" />

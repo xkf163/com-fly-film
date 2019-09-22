@@ -45,5 +45,10 @@ public class Person extends BaseEntity implements Serializable {
     private String job;
     private String imdbNo;
 
+    //@Lob 通常与@Basic同时使用，提高访问速度
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name=" face_logo", columnDefinition="longblob", nullable=true)
+    private byte[] faceLogo;
 
 }

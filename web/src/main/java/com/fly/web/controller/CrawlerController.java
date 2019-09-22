@@ -229,4 +229,30 @@ public class CrawlerController {
     }
 
 
+
+    @PostMapping(value = "/logoP")
+    @ResponseBody
+    public void runningLogoP(Crawler crawler) {
+
+        // System.out.println(crawler.getForFilm());
+
+        //所有filmlogo为空的film数据，并返回 https://movie.douban.com/subject/1305579/ 的LIST，供爬虫用
+        List<String> personImportWithoutLogoList = new ArrayList<>();
+
+        personImportWithoutLogoList = personService.findImportWithoutLogoList();
+
+
+        String[] urlArray=personImportWithoutLogoList.toArray(new String[personImportWithoutLogoList.size()]);
+
+        douBanLogoProcessor.runningLog  = " 人物海报爬取队列长度： "+personImportWithoutLogoList.size();
+
+        //默认spider
+        spider = Spider.create(douBanLogoProcessor).addUrl(urlArray).thread(1);
+
+        //SpiderMonitor.instance().register(spider);
+        //异步启动，当前线程继续执行
+        spider.start();
+
+    }
+
 }

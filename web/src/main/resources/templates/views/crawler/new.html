@@ -133,9 +133,13 @@
                         <form id="logo-form" method="logo-form" class="form-horizontal">
                             <div class="form-group" style="line-height: 35px;margin-left: 30px;">
                                 <input type="checkbox" value="1"   data-flag="icheck" class="square-blue"   id="forFilm" name="forFilm">&nbsp;&nbsp;爬取Film海报?（默认Media）
-                                <button type="submit" class="btn btn-white btn-info btn-bold  pull-right"  data-btn-type="save">
+                                <button type="submit" class="btn btn-white btn-info btn-bold  pull-right"  data-btn-type="logo">
                                     <i class="ace-icon fa fa-chain bigger-120 blue"></i>
-                                    爬取海报
+                                    爬取电影海报
+                                </button>
+                                <button type="submit" class="btn btn-white btn-info btn-bold  pull-right"  data-btn-type="logoP">
+                                    <i class="ace-icon fa fa-chain bigger-120 blue"></i>
+                                    爬取人物头像
                                 </button>
                                 <input type="checkbox" data-flag="icheck" class="square-grey"  value="1"  id="refreshL" name="refreshL" >
                                 <!--<button type="submit" class="btn btn-purple pull-right" data-btn-type="save">关联</button>-->
@@ -248,7 +252,8 @@
                     // $.ajaxSetup({
                     //     async: true
                     // });
-                    ajaxPost(basePath+'/crawler/logo', params, function(data, status) {
+                    var submitType = $(submitButton).attr("data-btn-type");
+                    ajaxPost(basePath+'/crawler/'+submitType, params, function(data, status) {
                         if(data.msg == "success"){
                             if(id!="0"){//更新
                                 modals.hideWin(winId);

@@ -25,24 +25,42 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group">
-                    <label for="subjectOther" class="col-sm-1 control-label">其他名</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="subjectOther" name="subjectOther" placeholder="其他名">
+                <div class="form-group col-md-6">
+                    <label for="subjectOther" class="col-sm-2 control-label">又名</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="subjectOther" name="subjectOther" placeholder="又名">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="genre" class="col-sm-2 control-label">类型</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="genre" name="genre" placeholder="类型">
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="year" class="col-sm-3 control-label">年代</label>
-                    <div class="col-sm-8">
+                <div class="form-group col-md-2">
+                    <label for="year" class="col-sm-5 control-label">年代</label>
+                    <div class="col-sm-6">
                         <input type="text" class="form-control" id="year" name="year" placeholder="年代">
                     </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="country" class="col-sm-3 control-label">国家/地区</label>
-                    <div class="col-sm-8">
+                <div class="form-group col-md-2">
+                    <label for="runtime" class="col-sm-5 control-label">时长</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="runtime" name="runtime" placeholder="时长">
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="country" class="col-sm-4 control-label">国家/地区</label>
+                    <div class="col-sm-7">
                         <input type="text" class="form-control" id="country" name="country" placeholder="国家/地区">
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="initialReleaseDate" class="col-sm-4 control-label">发行日期</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="initialReleaseDate" name="initialReleaseDate" placeholder="发行日期">
                     </div>
                 </div>
             </div>
@@ -89,46 +107,33 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="initialReleaseDate" class="col-sm-3 control-label">发行日期</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="initialReleaseDate" name="initialReleaseDate" placeholder="发行日期">
-                    </div>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="runtime" class="col-sm-3 control-label">时长</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="runtime" name="runtime" placeholder="时长">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="directors" class="col-sm-3 control-label">导演</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="directors" name="directors" >
-                    </div>
-                </div>
-                <div class="form-group col-md-6">
                     <label for="screenWriter" class="col-sm-3 control-label">编剧</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="screenWriter" name="screenWriter" >
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="form-group">
-                    <label for="actors" class="col-sm-1 control-label">演员</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="actors" name="actors" placeholder="演员">
+                <div class="form-group col-md-6">
+                    <label class="col-sm-3 control-label">海报</label>
+                    <div class="col-sm-8">
+                        <!--<form enctype="multipart/form-data" id="upload-form">-->
+                            <input type="file" class="pull-left col-sm-8" name="filmLogo" id="filmLogo" accept="image/*">
+                            <input type="button" id="upload" class="pull-right  col-sm-4" value="上传">
+                        <!--</form>-->
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group">
-                    <label for="genre" class="col-sm-1 control-label">类型</label>
+                <div class="form-group col-md-4">
+                    <label for="directors" class="col-sm-3 control-label">导演</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="directors" name="directors" >
+                    </div>
+                </div>
+                <div class="form-group col-md-8">
+                    <label for="actors" class="col-sm-1 control-label">演员</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="genre" name="genre" placeholder="类型">
+                        <input type="text" class="form-control" id="actors" name="actors" placeholder="演员">
                     </div>
                 </div>
             </div>
@@ -140,30 +145,17 @@
             </div>
 
         </div>
-
-        <!-- /.box-body -->
-        <div class="box-footer text-right">
+        <div class="modal-footer">
             <!--以下两种方式提交验证,根据所需选择-->
             <!--<button type="submit" class="btn btn-primary" data-btn-type="saveToProcess">修改待确认</button>-->
             <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
             <button type="submit" class="btn btn-primary" data-btn-type="save">保存</button>
             <!--<button type="submit" class="btn btn-primary" data-btn-type="saveToFinish">确认并完成</button>-->
         </div>
-        <!-- /.box-footer -->
     </form>
 
-    <br>
-    <div class="row">
-        <form action="/api/film/upload/${id}"  method="post" enctype="multipart/form-data" id="upload-form">
-            <input type="file" class="pull-left" name="fileLogo" accept="image/*">
-            <input type="button" id="upload" class="pull-right" value="上传">
-        </form>
-    </div>
-
-    <br>
-
-
 </div>
+
 
 
 <script>
@@ -255,12 +247,34 @@
             })
         }
 
+        $(".close").click(function () {
+            filmTable.reloadData();
+        });
 
         $("#upload").click(function () {
-            $("#upload-form").ajaxSubmit(function (data) {
-                modals.info(data.msg);
+            var formData = new FormData;
+            if($("#filmLogo")[0].files[0] == null){
+                modals.info("请先选择要上传的海报图片！");
+                return false;
+            }
+            formData.append('filmLogo',$("#filmLogo")[0].files[0]);
+            formData.append('id',id);
+            $.ajax({
+                type: 'post', // 提交方式 get/post
+                url: '/api/film/upload/${id}', // 需要提交的 url
+                data: formData,
+                //ajax2.0可以不用设置请求头，但是jq帮我们自动设置了，这样的话需要我们自己取消掉
+                contentType:false,
+                //取消帮我们格式化数据，是什么就是什么
+                processData:false,
+                success: function(data) { // data 保存提交后返回的数据，一般为 json 数据
+                    // 此处可对 data 作相关处理
+                    modals.info(data.msg);
+                }
             });
+            return false; // 阻止表单自动提交事件，必须返回false，否则表单会自己再做一次提交操作，并且页面跳转
         })
+
 
     });
 

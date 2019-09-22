@@ -15,6 +15,8 @@ public interface CrawlerService {
 
     Film extractOnlyFilmLogo(Page page) ;
 
+    Person extractOnlyPersonLogo(Page page) ;
+
     Person extractPerson(Page page, List<String> dbPersonDouBanNoList);
 
     void saveFilmList(List<Film> filmList);

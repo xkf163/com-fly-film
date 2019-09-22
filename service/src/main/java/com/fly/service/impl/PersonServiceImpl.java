@@ -104,6 +104,22 @@ public class PersonServiceImpl implements PersonService {
         return listDouBanNo;
     }
 
+    @Override
+    public List<String> findImportWithoutLogoList() {
+
+        QStar qStar = QStar.star;
+        QPerson qPerson = QPerson.person;
+
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<String> listDouBanNo = jpaQueryFactory.select(qPerson.douBanNo.prepend("https://movie.douban.com/celebrity/").append("/"))
+                .from(qPerson,qStar)
+                .where(qStar.person.faceLogo.isNull().and(qStar.person.douBanNo.isNotNull()))
+                .where(qStar.asActorNumber.gt(5))
+                .fetch();
+
+        return listDouBanNo;
+
+    }
 
     @Override
     @Transactional
