@@ -158,17 +158,18 @@
 	</query>
 
 
-	<!-- Star -->
+	<!-- 影人合集 左表 -->
 	<query id="star_media_list" key="id" tableName="人物列表" className="com.fly.entity.Star"
 		   pageSize="10"  widthType="px" order="asActorNumber desc">
 		<column key="rowIndex" header="序号" width="20" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left" />
+		<column key="person.faceLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderNameChn" />
+		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left"  fnRender="fnRenderNameExtend" />
 		<column key="person.birthDay" header="出生日" width="100"  operator="like"  align="left"  allowSort="true" />
 <!--		<column key="person.birthPlace" header="出生地" width="100"   align="left"  operator="like"  allowSort="true" />-->
-		<column key="asDirectorNumber" header="导演数" width="30" align="center"  allowSort="true" />
-		<column key="asActorNumber" header="演绎数" align="center" width="30"  allowSort="true"/>
-		<column key="asWriterNumber" header="编剧数" align="center" width="30"  allowSort="true"/>
+		<column key="asDirectorNumber" header="导数" width="30" align="center"  allowSort="true" />
+		<column key="asActorNumber" header="演数" align="center" width="30"  allowSort="true"/>
+		<column key="asWriterNumber" header="编数" align="center" width="30"  allowSort="true"/>
 
 <!--		<column key="person.job" header="职业" align="left" width="100"  operator="like" />-->
 	</query>

@@ -83,6 +83,8 @@ public class DouBanLogoProcessor implements PageProcessor {
 
         }else if(page.getUrl().regex(URL_PERSON).match()){
 
+            Person p = crawlerService.extractOnlyPersonLogo(page);
+            personSaveQueue.add(p);
 
 
         }else {
@@ -94,14 +96,14 @@ public class DouBanLogoProcessor implements PageProcessor {
 
        //批量保存，而不是抓一个就保存一次
         crawlerService.saveFilmList(filmSaveQueue);
-        //crawlerService.savePersonList(personSaveQueue);
+        crawlerService.savePersonList(personSaveQueue);
 
         //加入到savedPersons
         savedFilms.addAll(filmSaveQueue);
-        //savedPersons.addAll(personSaveQueue);
+        savedPersons.addAll(personSaveQueue);
 
         filmSaveQueue.clear();
-        //personSaveQueue.clear();
+        personSaveQueue.clear();
 
     }
 

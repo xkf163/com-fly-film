@@ -333,6 +333,7 @@ public class CrawlerServiceImpl implements CrawlerService {
             byte[] a = outStream.toByteArray();
             p.setFaceLogo(a);
 
+            System.out.println(douBanLogoProcessor.ind+"、[P] "+p.getName()+" ;豆瓣编号"+doubanNo+" 海报图片爬取成功");
             douBanLogoProcessor.runningLog  = douBanLogoProcessor.ind+"、[P] "+p.getName()+" ;豆瓣编号"+doubanNo+" 海报图片爬取成功";
             douBanLogoProcessor.ind++;
 
@@ -429,6 +430,37 @@ public class CrawlerServiceImpl implements CrawlerService {
         p.setGender(gender);
         p.setImdbNo(imdbNo);
         p.setBirthPlace(birthplace);
+
+
+
+
+        //18海报图片保存
+        //*[@id="mainpic"]/a/img
+        String logo_url = page.getHtml().xpath("//div[@class='article']//div[@class='pic']/a/img/@src").toString();
+        try {
+            URL url = new URL(logo_url);
+            URLConnection con = url.openConnection();
+            inStream = con.getInputStream();
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int len = 0;
+            while((len = inStream.read(buf)) != -1){
+                outStream.write(buf,0,len);
+            }
+            inStream.close();
+            outStream.close();
+            byte[] a = outStream.toByteArray();
+            p.setFaceLogo(a);
+
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
 
         //条目创建（爬取）时间
         p.setCreateDate(new Date());

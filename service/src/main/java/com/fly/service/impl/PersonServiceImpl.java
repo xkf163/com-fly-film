@@ -108,13 +108,12 @@ public class PersonServiceImpl implements PersonService {
     public List<String> findImportWithoutLogoList() {
 
         QStar qStar = QStar.star;
-        QPerson qPerson = QPerson.person;
 
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
-        List<String> listDouBanNo = jpaQueryFactory.select(qPerson.douBanNo.prepend("https://movie.douban.com/celebrity/").append("/"))
-                .from(qPerson,qStar)
+        List<String> listDouBanNo = jpaQueryFactory.select(qStar.person.douBanNo.prepend("https://movie.douban.com/celebrity/").append("/"))
+                .from(qStar)
                 .where(qStar.person.faceLogo.isNull().and(qStar.person.douBanNo.isNotNull()))
-                .where(qStar.asActorNumber.gt(5))
+                .where(qStar.asActorNumber.gt(5).or(qStar.asDirectorNumber.gt(5)))
                 .fetch();
 
         return listDouBanNo;
@@ -128,7 +127,11 @@ public class PersonServiceImpl implements PersonService {
         for (int i = 0; i < size; i++) {
             Person pp = persons.get(i);
 
-            entityManager.persist(pp);
+            if (null == pp.getId()) {
+                entityManager.persist(pp);
+            }else{
+                entityManager.merge(pp);
+            }
 
             if (i % 10 == 0 || i == (size - 1)) { // 每10条数据执行一次，或者最后不足10条时执行
                 entityManager.flush();

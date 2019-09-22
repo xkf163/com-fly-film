@@ -237,10 +237,12 @@ public class CrawlerController {
         // System.out.println(crawler.getForFilm());
 
         //所有filmlogo为空的film数据，并返回 https://movie.douban.com/subject/1305579/ 的LIST，供爬虫用
-        List<String> personImportWithoutLogoList = new ArrayList<>();
+        List<String> personImportWithoutLogoList ;
 
         personImportWithoutLogoList = personService.findImportWithoutLogoList();
 
+
+        System.out.println(" 人物海报爬取队列长度： "+personImportWithoutLogoList.size());
 
         String[] urlArray=personImportWithoutLogoList.toArray(new String[personImportWithoutLogoList.size()]);
 
