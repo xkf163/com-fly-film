@@ -54,6 +54,8 @@
     $(function() {
         //init table and fill data
         mediaTable = new CommonTable("media_list", dataUrl, "searchDiv");
+
+        $("#thumbnail").magnify();
     });
 
     function format ( d ) {
@@ -61,10 +63,12 @@
     }
 
     function fnRenderNameChn(value) {
+        var src = '/assets/images/avatars/nologo.png';
+
         if (value) {
-            return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
-        } else
-            return "<img width='50px' src= '/assets/images/avatars/nologo.png' >";
+            src = 'data:image/jpeg;base64,'+value;
+        }
+        return "<a id='thumbnail' data-magnify='gallery' data-caption='logo' href='"+src+"'><img width='50px'  src="+src+"></a>";
     }
 
 </script>

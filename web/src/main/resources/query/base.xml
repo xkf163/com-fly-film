@@ -124,8 +124,10 @@
 		   pageSize="10"  widthType="px" order="createDate desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left" />
-		<column key="birthDay" header="生日" width="60"  operator="like"  allowSort="true"/>
+		<column key="faceLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderFaceLogo" />
+		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left"   fnRender="fnRenderNameExtend" />
+		<column key="gender" header="性别" width="30"  operator="like"  align="left"  />
+		<column key="birthDay" header="出生日" width="60" align="left"  operator="like"  allowSort="true"/>
 		<column key="birthPlace" header="出生地" width="40"   align="left"  operator="like"  allowSort="true"/>
 		<column key="job" header="职业" operator="like" width="80"   align="left" allowSort="true"/>
 		<column key="createDate" header="爬取时间" operator="like" width="50" allowSort="true" />
@@ -134,11 +136,12 @@
 	<!-- Person 豆瓣数据/人物合集（左表）-->
 	<query id="person_film_list" key="id" tableName="人物列表" className="com.fly.entity.Person"
 		   pageSize="10"  widthType="px" order="createDate desc">
-		<column key="rowIndex" header="序号" width="30" allowSort="false" />
+		<column key="rowIndex" header="序号" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left" />
-		<column key="birthDay" header="生日" width="60"  operator="like"  allowSort="true"/>
-		<column key="birthPlace" header="出生地" width="40"   align="left"  operator="like"  allowSort="true"/>
+		<column key="faceLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderFaceLogo" />
+		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left"   fnRender="fnRenderNameExtend" />
+		<column key="birthDay" header="出生日" width="60" align="left"  operator="like"  allowSort="true"/>
+		<column key="birthPlace" header="出生地" width="60"   align="left"  operator="like"  allowSort="true"/>
 <!--		<column key="job" header="职业" operator="like" width="80"   align="left" allowSort="true"/>-->
 <!--		<column key="createDate" header="爬取时间" operator="like" width="50" allowSort="true" />-->
 	</query>
@@ -148,12 +151,13 @@
 		   pageSize="10"  widthType="px" order="asActorNumber desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left" />
+		<column key="person.faceLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderFaceLogo" />
+		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left"  fnRender="fnRenderNameExtend" />
 		<column key="person.birthPlace" header="出生地" width="100"   align="left"  operator="like"  allowSort="true" />
 		<column key="person.birthDay" header="出生日" width="200"  operator="like"  align="left" />
-		<column key="asDirectorNumber" header="导演作品数" width="100" align="center"  allowSort="true" />
-		<column key="asActorNumber" header="演绎作品数" align="center" width="100"  allowSort="true"/>
-		<column key="asWriterNumber" header="编剧作品数" align="center" width="100"  allowSort="true"/>
+		<column key="asDirectorNumber" header="导演数" width="100" align="center"  allowSort="true" />
+		<column key="asActorNumber" header="演绎数" align="center" width="100"  allowSort="true"/>
+		<column key="asWriterNumber" header="编剧数" align="center" width="100"  allowSort="true"/>
 		<column key="person.job" header="职业" align="left" width="100"  operator="like" />
 	</query>
 

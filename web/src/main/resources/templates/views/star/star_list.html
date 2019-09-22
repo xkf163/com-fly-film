@@ -191,14 +191,12 @@
 
 
 		function fnRenderNameExtend(value) {
-			if (value) {
-
-				if (value.indexOf(" ")>0){
-					return value.replace(" ","<br>");
-				}
-
-			} else
-				return value;
+            if (value) {
+                if (value.indexOf(" ")>0){
+                    return value.replace(" ","<br>");
+                }
+            }
+            return value;
 		}
 
 
