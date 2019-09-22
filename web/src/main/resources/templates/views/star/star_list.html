@@ -182,13 +182,22 @@
 		})
 
 
-		function fnRenderNameChn(value) {
+		function fnRenderFilmLogo(value) {
 			if (value) {
 				return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
 			} else
 				return "<img width='50px' src= '/assets/images/avatars/noface.png' >";
 		}
 
+
+		function fnRenderNameChn(value) {
+			if (value) {
+				if (value.indexOf("：")>0){
+					return value.replace("：","：<br>");
+				}
+			}
+			return value;
+		}
 
 		function fnRenderNameExtend(value) {
             if (value) {

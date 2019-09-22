@@ -92,10 +92,10 @@
 		   pageSize="10"  widthType="px" order="year desc">
 		<column key="rowIndex" header="序号" width="20" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="film.filmLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderNameChn" />
+		<column key="film.filmLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderFilmLogo" />
 <!--		<column key="name" header="片名" width="130"  operator="like"  align="left" />-->
-		<column key="nameChn" header="片名(中)" width="120"  operator="like"  align="left" />
-		<column key="nameEng" header="片名（英）" width="120"  operator="like"  align="left" />
+		<column key="nameChn" header="片名(中)" width="150"  operator="like"  align="left"  fnRender="fnRenderNameChn" />
+		<column key="nameEng" header="片名（英）" width="150"  operator="like"  align="left" />
 		<column key="year" header="年代" width="60"  operator="eq"  allowSort="true"/>
 		<column key="film.doubanRating" header="豆分" width="40"  operator="eq"  allowSort="true"/>
 		<column key="mediaSizeGB" header="大小(GB)" align="left" width="40"  allowSort="true"/>
@@ -167,7 +167,7 @@
 		   pageSize="10"  widthType="px" order="asActorNumber desc">
 		<column key="rowIndex" header="序号" width="20" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="person.faceLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderNameChn" />
+		<column key="person.faceLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderFilmLogo" />
 		<column key="nameExtend" header="姓名" width="120"  operator="like"  align="left"  fnRender="fnRenderNameExtend" />
 		<column key="person.birthDay" header="出生日" width="100"  operator="like"  align="left"  allowSort="true" />
 <!--		<column key="person.birthPlace" header="出生地" width="100"   align="left"  operator="like"  allowSort="true" />-->

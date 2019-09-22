@@ -104,21 +104,19 @@ public class PersonServiceImpl implements PersonService {
         return listDouBanNo;
     }
 
+
     @Override
     public List<String> findImportWithoutLogoList() {
-
         QStar qStar = QStar.star;
-
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
         List<String> listDouBanNo = jpaQueryFactory.select(qStar.person.douBanNo.prepend("https://movie.douban.com/celebrity/").append("/"))
                 .from(qStar)
                 .where(qStar.person.faceLogo.isNull().and(qStar.person.douBanNo.isNotNull()))
-                .where(qStar.asActorNumber.gt(5).or(qStar.asDirectorNumber.gt(5)))
+                .where(qStar.asActorNumber.gt(2).or(qStar.asDirectorNumber.gt(5)))
                 .fetch();
-
         return listDouBanNo;
-
     }
+
 
     @Override
     @Transactional
@@ -150,4 +148,8 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.findByDouBanNo(douBanNo);
     }
 
+    @Override
+    public void save(Person person) {
+        personRepository.save(person);
+    }
 }

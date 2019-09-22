@@ -248,7 +248,9 @@
         }
 
         $(".close").click(function () {
-            filmTable.reloadData();
+            if(filmTable){
+                filmTable.reloadData();
+            }
         });
 
         $("#upload").click(function () {
@@ -261,7 +263,7 @@
             formData.append('id',id);
             $.ajax({
                 type: 'post', // 提交方式 get/post
-                url: '/api/film/upload/${id}', // 需要提交的 url
+                url: '/api/film/upload/'+id, // 需要提交的 url
                 data: formData,
                 //ajax2.0可以不用设置请求头，但是jq帮我们自动设置了，这样的话需要我们自己取消掉
                 contentType:false,
@@ -269,6 +271,9 @@
                 processData:false,
                 success: function(data) { // data 保存提交后返回的数据，一般为 json 数据
                     // 此处可对 data 作相关处理
+                    id = data.data.id;
+                    $("input[name='id']").val(data.data.id);
+                    $("input[name='createDate']").val(data.data.createDate);
                     modals.info(data.msg);
                 }
             });

@@ -1,13 +1,15 @@
 package com.fly.web.restcontroller;
 
+import com.fly.common.base.pojo.ResultBean;
 import com.fly.entity.Media;
 import com.fly.entity.Person;
 import com.fly.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -28,5 +30,56 @@ public class RestPersonController {
         return personService.findOne(Long.parseLong(id));
     }
 
+
+
+    /**
+     *
+     * @param person
+     * @return
+     */
+    @PostMapping(value = "/save")
+    private ResultBean<Person> savePerson(Person person) {
+
+        Long id = person.getId();
+        if (id == null ){
+            person.setCreateDate(new Date());
+        }else{
+            Person p = personService.findOne(id);
+            person.setFaceLogo(p.getFaceLogo());
+            person.setUpdateDate(new Date());
+        }
+
+        personService.save(person);
+
+        return new ResultBean<>(person);
+    }
+
+    /**
+     *
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/upload/{personId}")
+    private ResultBean<Person> uploadFaceLogo(@PathVariable(name = "personId", required = true) Long personId, @RequestParam(name="faceLogo",required=false) MultipartFile faceLogo) throws IOException {
+        Person person ;
+        if (personId !=0){
+            person = personService.findOne(personId);
+            person.setUpdateDate(new Date());
+        }else{
+            person = new Person();
+            person.setCreateDate(new Date());
+        }
+
+        if (faceLogo == null){
+            person.setFaceLogo(null);
+        }else {
+            person.setFaceLogo(faceLogo.getBytes());
+        }
+
+        personService.save(person);
+
+        return new ResultBean<>(person);
+
+    }
 
 }

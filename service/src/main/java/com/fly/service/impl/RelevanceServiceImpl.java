@@ -101,16 +101,13 @@ public class RelevanceServiceImpl implements RelevanceService {
         List<Media> mediaList;
         if("1".equals(relevantAll)){
             mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1));
+            if (this.initStarPropWithQueryDsl()>0){
+                System.out.println("清空star表字段");
+            }
         }else{
             //只处理未关联film的Media
             mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1).and(qMedia.film.isNull()));
         }
-
-
-        if (this.initStarPropWithQueryDsl()>0){
-            System.out.println("清空star表字段");
-        }
-
 
 
 

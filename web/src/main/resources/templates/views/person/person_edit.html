@@ -8,7 +8,7 @@
     <form id="person-form" name="person-form" class="form-horizontal">
         <input type="hidden" name="id">
         <input type="hidden" name="deleted">
-
+        <input type="hidden" name="createDate">
         <div class="box-body">
             <div class="row">
                 <div class="form-group col-md-6">
@@ -23,7 +23,20 @@
                         <input type="text" class="form-control" id="nameExtend" name="nameExtend" placeholder="全路径">
                     </div>
                 </div>
-
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="nameCnOther" class="col-sm-3 control-label">中文又名</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="nameCnOther" name="nameCnOther" placeholder="中文又名">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="nameEnOther" class="col-sm-3 control-label">英文又名</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="nameEnOther" name="nameEnOther" placeholder="英文又名">
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
@@ -49,13 +62,29 @@
                     </div>
                 </div>
                 <div class="form-group col-md-6">
+                    <label class="col-sm-3 control-label">照片</label>
+                    <div class="col-sm-8">
+                        <!--<form enctype="multipart/form-data" id="upload-form">-->
+                        <input type="file" class="pull-left col-sm-8" name="faceLogo" id="faceLogo" accept="image/*">
+                        <input type="button" id="upload" class="pull-right  col-sm-4" value="上传">
+                        <!--</form>-->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
                     <label for="birthDay" class="col-sm-3 control-label">出生日</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control"  data-flag="date"  data-format="yyyy-mm-dd" id="birthDay" name="birthDay" placeholder="出生日" >
                     </div>
                 </div>
+                <div class="form-group col-md-6">
+                    <label for="deathDay" class="col-sm-3 control-label">卒日</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="deathDay" name="deathDay" placeholder="卒日">
+                    </div>
+                </div>
             </div>
-
 
             <div class="row">
                 <div class="form-group col-md-6">
@@ -83,12 +112,10 @@
         </div>
         <br>
         <!-- /.box-body -->
-        <div class="box-footer text-right" style="display: none">
+        <div class="modal-footer">
             <!--以下两种方式提交验证,根据所需选择-->
-            <button type="submit" class="btn btn-primary" data-btn-type="saveToProcess">修改待确认</button>
             <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
             <button type="submit" class="btn btn-primary" data-btn-type="save">保存</button>
-            <button type="submit" class="btn btn-primary" data-btn-type="saveToFinish">确认并完成</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -114,9 +141,8 @@
                 modals.confirm('确认继续？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    var filmId = $("#filmId").val();
                     var submitType = $(submitButton).attr("data-btn-type");
-                    ajaxPost(basePath+'/api/person/'+submitType+'?filmId='+filmId, params, function(data, status) {
+                    ajaxPost(basePath+'/api/person/'+submitType, params, function(data, status) {
                         if(data.msg == "success"){
                             if(id!="0"){//更新
                                 modals.hideWin(winId);
@@ -183,6 +209,41 @@
                 form.initFormData(data);
             })
         }
+
+
+        $(".close").click(function () {
+            if(personTable){
+                personTable.reloadData();
+            }
+        });
+
+        $("#upload").click(function () {
+            var formData = new FormData;
+            if($("#faceLogo")[0].files[0] == null){
+                modals.info("请先选择要上传的海报图片！");
+                return false;
+            }
+            formData.append('faceLogo',$("#faceLogo")[0].files[0]);
+            formData.append('id',id);
+            $.ajax({
+                type: 'post', // 提交方式 get/post
+                url: '/api/person/upload/'+id, // 需要提交的 url
+                data: formData,
+                //ajax2.0可以不用设置请求头，但是jq帮我们自动设置了，这样的话需要我们自己取消掉
+                contentType:false,
+                //取消帮我们格式化数据，是什么就是什么
+                processData:false,
+                success: function(data) { // data 保存提交后返回的数据，一般为 json 数据
+                    // 此处可对 data 作相关处理
+                    id = data.data.id;
+                    $("input[name='id']").val(data.data.id);
+                    $("input[name='createDate']").val(data.data.createDate);
+                    modals.info(data.msg);
+                }
+            });
+            return false; // 阻止表单自动提交事件，必须返回false，否则表单会自己再做一次提交操作，并且页面跳转
+        })
+
     });
 
 

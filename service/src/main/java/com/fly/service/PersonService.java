@@ -23,4 +23,6 @@ public interface PersonService {
     Person findByDouBanNo(String douBanNo);
 
     Person findOne(Long id);
+
+    void save(Person person);
 }

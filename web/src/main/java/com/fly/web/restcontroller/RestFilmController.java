@@ -79,13 +79,21 @@ public class RestFilmController {
      */
     @PostMapping(value = "/upload/{filmId}")
     private ResultBean<Film> uploadLogo(@PathVariable(name = "filmId", required = true) Long filmId,@RequestParam(name="filmLogo",required=false) MultipartFile filmLogo) throws IOException {
-        Film film = filmService.findOne(filmId);
+        Film film;
+        if (filmId!=0){
+            film = filmService.findOne(filmId);
+            film.setUpdateDate(new Date());
+        }else{
+            film = new Film();
+            film.setCreateDate(new Date());
+        }
+
         if (filmLogo == null){
             film.setFilmLogo(null);
         }else {
             film.setFilmLogo(filmLogo.getBytes());
         }
-        film.setUpdateDate(new Date());
+
         filmService.save(film);
 
         return new ResultBean<>(film);
