@@ -16,6 +16,13 @@ a:focus {
     text-decoration: none
 }
 
+
+a:hover, a:active, a:focus {
+    outline: none;
+    text-decoration: none;
+    color: #72afd2
+}
+
 html {
     position: relative
 }

@@ -30,6 +30,7 @@ public class RestFilmController {
     @Autowired
     FilmService filmService;
 
+
     @PostMapping(value = "/all")
     public Map<String, Object> filmAll(String reqObj) throws Exception {
         return filmService.findAll(reqObj);
@@ -99,5 +100,7 @@ public class RestFilmController {
         return new ResultBean<>(film);
 
     }
+
+
 
 }

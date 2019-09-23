@@ -146,6 +146,18 @@
 <!--		<column key="createDate" header="爬取时间" operator="like" width="50" allowSort="true" />-->
 	</query>
 
+	<!-- person_select_table-->
+	<query id="person_select_table" key="id" tableName="人物列表" className="com.fly.entity.Person"
+		   pageSize="10"  widthType="px" order="createDate desc">
+		<column key="isSelected" header="选择" fnRender="fnRenderSelectReceiver" />
+		<column key="rowIndex" header="序号" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left" />
+		<column key="birthDay" header="出生日" width="60" align="left"  operator="like"  allowSort="true"/>
+		<column key="birthPlace" header="出生地" width="60"   align="left"  operator="like"  allowSort="true"/>
+	</query>
+
+
 	<!-- Star 影音管理/影人列表-->
 	<query id="star_list" key="id" tableName="人物列表" className="com.fly.entity.Star"
 		   pageSize="10"  widthType="px" order="asActorNumber desc">

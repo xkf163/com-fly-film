@@ -25,4 +25,6 @@ public interface PersonService {
     Person findOne(Long id);
 
     void save(Person person);
+
+    Map getPersonNamesByPersonIds(String personIds);
 }

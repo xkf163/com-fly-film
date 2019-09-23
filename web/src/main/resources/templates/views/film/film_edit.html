@@ -108,8 +108,12 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="screenWriter" class="col-sm-3 control-label">编剧</label>
-                    <div class="col-sm-8">
+                    <div class="input-group">
                         <input type="text" class="form-control" id="screenWriter" name="screenWriter" >
+                        <div class="input-group-addon">
+                            <a href="#" data-btn-type="person_select"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
+                            <!-- <i class="fa fa-users" title="点击此按钮选择接收人"></i>-->
+                        </div>
                     </div>
                 </div>
 
@@ -126,16 +130,28 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="directors" class="col-sm-3 control-label">导演</label>
-                    <div class="col-sm-8">
+                    <div class="input-group">
                         <input type="text" class="form-control" id="directors" name="directors" >
+                        <div class="input-group-addon">
+                            <a href="#" data-btn-type="person_select"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
+                            <!-- <i class="fa fa-users" title="点击此按钮选择接收人"></i>-->
+                        </div>
                     </div>
                 </div>
                 <div class="form-group col-md-8">
                     <label for="actors" class="col-sm-1 control-label">演员</label>
-                    <div class="col-sm-10">
+                    <div class="input-group">
                         <input type="text" class="form-control" id="actors" name="actors" placeholder="演员">
+                        <div class="input-group-addon">
+                            <a href="#" data-btn-type="person_select"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
+                            <!-- <i class="fa fa-users" title="点击此按钮选择接收人"></i>-->
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div  class="row">
+                <input  name="receiverIds" id="receiverIds">
+                <input readonly id="receiverUsers" placeholder="接收人" class="form-control">
             </div>
             <div class="row">
                 <label for="introduce" class="col-sm-1 control-label">简介</label>
@@ -279,6 +295,22 @@
             });
             return false; // 阻止表单自动提交事件，必须返回false，否则表单会自己再做一次提交操作，并且页面跳转
         })
+
+
+        //选择人person_select
+        $("[data-btn-type='person_select']").click(function () {
+            modals.openWin({
+                winId: "receiverWin",
+                title: '选择人',
+                width: '800px',
+                url: basePath + "/film/person/select",
+                hideFunc: function () {
+                    //主要是本页面wyhtml5含有modal样式影响了模态窗体的显示
+                    $(document.body).removeClass('modal-open');
+                    $(document.body).css("padding-right", "0px");
+                }
+            });
+        });
 
 
     });

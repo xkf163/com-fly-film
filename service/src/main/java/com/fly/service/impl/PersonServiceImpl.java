@@ -14,6 +14,7 @@ import com.fly.service.PersonService;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -151,5 +152,26 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void save(Person person) {
         personRepository.save(person);
+    }
+
+    @Override
+    public Map getPersonNamesByPersonIds(String personIds) {
+        String[] strArr = personIds.split(",");
+        Long[] retArr = new Long[strArr.length];
+        for (int i = 0; i < strArr.length; i++) {
+            retArr[i] = Long.parseLong(strArr[i].trim());
+        }
+
+        QPerson qPerson = QPerson.person;
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<String> listPersonName = jpaQueryFactory.select(qPerson.name)
+                .from(qPerson)
+                .where(qPerson.id.in(retArr))
+                .where(qPerson.deleted.ne(1))
+                .fetch();
+
+        Map map = new HashMap();
+        map.put("name", StringUtils.join(listPersonName.toArray(), ","));
+        return map;
     }
 }

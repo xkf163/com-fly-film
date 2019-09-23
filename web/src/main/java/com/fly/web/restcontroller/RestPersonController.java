@@ -82,4 +82,11 @@ public class RestPersonController {
 
     }
 
+
+
+    @PostMapping(value = "/names")
+    public Map getByPersonIds(String personIds){
+        return personService.getPersonNamesByPersonIds(personIds);
+    }
+
 }

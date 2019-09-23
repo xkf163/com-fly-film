@@ -3,8 +3,10 @@ package com.fly.web.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Author:xukangfeng
@@ -33,6 +35,14 @@ public class FilmController {
     private String uploadLogo(String id, HttpServletRequest request) {
         request.setAttribute("id", id);
         return "views/film/film_upload";
+    }
+
+
+    //选择人
+    @RequestMapping(value="/person/select",method= RequestMethod.GET)
+    public String selectReceiver(HttpServletRequest request){
+
+        return "views/film/person_select";
     }
 
 }

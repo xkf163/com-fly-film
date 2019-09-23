@@ -1,0 +1,165 @@
+<style>
+    #groupDiv ul.nav li a span {
+        padding-left: 10px;
+    }
+</style>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+        <li class="fa fa-remove"></li>
+    </button>
+    <h5 class="modal-title"></h5>
+</div>
+
+<div class="modal-body" data-margin="top">
+    <div class="row">
+            <div class="box box-primary">
+                <!--隐藏域保存选中的用户-->
+                <input name="selectedUserId" id="selectedUserId" style="width: 100%"/>
+                <div class="dataTables_filter" id="searchDiv_receiver_select" >
+                    <input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true"/>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-primary" data-btn-type="select">选择</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="person_select_table" class="table table-border table-stripped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+<script>
+    var receiverSelctTable;
+    $(function () {
+        $("[data-flag='icheck']").iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue'
+        });
+
+        receiverSelctTable = new CommonTable("person_select_table", "/api/person/all", "searchDiv_receiver_select", null);
+        //回调选中
+        receiverSelctTable.serverCallback = function (settings) {
+            setCheckboxState();
+        };
+
+
+
+        //数据回填
+        //setTimeout(function(){backfillReceiver()},500);
+        backfillReceiver();
+
+        //选择
+        $("button[data-btn-type='select']").click(function () {
+            submitSelect();
+        });
+
+    });
+
+    //回填选中
+    function backfillReceiver() {
+        var receiverIds = $("#receiverIds").val();
+        if (!receiverIds) {
+            return false;
+        }
+
+        $("#selectedUserId").val(receiverIds);
+
+    }
+
+    //初始化全选按钮
+    function initSelectAllCheckbox() {
+        setTimeout(function () {
+            $("#receiver_select_table thead tr th:eq(0)").css("padding-right", "8px");
+            $("#receiver_select_table thead tr th:eq(0)").html("<input type='checkbox' id='selectAllReceiver'>");
+            $("#selectAllReceiver").on("change", function () {
+                var checked = $(this).is(":checked");
+                $(":checkbox.checkbox_receiver").prop("checked", checked);
+            })
+        }, 200);
+
+    }
+
+    function setCheckboxState() {
+        var selectUserIds = $("#selectedUserId").val();
+        if (selectUserIds) {
+            var userIdArr = selectUserIds.split(",");
+            //选中增加的用户
+            $.each(userIdArr, function (index, userId) {
+                if (receiverSelctTable.table.$("#" + userId).length > 0) {
+                    receiverSelctTable.table.$("#" + userId).find(":checkbox.checkbox_receiver").prop("checked", true);
+                }
+            });
+            //删除已经选中的
+            receiverSelctTable.table.$("tr").find(":checkbox.checkbox_receiver:checked").each(function () {
+                var curUserId = $(this).parents("tr").attr("id");
+                //找不到，已经被删除
+                if (selectUserIds.indexOf(curUserId) == -1) {
+                    receiverSelctTable.table.$("#" + curUserId).find(":checkbox.checkbox_receiver").prop("checked", false);
+                }
+            });
+        } else {
+            $(":checkbox.checkbox_receiver").prop("checked", false);
+        }
+    }
+
+    function fnRenderSelectReceiver(value, type, rowObj, oSetting) {
+        return "<input type='checkbox' value='1' class='checkbox_receiver' onchange='selectReceiver(this)'>";
+    }
+
+    //根据选中的checkbox 缓存到selectedUserIds
+    function selectReceiver(obj) {
+        var isChecked = $(obj).is(":checked");
+        var selectedUserIds = $("#selectedUserId").val();
+        var value = $(obj).parents("tr").eq(0).attr("id");
+        var userArr = getSelectedUserArr(selectedUserIds, value, isChecked);
+        $("#selectedUserId").val(userArr.join(","));
+    }
+
+    function submitSelect() {
+        var selectedUserIds = $("#selectedUserId").val();
+        if (!selectedUserIds) {
+            modals.info("请至少选择一个人");
+            return;
+        }
+        setReceiverUserIds();
+        modals.hideWin("receiverWin");
+    }
+
+
+    //不建立群组，直接返回接收人
+    function setReceiverUserIds() {
+        $("#receiverIds").val($("#selectedUserId").val());
+        //显示接收人姓名
+        ajaxPost(basePath + "/api/person/names", {personIds: $("#selectedUserId").val()}, function (map) {
+            $("#receiverUsers").val(map.name);
+        });
+    }
+
+    function getSelectedUserArr(selectedUserIds, curValue, isChecked) {
+        var userArr = [];
+        if (selectedUserIds)
+            userArr = selectedUserIds.split(",");
+        if (isChecked) {
+            var flag = true;
+            for (var i = 0; i < userArr.length; i++) {
+                if (userArr[i] == curValue) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                userArr.push(curValue);
+        } else {
+            for (var i = 0; i < userArr.length; i++) {
+                var userIdValue = userArr[i];
+                if (userIdValue == curValue) {
+                    userArr.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        return userArr;
+    }
+
+</script>
