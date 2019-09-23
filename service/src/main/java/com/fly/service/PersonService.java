@@ -16,7 +16,7 @@ public interface PersonService {
 
     List<String> findAllDouBanNo();
 
-    List<String> findImportWithoutLogoList();
+    List<String> findImportWithoutLogoList(String filmNumber);
 
     void batchInsertAndUpdate(List<Person> persons);
 
