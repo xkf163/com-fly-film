@@ -157,6 +157,12 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Map getPersonNamesByPersonIds(String personIds) {
+        Map map = new HashMap();
+        if (personIds == null){
+             map.put("name","");
+             return map;
+        }
+
         String[] strArr = personIds.split(",");
         Long[] retArr = new Long[strArr.length];
         for (int i = 0; i < strArr.length; i++) {
@@ -171,7 +177,7 @@ public class PersonServiceImpl implements PersonService {
                 .where(qPerson.deleted.ne(1))
                 .fetch();
 
-        Map map = new HashMap();
+
         map.put("name", StringUtils.join(listPersonName.toArray(), ","));
         return map;
     }

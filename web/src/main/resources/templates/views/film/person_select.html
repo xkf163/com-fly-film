@@ -14,7 +14,7 @@
     <div class="row">
             <div class="box box-primary">
                 <!--隐藏域保存选中的用户-->
-                <input name="selectedUserId" id="selectedUserId" style="width: 100%"/>
+                <input name="selectedUserId" id="selectedUserId" style="width: 100%;display: none"/>
                 <div class="dataTables_filter" id="searchDiv_receiver_select" >
                     <input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true"/>
                     <div class="btn-group">
@@ -29,6 +29,7 @@
             </div>
         </div>
 </div>
+
 <script>
     var receiverSelctTable;
     $(function () {
@@ -43,8 +44,6 @@
             setCheckboxState();
         };
 
-
-
         //数据回填
         //setTimeout(function(){backfillReceiver()},500);
         backfillReceiver();
@@ -58,7 +57,7 @@
 
     //回填选中
     function backfillReceiver() {
-        var receiverIds = $("#receiverIds").val();
+        var receiverIds = $("#"+filedIds).val();
         if (!receiverIds) {
             return false;
         }
@@ -129,10 +128,10 @@
 
     //不建立群组，直接返回接收人
     function setReceiverUserIds() {
-        $("#receiverIds").val($("#selectedUserId").val());
+        $("#"+filedIds).val($("#selectedUserId").val());
         //显示接收人姓名
         ajaxPost(basePath + "/api/person/names", {personIds: $("#selectedUserId").val()}, function (map) {
-            $("#receiverUsers").val(map.name);
+            $("#"+filedNames).val(map.name);
         });
     }
 

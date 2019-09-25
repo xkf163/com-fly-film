@@ -109,9 +109,10 @@
                 <div class="form-group col-md-6">
                     <label for="screenWriter" class="col-sm-3 control-label">编剧</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="screenWriter" name="screenWriter" >
+                        <input type="hidden" id="screenWriter"  name="screenWriter" >
+                        <input type="text" class="form-control" id="screenWriterNames">
                         <div class="input-group-addon">
-                            <a href="#" data-btn-type="person_select"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
+                            <a href="#" data-btn-type="person_select"  data-ret-ids="screenWriter" data-ret-names="screenWriterNames"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
                             <!-- <i class="fa fa-users" title="点击此按钮选择接收人"></i>-->
                         </div>
                     </div>
@@ -128,30 +129,28 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-5">
                     <label for="directors" class="col-sm-3 control-label">导演</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="directors" name="directors" >
+                        <input type="hidden" id="directors" name="directors" >
+                        <input type="text" class="form-control" id="directorsNames"  >
                         <div class="input-group-addon">
-                            <a href="#" data-btn-type="person_select"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
+                            <a href="#" data-btn-type="person_select" data-ret-ids="directors" data-ret-names="directorsNames"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
                             <!-- <i class="fa fa-users" title="点击此按钮选择接收人"></i>-->
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-8">
+                <div class="form-group col-md-7">
                     <label for="actors" class="col-sm-1 control-label">演员</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="actors" name="actors" placeholder="演员">
+                        <input type="hidden" id="actors" name="actors">
+                        <input type="text" class="form-control" id="actorsNames" placeholder="演员">
                         <div class="input-group-addon">
-                            <a href="#" data-btn-type="person_select"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
+                            <a href="#" data-btn-type="person_select"  data-ret-ids="actors" data-ret-names="actorsNames"><i class="fa fa-users"></i>&nbsp;&nbsp;选择</a>
                             <!-- <i class="fa fa-users" title="点击此按钮选择接收人"></i>-->
                         </div>
                     </div>
                 </div>
-            </div>
-            <div  class="row">
-                <input  name="receiverIds" id="receiverIds">
-                <input readonly id="receiverUsers" placeholder="接收人" class="form-control">
             </div>
             <div class="row">
                 <label for="introduce" class="col-sm-1 control-label">简介</label>
@@ -179,6 +178,9 @@
     var form =null;
     var id="${id?default(0)}";
     var winId = "filmWin";
+
+    var filedIds ;
+    var filedNames;
     $(function() {
         //初始化控件
         form=$("#film-form").form();
@@ -260,6 +262,9 @@
         if(id!="0"){
             ajaxPost(basePath+"/api/film/get",{id:id},function(data){
                 form.initFormData(data);
+                initPersonNames("directors","directorsNames");
+                initPersonNames("actors","actorsNames");
+                initPersonNames("screenWriter","screenWriterNames");
             })
         }
 
@@ -299,6 +304,8 @@
 
         //选择人person_select
         $("[data-btn-type='person_select']").click(function () {
+            filedIds = $(this).attr("data-ret-ids");
+            filedNames = $(this).attr("data-ret-names");
             modals.openWin({
                 winId: "receiverWin",
                 title: '选择人',
@@ -316,6 +323,13 @@
     });
 
 
+    //不建立群组，直接返回接收人
+    function initPersonNames(filedIds,filedNames) {
+        //显示接收人姓名
+        ajaxPost(basePath + "/api/person/names", {personIds: $("#"+filedIds).val()}, function (map) {
+            $("#"+filedNames).val(map.name);
+        });
+    }
 
     function resetForm(){
         form.clearForm();
