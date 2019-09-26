@@ -11,6 +11,7 @@ import com.fly.dao.PersonRepository;
 import com.fly.entity.*;
 import com.fly.service.PersonService;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -156,11 +157,50 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Map getPersonNamesByDoubanNos(String personDoubanNos) {
+        Map map = new HashMap();
+        if (personDoubanNos == null){
+             map.put("names","");
+             map.put("ids","");
+             return map;
+        }
+
+        String[] strArr = personDoubanNos.split(",");
+        String[] retArr = new String[strArr.length];
+        for (int i = 0; i < strArr.length; i++) {
+            retArr[i] = strArr[i].trim();
+        }
+
+        QPerson qPerson = QPerson.person;
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<Tuple> listPersonName = jpaQueryFactory.select(qPerson.name,qPerson.id)
+                .from(qPerson)
+                .where(qPerson.douBanNo.in(retArr))
+                .where(qPerson.deleted.ne(1))
+                .fetch();
+
+        String[] names = new String[listPersonName.size()];
+        Long[] ids = new Long[listPersonName.size()];
+        int indx = 0;
+        for (Tuple row : listPersonName) {
+            names[indx]=row.get(qPerson.name);
+            ids[indx]=row.get(qPerson.id);
+            indx++;
+        }
+
+        map.put("ids", StringUtils.join(ids, ","));
+        map.put("names", StringUtils.join(names, ","));
+        //map.put("name", StringUtils.join(listPersonName.toArray(), ","));
+        return map;
+    }
+
+
+    @Override
     public Map getPersonNamesByPersonIds(String personIds) {
         Map map = new HashMap();
         if (personIds == null){
-             map.put("name","");
-             return map;
+            map.put("name","");
+            return map;
         }
 
         String[] strArr = personIds.split(",");

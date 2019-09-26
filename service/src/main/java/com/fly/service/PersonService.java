@@ -26,5 +26,7 @@ public interface PersonService {
 
     void save(Person person);
 
+    Map getPersonNamesByDoubanNos(String personDoubanNos);
+
     Map getPersonNamesByPersonIds(String personIds);
 }

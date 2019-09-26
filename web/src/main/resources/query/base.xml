@@ -152,6 +152,7 @@
 		<column key="isSelected" header="选择" fnRender="fnRenderSelectReceiver" />
 		<column key="rowIndex" header="序号" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
+		<column key="douBanNo" header="豆号" width="30" allowSort="true"/>
 		<column key="nameExtend" header="姓名" width="150"  operator="like"  align="left" />
 		<column key="birthDay" header="出生日" width="60" align="left"  operator="like"  allowSort="true"/>
 		<column key="birthPlace" header="出生地" width="60"   align="left"  operator="like"  allowSort="true"/>

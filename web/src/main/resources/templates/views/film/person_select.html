@@ -14,7 +14,8 @@
     <div class="row">
             <div class="box box-primary">
                 <!--隐藏域保存选中的用户-->
-                <input name="selectedUserId" id="selectedUserId" style="width: 100%;display: none"/>
+                <input name="selectedUserId" id="selectedUserId" style="width: 100%;display: none" />
+                <input name="selectedUserNo" id="selectedUserNo" style="width: 100%;display: none" />
                 <div class="dataTables_filter" id="searchDiv_receiver_select" >
                     <input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true"/>
                     <div class="btn-group">
@@ -57,13 +58,13 @@
 
     //回填选中
     function backfillReceiver() {
-        var receiverIds = $("#"+filedIds).val();
+        var receiverIds = $("#"+fieldName+"Ids").val();
+        var receiverNos = $("#"+fieldName).val();
         if (!receiverIds) {
             return false;
         }
-
         $("#selectedUserId").val(receiverIds);
-
+        $("#selectedUserNo").val(receiverNos);
     }
 
     //初始化全选按钮
@@ -110,9 +111,16 @@
     function selectReceiver(obj) {
         var isChecked = $(obj).is(":checked");
         var selectedUserIds = $("#selectedUserId").val();
+        var selectUserNos = $("#selectedUserNo").val();
+
         var value = $(obj).parents("tr").eq(0).attr("id");
         var userArr = getSelectedUserArr(selectedUserIds, value, isChecked);
         $("#selectedUserId").val(userArr.join(","));
+
+        var _row = receiverSelctTable.getRowDataByRowId(value);
+        value = _row["douBanNo"];
+        userArr = getSelectedUserArr(selectUserNos, value, isChecked);
+        $("#selectedUserNo").val(userArr.join(","));
     }
 
     function submitSelect() {
@@ -128,10 +136,11 @@
 
     //不建立群组，直接返回接收人
     function setReceiverUserIds() {
-        $("#"+filedIds).val($("#selectedUserId").val());
+        $("#"+fieldName+"Ids").val($("#selectedUserId").val());
+        $("#"+fieldName).val($("#selectedUserNo").val());
         //显示接收人姓名
-        ajaxPost(basePath + "/api/person/names", {personIds: $("#selectedUserId").val()}, function (map) {
-            $("#"+filedNames).val(map.name);
+        ajaxPost(basePath + "/api/person/name", {personIds: $("#selectedUserId").val()}, function (map) {
+            $("#"+fieldName+"Names").val(map.name);
         });
     }
 
