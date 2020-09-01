@@ -76,6 +76,12 @@
             columns.push(obj);
         }
 
+        // if ( this.tableId == "media_list"){
+        //     $('#' + this.tableId + ' tbody>tr').find("td:first-child").each(function (index) {
+        //         $(this).addClass("details-control");
+        //     })
+        // }
+
         for (var i = 0; i < this.data.columnCarrier.length; i++) {
             var column = this.data.columnCarrier[i];
             var obj = {};
@@ -85,7 +91,7 @@
             obj["visible"] = !column.hidden;
             obj["sortable"] = column.allowSort;
             obj["class"] = "text-" + column.align;
-            //obj["width"]=column.width+"px";
+            // obj["width"]= column.width+"px";
             //obj["sWidthOrig"]=null;
             if (column.fnRender) {
                 var fnRender = null;
@@ -101,8 +107,10 @@
             columns.push(obj);
         }
 
-        //console.log(columns);
 
+        // -34px -52px -42px -45px -12px
+        var _h = $(window).height();
+        _h = _h - 300;
         // alert(JSON.stringify(columns));
         //var allowPaging = this.data.query.allowPaging;
         var allowPaging = true;
@@ -117,6 +125,8 @@
             "rowId": rowId,
             "info": allowPaging, // 分页明细
             "autoWidth": false,
+            "scrollX": '100%',
+            "scrollY": _h,
             "dom": 'rt<"row"<"col-sm-5"il><"col-sm-7"p>>',
             //"stateSave" : true,// 这样就可以在删除返回时，保留在同一页上
             "processing": true,// 是否显示取数据时的那个等待提示
@@ -206,6 +216,7 @@
             columns.push(obj);
         }
         // alert(JSON.stringify(columns));
+        alert('calc(100vh - 280px)');
         var allowPaging = this.data.query.allowPaging;
         var rowId = this.data.query.key;
         this.table = $('#' + tableId).DataTable($.extend({
@@ -362,8 +373,8 @@
         }
 
 
-        //增加双击行事件 190903
-        $('#' + this.tableId + ' tbody').on('dblclick','tr[role="row"]',function() {
+        //增加双击行事件 190903>200820
+        $('#' + this.tableId + ' tbody>tr[role="row"]').find('td:not(:first)').on('dblclick',function() {
             var _id = _this.getSelectedRowData().id;
             var _obj = _this.tableId.substring(0,_this.tableId.indexOf("_"));
             var _url = "/"+_obj+"/edit?id="+_id;
@@ -375,6 +386,9 @@
                 url: basePath+_url
             });
         });
+
+
+
 
         // Array to track the ids of the details displayed rows
         var detailRows = [];

@@ -34,16 +34,17 @@
 	<!-- Media 影音管理/影音列表 -->
 	<query id="media_list" key="id" tableName="影音列表" className="com.fly.entity.Media"
 		pageSize="10"  widthType="px" order="gatherDate desc">
-		<column key="rowIndex" header="序号" width="10px" allowSort="false" />
+<!--		<column key="rowFolder" header="+/-" width="5" allowSort="false"  align="center"  fnRender="fnRenderPlus" />-->
+		<column key="rowIndex" header="序号" width="10" allowSort="false" align="center"  />
 		<column key="id" header="id" hidden="true"/>
-		<column key="film.filmLogo" header="" width="30px"  operator="like"  align="center" fnRender="fnRenderNameChn" />
-		<column key="name" header="片名" width="130"  operator="like"  align="left" />
-		<column key="year" header="年代" width="50"  operator="eq"  allowSort="true"/>
-		<column key="pcName" header="PC名" width="70"  operator="like"  align="left"  allowSort="true"/>
-		<column key="diskName" header="盘名" width="50"  operator="like"  allowSort="true"/>
+		<column key="film.filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderNameChn" />
+		<column key="name" header="影音文件（夹）名"  operator="like"  align="left" />
+		<column key="year" header="年代" width="30"  operator="eq"  allowSort="true"/>
+<!--		<column key="pcName" header="PC名" width="70"  operator="like"  align="left"  allowSort="true"/>-->
+<!--		<column key="diskName" header="盘名" width="50"  operator="like"  allowSort="true"/>-->
 		<!--<column key="fullPath" header="全路径" operator="like" align="left"  allowSort="true" />-->
-		<column key="film.doubanRating" header="豆分" width="40"  operator="eq"  allowSort="true"/>
-		<column key="mediaSizeGB" header="大小(GB)"  width="50"  allowSort="true"/>
+		<column key="film.doubanRating" header="豆分" width="30"  operator="eq"  allowSort="true"/>
+		<column key="mediaSizeGB" header="大小(GB)"  width="40"  allowSort="true"/>
 		<column key="gatherDate" header="下载时间" operator="like" align="left"  width="110" allowSort="true"/>
 		<!-- <column key="whetherFolder" header="文件夹" width="30"  render="1=是,0=否" /> -->
 		<!--<column key="film.doubanNo" header="豆号" operator="like" width="30" />-->
