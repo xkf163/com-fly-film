@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <artifactId>film-web</artifactId>
 
     <dependencies>
@@ -29,7 +29,6 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
@@ -49,8 +48,6 @@
         </dependency>
     </dependencies>
 
-
-
     <!--spring boot打包的话需要指定一个唯一的入门-->
     <build>
         <plugins>
@@ -58,8 +55,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-
         </plugins>
     </build>
 
