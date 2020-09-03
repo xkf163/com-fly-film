@@ -46,6 +46,8 @@ public class StarServiceImpl implements StarService {
 
     @Override
     public Map<String, Object> findAll(String reqObj) throws Exception {
+
+        System.out.println(reqObj);
         //用于接收返回数据(配置、分页、数据)
         Map<String, Object> map = new HashMap<>();
         QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
@@ -72,7 +74,7 @@ public class StarServiceImpl implements StarService {
         //4)dsl动态查询
         List<Map<String, Object>> conditions = queryCondition.getConditions();
         String name = null ;
-        if (!"".equals(conditions.get(0).get("value"))){
+        if (!conditions.isEmpty() && !"".equals(conditions.get(0).get("value"))){
             name =  (String) conditions.get(0).get("value");
         }
 

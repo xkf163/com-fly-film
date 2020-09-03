@@ -73,6 +73,7 @@
             obj["orderable"] = false;
             obj["data"] = null;
             obj["defaultContent"] = "";
+            obj["width"] = "5";
             columns.push(obj);
         }
 
@@ -91,7 +92,7 @@
             obj["visible"] = !column.hidden;
             obj["sortable"] = column.allowSort;
             obj["class"] = "text-" + column.align;
-            // obj["width"]= column.width+"px";
+            obj["width"]= column.width=="auto"?"auto":column.width+"px";
             //obj["sWidthOrig"]=null;
             if (column.fnRender) {
                 var fnRender = null;
@@ -124,8 +125,8 @@
             "ordering": true, // 排序
             "rowId": rowId,
             "info": allowPaging, // 分页明细
-            "autoWidth": false,
-            "scrollX": '100%',
+            "autoWidth": true,
+            //"scrollX": '100%',
             "scrollY": _h,
             "dom": 'rt<"row"<"col-sm-5"il><"col-sm-7"p>>',
             //"stateSave" : true,// 这样就可以在删除返回时，保留在同一页上
@@ -143,7 +144,6 @@
             "fnInitComplete": $.proxy(that.fnInitComplete, that),
             "singleSelect": true,  //单选
             "aoColumns": columns
-
         }, that.config));
 
         //绑定事件
@@ -193,7 +193,7 @@
             obj["visible"] = !column.hidden;
             obj["sortable"] = column.allowSort;
             obj["class"] = "text-" + column.align;
-            //obj["width"]=column.width+"px";
+            //obj["width"]= column.width+"px";
             //obj["sWidthOrig"]=null;
             if (column.fnRender) {
                 var fnRender = null;
@@ -242,7 +242,6 @@
             "fnInitComplete": $.proxy(that.fnInitComplete, that),
             "singleSelect": true,  //单选
             "aoColumns": columns
-
         }, that.config));
 
 
@@ -364,11 +363,10 @@
             $("#" + this.tableId + "_wrapper div.row").eq(0).find("div.col-sm-9").removeClass("col-sm-9").addClass("col-sm-12");
         }
 
+
         //Y轴滚动时，设置列头自适应
-        if (oSettings.oInit.scrollY) {
-            setTimeout(function () {
-                _this.table.columns.adjust();
-            }, 200);
+        if(oSettings.oInit.scrollY){
+            setTimeout(function(){_this.table.columns.adjust();},200);
             //setTimeout(function(){_this.fixHeaderWidth()},100);
         }
 
@@ -419,25 +417,25 @@
     }
 
 
-    CommonTable.prototype.fixHeaderWidth = function () {
-        var _this = this;
-        var width = $("#" + this.tableId).find("tbody tr:first").width();
+    CommonTable.prototype.fixHeaderWidth=function(){
+        var _this=this;
+        var width=$("#"+this.tableId).find("tbody tr:first").width();
         console.log(width)
-        if (width > 0) {
+        if(width>0){
             //$("#"+_this.tableId+"_wrapper div.dataTables_scrollHeadInner table").css("width",width).parent().css("width",width);
-            $("#" + this.tableId).find("tbody tr:first td").each(function (index, item) {
-                console.log($("#" + _this.tableId + "_wrapper div.dataTables_scrollHeadInner table").find("thead").length);
-                console.log("width" + index + ":" + $("#" + _this.tableId).find("thead tr:first th").eq(index).css('width'));
-                var thwidth = $("#" + _this.tableId).find("thead tr:first th").eq(index).css('width')
+            $("#"+this.tableId).find("tbody tr:first td").each(function(index,item){
+                console.log($("#"+_this.tableId+"_wrapper div.dataTables_scrollHeadInner table").find("thead").length);
+                console.log("width"+index+":"+$("#"+_this.tableId).find("thead tr:first th").eq(index).css('width'));
+                var thwidth=$("#"+_this.tableId).find("thead tr:first th").eq(index).css('width')
                 //if(thwidth=="0px"){
-                $("#" + _this.tableId).find("thead tr:first th").eq(index).css("width", $(item).width());
-                $("#" + _this.tableId + "_wrapper div.dataTables_scrollHeadInner table").css("width", width).parent().css("width", width);
-                $("#" + _this.tableId + "_wrapper div.dataTables_scrollHeadInner table").find("thead tr:first th").eq(index).css("width", $(item).width());
+                $("#"+_this.tableId).find("thead tr:first th").eq(index).css("width",$(item).width());
+                $("#"+_this.tableId+"_wrapper div.dataTables_scrollHeadInner table").css("width",width).parent().css("width",width);
+                $("#"+_this.tableId+"_wrapper div.dataTables_scrollHeadInner table").find("thead tr:first th").eq(index).css("width",$(item).width());
                 //}
                 console.log($(item).width());
             })
         }
-        else {
+        else{
             //console.log("this.fixHeaderWidth();");
             this.fixHeaderWidth();
         }

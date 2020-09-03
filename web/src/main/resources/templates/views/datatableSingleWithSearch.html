@@ -1,0 +1,108 @@
+<style>
+
+    td.details-control:after {
+        content: "\f055" !important;
+        font-family: FontAwesome;
+        color: #438EB9;
+        font-size: 16px;
+        font-weight: 400;
+        cursor: pointer;
+    }
+
+
+    tr.details td.details-control:after {
+        content: "\f056" !important;
+        font-family: FontAwesome;
+        color: #438EB9;
+        font-size: 16px;
+        font-weight: 400;
+    }
+    tr.selected td.details-control:after {
+        color: #2B7DBC;
+    }
+
+    .dataTables_filter{
+        margin-left:0px !important;
+        margin-right: 0px !important;
+        margin-left: -4px !important;
+    }
+
+    .dataTables_wrapper .row:first-child{
+        /*background-color: #EFF3F8;*/
+    }
+    .dataTables_wrapper .row:first-child{
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    div.dataTables_filter{
+        text-align: left;
+    }
+
+    .page-header{
+        padding-bottom: 6px !important;
+    }
+
+    .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
+</style>
+
+
+
+<div class="page-content" >
+
+    <div class="page-header">
+        <h1>${pageSubject}
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                overview &amp; Ver20190926
+            </small>
+        </h1>
+    </div>
+
+    <div class="page-body">
+
+        <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline">
+            <div class="row">
+                <div class="dataTables_filter alert-block" id="searchDiv">
+                </div>
+            </div>
+            <!-- PAGE CONTENT BEGINS -->
+            <table id="${dataTableId}" class="table table-bordered table-hover dataTable" width="100%">
+            </table>
+            <!-- PAGE CONTENT ENDS -->
+        </div>
+
+
+    </div><!-- /.row -->
+    <!-- /.page-content -->
+
+
+<script>
+    //tableId,queryId,conditionContainer
+    var ffTable;
+    var dataUrl ="${dataUrl}";
+
+    $(function() {
+        //init table and fill data
+        loadPage("${searchDivUrl}", $('#searchDiv') );
+        ffTable = new CommonTable("${dataTableId}", dataUrl, "searchDiv");
+    });
+
+
+    function fnRenderNameExtend(value) {
+        if (value) {
+            if (value.indexOf(" ")>0){
+                return value.replace(" ","<br>");
+            }
+        } else
+            return value;
+    }
+
+    function fnRenderFaceLogo(value) {
+        if (value) {
+            return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
+        } else
+            return "<img width='50px' src= '/assets/images/avatars/noface.png' >";
+    }
+
+</script>

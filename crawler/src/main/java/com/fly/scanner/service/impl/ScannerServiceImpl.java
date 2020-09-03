@@ -158,12 +158,17 @@ public class ScannerServiceImpl implements ScannerService {
 
     }
 
-
+    /**
+     * 读取并保存为media
+     * @param f
+     * @param scanner
+     * @param folder
+     */
     public void deal(File f,Scanner scanner,boolean folder) {
 
-        String fullPathAll = f.getAbsolutePath();
-        String fullPath = fullPathAll.substring(fullPathAll.indexOf(":")+1,fullPathAll.length());
-        String diskNo = fullPathAll.substring(0,fullPathAll.indexOf(":"));
+        String fullPathAll = f.getAbsolutePath(); //全路径（带盘符）
+        String fullPath = fullPathAll.substring(fullPathAll.indexOf(":")+1,fullPathAll.length()); //全路径（不带盘符）
+        String diskNo = fullPathAll.substring(0,fullPathAll.indexOf(":")); //盘符
 
         if (oldMediaEntriesMap.containsKey(fullPath)){
             //说明已存在，oldmediaenties 去除该mediaobj，newmediaenties 无需add

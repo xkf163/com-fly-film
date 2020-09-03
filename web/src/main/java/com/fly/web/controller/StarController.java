@@ -17,7 +17,11 @@ public class StarController {
     @GetMapping(value = "/all")
     public String starAll(HttpServletRequest request) {
         request.setAttribute("dataUrl", "api/star/all");
-        return "views/star/list";
+        //return "views/star/list";
+        request.setAttribute("pageSubject","影人列表");
+        request.setAttribute("dataTableId","star_list");
+        request.setAttribute("searchDivUrl","common/search/star");
+        return "views/datatableSingleWithSearch";
     }
 
     @GetMapping(value = "/list")
