@@ -98,11 +98,11 @@
         $("#thumbnail").magnify();
     });
 
-    function format ( d ) {
-        return d.diskNo + ":" +d.fullPath;
+    function fnRenderNames ( d , e , f ) {
+        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.name+"</strong><BR><small style='color: #333'>"+f.diskNo + ":" +f.fullPath+"</small>";
     }
 
-    function fnRenderNameChn(value) {
+    function fnRenderLogo(value) {
         var src = '/assets/images/avatars/nologo.png';
 
         if (value) {

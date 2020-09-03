@@ -67,15 +67,15 @@
         var columns = [];
 
         //190912mod:行展开和折叠功能
-        if(tableId == "media_list"){
-            var obj = {};
-            obj["class"] = "details-control text-center";
-            obj["orderable"] = false;
-            obj["data"] = null;
-            obj["defaultContent"] = "";
-            obj["width"] = "5";
-            columns.push(obj);
-        }
+        // if(tableId == "media_list"){
+        //     var obj = {};
+        //     obj["class"] = "details-control text-center";
+        //     obj["orderable"] = false;
+        //     obj["data"] = null;
+        //     obj["defaultContent"] = "";
+        //     obj["width"] = "5";
+        //     columns.push(obj);
+        // }
 
         // if ( this.tableId == "media_list"){
         //     $('#' + this.tableId + ' tbody>tr').find("td:first-child").each(function (index) {
@@ -370,9 +370,10 @@
             //setTimeout(function(){_this.fixHeaderWidth()},100);
         }
 
-
+        console.log("---dt 绑定双击事件")
         //增加双击行事件 190903>200820
-        $('#' + this.tableId + ' tbody>tr[role="row"]').find('td:not(:first)').on('dblclick',function() {
+        //$('#' + this.tableId + ' tbody tr').find('td:not(:first)').on('dblclick',function() {
+        $('#' + this.tableId + ' tbody ').on('dblclick','tr[role="row"]' ,function() {
             var _id = _this.getSelectedRowData().id;
             var _obj = _this.tableId.substring(0,_this.tableId.indexOf("_"));
             var _url = "/"+_obj+"/edit?id="+_id;
@@ -387,6 +388,7 @@
 
 
 
+    /*
 
         // Array to track the ids of the details displayed rows
         var detailRows = [];
@@ -412,7 +414,7 @@
                 }
             }
         } );
-
+     */
 
     }
 

@@ -37,8 +37,8 @@
 <!--		<column key="rowFolder" header="+/-" width="5" allowSort="false"  align="center"  fnRender="fnRenderPlus" />-->
 		<column key="rowIndex" header="序号" width="30" allowSort="false" align="center"  />
 		<column key="id" header="id" hidden="true"/>
-		<column key="film.filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderNameChn" />
-		<column key="name" header="影音文件（夹）名" width="auto" operator="like"  align="left" />
+		<column key="film.filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderLogo" />
+		<column key="name" header="影音文件（夹）名" width="auto" operator="like"  align="left" fnRender="fnRenderNames" />
 		<column key="year" header="年代" width="40"  operator="eq"  allowSort="true"/>
 <!--		<column key="pcName" header="PC名" width="70"  operator="like"  align="left"  allowSort="true"/>-->
 <!--		<column key="diskName" header="盘名" width="50"  operator="like"  allowSort="true"/>-->
@@ -172,7 +172,7 @@
 		<column key="asDirectorNumber" header="导演数" width="50" align="center"  allowSort="true" />
 		<column key="asActorNumber" header="演绎数" align="center" width="50"  allowSort="true"/>
 		<column key="asWriterNumber" header="编剧数" align="center" width="50"  allowSort="true"/>
-		<column key="person.job" header="职业" align="left" width="160"  operator="like" />
+<!--		<column key="person.job" header="职业" align="left" width="160"  operator="like" />-->
 	</query>
 
 

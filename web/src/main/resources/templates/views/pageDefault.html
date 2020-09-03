@@ -83,21 +83,30 @@
     var dataUrl ="${dataUrl}";
 
     $(function() {
-        //init table and fill data
+        jQuery.ajaxSettings.async = false; //同步
         loadPage("${searchDivUrl}", $('#searchDiv') );
+        jQuery.ajaxSettings.async = true; //同步
+        //init table and fill data
         ffTable = new CommonTable("${dataTableId}", dataUrl, "searchDiv");
+        $("#thumbnail").magnify();
     });
 
 
-    function fnRenderNameExtend(value) {
+    function fnRenderNames ( d , e , f ) {
+        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.name+"</strong><BR><small style='color: #333'>"+f.diskNo + ":" +f.fullPath+"</small>";
+    }
+    function fnRenderLogo(value) {
+        var src = '/assets/images/avatars/nologo.png';
         if (value) {
-            if (value.indexOf(" ")>0){
-                return value.replace(" ","<br>");
-            }
-        } else
-            return value;
+            src = 'data:image/jpeg;base64,'+value;
+        }
+        return "<a id='thumbnail' data-magnify='gallery' data-caption='logo' href='"+src+"'><img width='50px'  src="+src+"></a>";
     }
 
+
+    function fnRenderNameExtend(value,e,f) {
+            return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+value +"</strong><BR><small>"+f.person.job+"</small>";
+    }
     function fnRenderFaceLogo(value) {
         if (value) {
             return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";

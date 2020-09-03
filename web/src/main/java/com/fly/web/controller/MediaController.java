@@ -20,7 +20,11 @@ public class MediaController {
     @GetMapping(value = "/all")
     public String mediaAll(HttpServletRequest request) {
         request.setAttribute("dataUrl", "api/media/all");
-        return "views/media/list";
+        request.setAttribute("pageSubject","影音列表");
+        request.setAttribute("dataTableId","media_list");
+        request.setAttribute("searchDivUrl","common/search/media");
+        return "views/pageDefault";
+        //return "views/media/list";
     }
 
 
