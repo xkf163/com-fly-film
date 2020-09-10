@@ -19,8 +19,9 @@ public class MediaController {
 
     @GetMapping(value = "/all")
     public String mediaAll(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
         request.setAttribute("dataUrl", "api/media/all");
-        request.setAttribute("pageSubject","影音列表");
         request.setAttribute("dataTableId","media_list");
         request.setAttribute("searchDivUrl","common/search/media");
         return "views/pageDefault";

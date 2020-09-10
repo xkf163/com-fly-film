@@ -20,8 +20,13 @@ public class FilmController {
 
     @GetMapping(value = "/all")
     public String filmAll(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
         request.setAttribute("dataUrl", "api/film/all");
-        return "views/film/list";
+        request.setAttribute("dataTableId","film_list");
+        request.setAttribute("searchDivUrl","common/search/film");
+        return "views/pageDefault";
+        //return "views/film/list";
     }
 
     @GetMapping(value = "/edit")

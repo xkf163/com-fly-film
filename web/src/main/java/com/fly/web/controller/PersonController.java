@@ -17,8 +17,12 @@ public class PersonController {
 
     @GetMapping(value = "/all")
     public String personAll(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
         request.setAttribute("dataUrl", "api/person/all");
-        return "views/person/list";
+        request.setAttribute("dataTableId","person_list");
+        request.setAttribute("searchDivUrl","common/search/person");
+        return "views/pageDefault";
     }
 
 

@@ -396,62 +396,35 @@
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-youtube-play"></i>
 							<span class="menu-text">
-								影音管理
+								影片管理
 							</span>
-
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
 
 						<b class="arrow"></b>
 
 						<ul class="submenu">
-
 							<li class="">
 								<a href="#" data-url="/media/all">
 									<i class="menu-icon fa fa-caret-right"></i>
-									影音列表
+									<span class="menu-text">影片列表</span>
 								</a>
-
 								<b class="arrow"></b>
 							</li>
 							<li class="">
 								<a href="#"  data-url="/star/all">
 									<i class="menu-icon fa fa-caret-right"></i>
-									影人列表
+									<span class="menu-text">影人列表</span>
 								</a>
-
 								<b class="arrow"></b>
 							</li>
-
-
-								<li class="">
-									<a href="#" class="dropdown-toggle">
-										<i class="menu-icon fa fa-caret-right"></i>
-
-										系列合集
-										<b class="arrow fa fa-angle-down"></b>
-									</a>
-
-									<b class="arrow"></b>
-									<ul class="submenu">
-										<li class="">
-											<a href="#" data-url="/star/list">
-												<i class="menu-icon fa fa-caret-right"></i>
-												影人合集
-											</a>
-
-											<b class="arrow"></b>
-										</li>
-										<li class="">
-											<a href="#" data-url="/series/all">
-												<i class="menu-icon fa fa-caret-right"></i>
-												影音系列
-											</a>
-
-											<b class="arrow"></b>
-										</li>
-									</ul>
-								</li>
+							<li class="">
+								<a href="#"  data-url="/series/all">
+									<i class="menu-icon fa fa-caret-right"></i>
+									<span class="menu-text">影片系列</span>
+								</a>
+								<b class="arrow"></b>
+							</li>
 
 						</ul>
 					</li>
@@ -459,8 +432,7 @@
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-database"></i>
-							<span class="menu-text"> 豆瓣网库 </span>
-
+							<span class="menu-text"> 豆瓣影库 </span>
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
 
@@ -470,29 +442,32 @@
 							<li class="">
 								<a href="#"  data-url="/film/all">
 									<i class="menu-icon fa fa-caret-right"></i>
-									电影列表
+									<span class="menu-text">电影列表</span>
 								</a>
-
 								<b class="arrow"></b>
 							</li>
 
 							<li class="">
 								<a href="#"  data-url="/person/all">
 									<i class="menu-icon fa fa-caret-right"></i>
-									人物列表
+									<span class="menu-text">人物列表</span>
 								</a>
-
+								<b class="arrow"></b>
+							</li>
+							<li class="hide">
+								<a href="#" data-url="/person/list">
+									<i class="menu-icon fa fa-caret-right"></i>
+									<span class="menu-text">人物合集</span>
+								</a>
 								<b class="arrow"></b>
 							</li>
 							<li class="">
-								<a href="#" data-url="/person/list">
-									<i class="menu-icon fa fa-caret-right"></i>
-									人物合集
+								<a href="#" data-url="/crawler/new" >
+									<i class="menu-icon fa fa-bug"></i>
+									<span class="menu-text">影资爬虫</span>
 								</a>
-
 								<b class="arrow"></b>
 							</li>
-
 						</ul>
 					</li>
 
@@ -500,79 +475,57 @@
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-user-md"></i>
-							<span class="menu-text"> 影音维护 </span>
+							<span class="menu-text"> 数据运维 </span>
 
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
-
 						<b class="arrow"></b>
 
 						<ul class="submenu">
-
-							<!--<li class=""> 作废 20190906-->
-							<!--<a href="#"  data-url="/relevance/new" >-->
-							<!--<i class="menu-icon fa fa-caret-right"></i>-->
-							<!--关联Film-->
-							<!--</a>-->
-
-							<!--<b class="arrow"></b>-->
-							<!--</li>-->
 							<li class="">
 								<a href="#" data-url="/media/unlink">
 									<i class="menu-icon fa fa-caret-right"></i>
-									未关联
+									<span class="menu-text">未关联</span>
 								</a>
-
 								<b class="arrow"></b>
 							</li>
 							<li class="">
 								<a href="#" data-url="/media/duplicate">
 									<i class="menu-icon fa fa-caret-right"></i>
-									重复的
+									<span class="menu-text">重复的</span>
 								</a>
-
 								<b class="arrow"></b>
 							</li>
-							<li class="">
+							<li class="hide">
 								<a href="#" data-url="/media/deleted/2">
 									<i class="menu-icon fa fa-caret-right"></i>
-									待确认
+									<span class="menu-text">待确认</span>
 								</a>
-
 								<b class="arrow"></b>
 							</li>
 							<li class="">
 								<a href="#" data-url="/media/deleted/1">
 									<i class="menu-icon fa fa-caret-right"></i>
-									废纸篓
+									<span class="menu-text">垃圾桶</span>
 								</a>
-
 								<b class="arrow"></b>
 							</li>
-
+							<li class="">
+								<a href="#" data-url="/crawler/new" >
+									<i class="menu-icon fa fa-caret-right"></i>
+									<span class="menu-text">媒影关联</span>
+								</a>
+								<b class="arrow"></b>
+							</li>
+							<li class="">
+								<a href="#" data-url="/scanner/new" >
+									<i class="menu-icon fa fa-caret-right"></i>
+									<span class="menu-text">媒体入库</span>
+								</a>
+								<b class="arrow"></b>
+							</li>
 						</ul>
 					</li>
-
-					<li class="">
-						<a href="#" data-url="/crawler/new" >
-							<i class="menu-icon fa fa-bug"></i>
-							<span class="menu-text"> 爬取关联</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-
-					<li class="">
-						<a href="#" data-url="/scanner/new" >
-							<i class="menu-icon fa fa-usb"></i>
-							<span class="menu-text">
-								影音扫描
-								<span class="badge badge-primary">5</span>
-							</span>
-						</a>
-						<b class="arrow"></b>
-					</li>
-
 
 				</ul><!-- /.nav-list -->
 
@@ -682,7 +635,9 @@
                 //首页默认加载
                 loadPage("/dashboard");
                 $("a[data-url]").click(function(evt){
-                    loadPage($(this).data("url"));
+                	var url = $(this).data("url");
+                	url = url + "?pageSubject="+$(this).find("span").text();
+                    loadPage(url);
                     $("ul.nav-list li").removeClass("active");
 
 					$(this).parent().addClass("active");

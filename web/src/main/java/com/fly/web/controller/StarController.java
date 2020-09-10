@@ -16,8 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 public class StarController {
     @GetMapping(value = "/all")
     public String starAll(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
         request.setAttribute("dataUrl", "api/star/all");
-        request.setAttribute("pageSubject","影人列表");
         request.setAttribute("dataTableId","star_list");
         request.setAttribute("searchDivUrl","common/search/star");
         return "views/pageDefault";
