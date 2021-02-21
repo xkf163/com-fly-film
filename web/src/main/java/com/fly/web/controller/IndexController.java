@@ -11,7 +11,12 @@ public class IndexController {
 
     @GetMapping(value = "/")
     public String index(){
-        return "framework";
+        return "indexPage";
+    }
+
+    @GetMapping(value = "/admin")
+    public String admin(){
+        return "adminIndex";
     }
 
     @GetMapping(value = "/dashboard")
