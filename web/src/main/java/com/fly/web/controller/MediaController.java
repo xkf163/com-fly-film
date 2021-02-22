@@ -28,6 +28,29 @@ public class MediaController {
         //return "views/media/list";
     }
 
+    /**
+     * media查询主页面，放3张表格，数据串联
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/triple")
+    public String mediaTriple(HttpServletRequest request) {
+        String pageSubject = request.getParameter("pageSubject");
+        request.setAttribute("pageSubject", pageSubject);
+        request.setAttribute("dataMainTable", "api/media/all");
+        request.setAttribute("dataMainTableId", "mainMedia");
+        request.setAttribute("dataSearchDivMainHtml", "common/search/media");
+
+        request.setAttribute("dataSubTopTable", "api/star/all");
+        request.setAttribute("dataSubTopTableId", "subStar");
+        //request.setAttribute("dataSearchDivSubTopHtml", "common/search/star");
+
+        request.setAttribute("dataSubBottomTable", "api/media/duplicate");
+        request.setAttribute("dataSubBottomTableId", "subMedia");
+
+//       return "views/media/triple";
+        return "views/pageTriple";
+    }
 
     @GetMapping(value = "/duplicate")
     public String mediaDuplicate(HttpServletRequest request) {

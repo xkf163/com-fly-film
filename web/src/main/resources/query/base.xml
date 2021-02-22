@@ -2,6 +2,49 @@
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.example.org/query query.xsd ">
 
+
+	<!-- Media 影音管理/影音列表 -->
+	<query id="mainMedia" key="id" tableName="影音列表" className="com.fly.entity.Media"
+		   pageSize="10"  widthType="px" order="gatherDate desc">
+		<column key="rowIndex" header="序号" width="30" allowSort="false"  />
+		<column key="id" header="id" hidden="true"/>
+		<column key="film.filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderLogo" />
+		<column key="name" header="影音文件（夹）名" width="auto" operator="like"  align="left" fnRender="fnRenderNames" />
+<!--		<column key="year" header="年代" width="40"  operator="eq"  allowSort="true"/>-->
+<!--		<column key="film.country" header="国家/地区" width="80"  align="left" />-->
+<!--		<column key="film.doubanRating" header="豆分" width="40"  operator="eq"  allowSort="true"/>-->
+<!--		<column key="mediaSizeGB" header="大小(GB)"  width="60"  allowSort="true"/>-->
+<!--		<column key="gatherDate" header="下载时间" operator="like" align="left"  width="120" allowSort="true"/>-->
+	</query>
+
+	<!-- Media 影音管理/影音列表 -->
+	<query id="subMedia" key="id" tableName="影音列表" className="com.fly.entity.Media"
+		   pageSize="10"  widthType="px" order="gatherDate desc">
+		<column key="rowIndex" header="序号" width="30" allowSort="false"  />
+		<column key="id" header="id" hidden="true"/>
+		<column key="film.filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderLogo" />
+		<column key="name" header="影音文件（夹）名" width="auto" operator="like"  align="left" fnRender="fnRenderNames" />
+		<!--		<column key="year" header="年代" width="40"  operator="eq"  allowSort="true"/>-->
+		<!--		<column key="film.country" header="国家/地区" width="80"  align="left" />-->
+		<!--		<column key="film.doubanRating" header="豆分" width="40"  operator="eq"  allowSort="true"/>-->
+		<!--		<column key="mediaSizeGB" header="大小(GB)"  width="60"  allowSort="true"/>-->
+		<!--		<column key="gatherDate" header="下载时间" operator="like" align="left"  width="120" allowSort="true"/>-->
+	</query>
+
+	<!-- Star 影音管理/影人列表-->
+	<query id="subStar" key="id" tableName="人物列表" className="com.fly.entity.Star"
+		   pageSize="10"  widthType="px" order="asActorNumber desc">
+		<column key="rowIndex" header="序号" width="30" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="person.faceLogo" header="" width="50"  operator="like"  align="center" fnRender="fnRenderFaceLogo" />
+		<column key="nameExtend" header="姓名" width="auto"  operator="like"  align="left"  fnRender="fnRenderNameExtend" />
+<!--		<column key="person.gender" header="性别" width="40"  operator="like"  align="left"  />-->
+<!--		<column key="person.birthDay" header="出生日" width="80"  operator="like"  align="left"  allowSort="true"  />-->
+<!--		<column key="asDirectorNumber" header="导演数" width="50" align="center"  allowSort="true" />-->
+<!--		<column key="asActorNumber" header="演绎数" align="center" width="50"  allowSort="true"/>-->
+<!--		<column key="asWriterNumber" header="编剧数" align="center" width="50"  allowSort="true"/>-->
+	</query>
+
 	<!-- Film 豆瓣数据/电影列表-->
 	<query id="film_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="createDate desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />

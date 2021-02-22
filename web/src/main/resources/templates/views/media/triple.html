@@ -1,0 +1,208 @@
+
+	<div class="page-content" >
+
+		<div class="page-body">
+		<div class="row">
+		
+			<!-- /.col -->
+			<div class="col-xs-12 col-md-6" style="padding-left: 5px;padding-right: 5px;">
+				<div class="">
+					<div class="col-xs-12" style="padding-right: 0px;padding-left: 0px;">
+						<div id="seriesName" class="col-md-4" style="padding-left:0px;padding-right:0px; font-size: 26px;font-weight: lighter;color: #2679b5;">${pageSubject}</div>
+						<div class="dataTables_filter col-md-8" id="searchDiv_Main" style="margin-left: 0px;margin-right: 0px;padding-left: 0px;padding-right:0px;">
+							<input placeholder="请输入片名（中）" name="nameChn" class="form-control" type="search" likeOption="true"/>
+							<input placeholder="请输入影片年代" name="year" class="form-control" type="search" />
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" data-btn-type="search"><i class="fa fa-search"></i></button>
+								<button type="button" class="btn btn-default" data-btn-type="reset"><i class="fa fa-mail-reply"></i></button>
+								<button type="button" class="btn btn-default" data-btn-type="add"><i class="fa fa-plus"></i></button>
+							</div>
+						</div>
+					</div>
+					<div class="">
+						<table id="MainTable" class="table table-bordered table-hover">
+						</table>
+					</div>
+					<!-- /.box-body -->
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-md-6" style="padding-right: 0px;">
+				<div class="">
+					<div class="dataTables_filter" id="searchDivSubTop" style="margin-left: 0px; margin-right: 0px; padding-right: 0px;">
+
+						<input type="hidden"  name="MediaId" value="-1" id="MediaId"/>
+						<input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true"/>
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+							<button type="button" class="btn btn-default" data-btn-type="selectMedia">选择</button>
+							<button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+						</div>
+					</div>
+				</div>
+				<div class="">
+					<table id="SubTableTop" class="table table-bordered table-hover">
+					</table>
+				</div>
+			</div>
+
+		</div>
+		</div>
+	</div>
+
+	<script>
+		//tableId,queryId,conditionContainer
+		var mainTable,subTableTop;
+		var winId="seriesWin";
+		var subTableTopUrl ="${SubTableTopUrl}";
+		var mainTableUrl ="${MainTableUrl}";
+		$(function() { 
+			//init table and fill data
+			var main_config={
+					lengthChange:false,
+					pagingType:'simple_numbers',
+					rowClick:function(row,isSelected){  
+						$("#MediaId").val(isSelected?row.id:"-1");
+						if(isSelected)
+							//$("#seriesName").text(row.name);
+						subTableTopUrl.reloadData();
+					}
+			}
+			mainTable = new CommonTable("MainTable", mainTableUrl, "searchDiv_Main",main_config);
+
+			var sub_config={
+				lengthChange:false,
+				pagingType:'simple_numbers'
+			}
+
+			//init star film table
+			subTableTop=new CommonTable("SubTableTop",subTableTopUrl,"searchDivSubTop",sub_config);
+			  
+			//默认选中第一行 
+			setTimeout(function(){mainTable.selectFirstRow(true)},100);
+			//make right table button on the same row
+			 
+			//button event   
+			$('button[data-btn-type]').click(function() {
+				var action = $(this).attr('data-btn-type');
+				var rowId=seriesTable.getSelectedRowId();
+				switch (action) {
+				case 'add':
+                       modals.openWin({
+                       	winId:winId,
+                       	title:'Series表单',
+                       	width:'900px',
+						url:basePath+"/series/edit"
+                       	/*, hideFunc:function(){
+                       		modals.info("hide me");
+                       	},
+                       	showFunc:function(){
+                       		modals.info("show me");
+                       	} */
+                       });                        
+					break;
+				case 'edit':
+					if(!rowId){
+						modals.info('请选择要编辑的行');
+						return false;
+					}
+					modals.openWin({
+                       	winId:winId,
+                       	title:'编辑角色【'+seriesTable.getSelectedRowData().name+'】',
+                       	width:'600px',
+                       	url:basePath+"/role/edit?id="+rowId
+                       }); 
+				   break;
+				case 'delete':
+					if(!rowId){
+						modals.info('请选择要删除的行');
+						return false;
+					}
+					modals.confirm("是否要删除该行数据？",function(){
+						ajaxPost(basePath+"/role/delete/"+rowId,null,function(data){
+							if(data.success){
+								//modals.correct("已删除该数据");
+								seriesTable.reloadData();
+							}else{  
+								//setTimeout(function(){modals.info(data.message)},2000);
+								modals.info(data.message); 
+							}  
+						});  
+					})
+					break;					
+				case 'selectMedia':
+					if(!rowId){
+						modals.info('请选择系列');
+						return;
+					}
+					modals.openWin({
+						winId:'mediaWin',
+						width:1200,
+						title:'系列【'+seriesTable.getSelectedRowData().name+'】绑定Media',
+						url:basePath+'/media/select?seriesId='+rowId,
+					    hideFunc:function(){seriesMediaTable.reloadData();seriesTable.reloadData();}
+					})
+					break;
+				case 'deleteUserRole':
+					var rowId_ur=seriesMediaTable.getSelectedRowId();
+					if(!rowId_ur){
+						modals.info("请选择要删除的用户");
+						return false;
+					}
+					modals.confirm("是否要删除该行数据",function(){
+						ajaxPost(basePath+"/userrole/delete",{ids:rowId_ur},function(data){
+							if(data.success){
+								seriesMediaTable.reloadData();
+							}else{ 
+								modals.info(data.message);
+							}
+						})
+					});
+					break;
+				}
+
+			});
+			//form_init();
+
+
+
+		})
+
+		function fnRenderNames ( d , e , f ) {
+			return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.name+"</strong><BR><small style='color: #333'>"+f.diskNo + ":" +f.fullPath+"</small>";
+		}
+
+		function fnRenderLogo(value) {
+			var src = '/assets/images/avatars/nologo.png';
+
+			if (value) {
+				src = 'data:image/jpeg;base64,'+value;
+			}
+			return "<a id='thumbnail' data-magnify='gallery' data-caption='logo' href='"+src+"'><img width='50px'  src="+src+"></a>";
+		}
+
+		function fnRenderNameChn(value) {
+			if (value) {
+				return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
+			} else
+				return "<img width='50px' src= '/assets/images/avatars/nologo.png' >";
+		}
+
+		function fnRenderNameExtend(value) {
+			if (value) {
+				if (value.indexOf(" ")>0){
+					return value.replace(" ","<br>");
+				}
+			}
+			return value;
+		}
+
+		function fnRenderFaceLogo(value) {
+			if (value) {
+				return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
+			} else
+				return "<img width='50px' src= '/assets/images/avatars/noface.png' >";
+		}
+
+
+	</script>
