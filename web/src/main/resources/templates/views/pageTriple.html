@@ -39,10 +39,16 @@
         text-align: left;
     }
 
+    div.dataTables_info{
+        line-height: 30px;
+    }
     .page-header{
         padding-bottom: 6px !important;
     }
 
+    .dynamic-table_wrapper_right_table{
+        padding: 0 5px 0 5px;
+    }
     .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
 </style>
 
@@ -54,45 +60,54 @@
         <h1>${pageSubject}
             <small>
                 <i class="ace-icon fa fa-angle-double-right"></i>
-                overview &amp; Ver20190926
+                overview &amp; Ver20210222
             </small>
         </h1>
     </div>
 
     <div class="page-body">
-        <div class="row">
 
-        <div class="col-xs-12 col-md-6" style="padding-left: 5px;padding-right: 5px;">
             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline">
                 <div class="row">
                     <div class="dataTables_filter alert-block" id="searchDivMain">
                     </div>
                 </div>
-                <!-- PAGE CONTENT BEGINS -->
-                <table id="${dataMainTableId}" class="table table-bordered table-hover dataTable" width="100%">
-                </table>
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                    <!-- PAGE CONTENT BEGINS -->
+                        <table id="${dataMainTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                        </table>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6">
+                        <div class="dynamic-table_wrapper_right_table">
+                            <div class="row">
+                                <div class="dataTables_filter alert-block" id="searchDivSubTop">
+                                    <input type="hidden" name="name" value="" />
+                                    <input type="hidden" name="MediaId" value="-1" id="MediaId"/>
+                                </div>
+                            </div>
+                            <table id="${dataSubTopTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                            </table>
+                        </div>
+                        <div class="dynamic-table_wrapper_right_table">
+                            <div class="row">
+                                <div class="dataTables_filter alert-block" id="searchDivSubBottom">
+                                    <input type="hidden" name="StarId" value="-1" id="StarId"/>
+                                </div>
+                            </div>
+                            <table id="${dataSubBottomTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
                 <!-- PAGE CONTENT ENDS -->
             </div>
-        </div>
-
-        <div class="col-xs-12 col-md-6" style="padding-left: 5px;padding-right: 5px;">
-            <div class="row">
-                <div id="dynamic-table_wrapper_righttop" class="dataTables_wrapper form-inline">
-                    <table id="${dataSubTopTableId}" class="table table-bordered table-hover dataTable" width="100%">
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div id="dynamic-table_wrapper_rightbottom" class="dataTables_wrapper form-inline">
-                    <table id="${dataSubBottomTableId}" class="table table-bordered table-hover dataTable" width="100%">
-                    </table>
-                </div>
-            </div>
-
-        </div>
         </div>    <!-- /.row -->
-        </div>
-    </div>
+
+
+</div>
     <!-- /.page-content -->
 
 
@@ -103,14 +118,70 @@
     var subTopUrl ="${dataSubTopTable}";
     var subBottomUrl ="${dataSubBottomTable}";
     $(function() {
+        var  pageHeight  = $(window).height();
+        console.log("pageHeight  "+ pageHeight);
+        var  subTableHeight = (pageHeight-300-41-42+9) / 2;
+        console.log("subTableHeight  "+ subTableHeight);
+        //$("${dataSubTopTableId}").height(subTableHeight);
+        //$("${dataSubBottomTableId}").height(subTableHeight);
+        //$("#dynamic-table_wrapper_right").height(pageHeight-40);
+        //$(".dynamic-table_wrapper_right_table").height(subTableHeight);
         jQuery.ajaxSettings.async = false; //同步
         loadPage("${dataSearchDivMainHtml}", $('#searchDivMain') );
         jQuery.ajaxSettings.async = true; //同步
         //init table and fill data
-        mainTable = new CommonTable("${dataMainTableId}", mainUrl, "searchDivMain");
+        var main_config={
+            // lengthChange:false,
+            // pagingType:'simple_numbers',
+            rowClick:function(row,isSelected){
+                $("#MediaId").val(isSelected?row.id:"-1");
+                if(isSelected)
+                    subTopTable.reloadData();
+
+                var defaultId = subTopTable.data.pageCarrier.content[0].id;
+                console.log("defaultId: "+ defaultId);
+                $("#StarId").val(defaultId);
+                subBottomTable.reloadData();
+            }
+        }
+        mainTable = new CommonTable("${dataMainTableId}", mainUrl, "searchDivMain",main_config);
+
+        var defaultId = mainTable.data.pageCarrier.content[0].id;
+        console.log("defaultId: "+ defaultId);
+        $("#MediaId").val(defaultId);
+
+        var sub_config_bottom={
+            lengthChange:false,
+            pagingType:'simple_numbers',
+            scrollY: subTableHeight
+            // pageLength: 5,
+            // displayLength: 5
+        }
+
+        var sub_config_top={
+            lengthChange:false,
+            pagingType:'simple_numbers',
+            scrollY: subTableHeight,
+            rowClick:function(row,isSelected){
+                $("#StarId").val(isSelected?row.id:"-1");
+                if(isSelected)
+                    subBottomTable.reloadData();
+            }
+            // pageLength: 5,
+            // displayLength: 5
+        }
+
+        subTopTable = new CommonTable("${dataSubTopTableId}", subTopUrl,"searchDivSubTop",sub_config_top);
+
+
+        defaultId = subTopTable.data.pageCarrier.content[0].id;
+        console.log("defaultId: "+ defaultId);
+        $("#StarId").val(defaultId);
+
+
+        subBottomTable = new CommonTable("${dataSubBottomTableId}", subBottomUrl,"searchDivSubBottom",sub_config_bottom);
+
         $("#thumbnail").magnify();
-        subTopTable = new CommonTable("${dataSubTopTableId}", subTopUrl);
-        subBottomTable = new CommonTable("${dataSubBottomTableId}", subBottomUrl);
     });
 
 

@@ -77,22 +77,83 @@ public class MediaServiceImpl implements MediaService {
 
         //4)dsl动态查询
         List<Map<String, Object>> conditions = queryCondition.getConditions();
-        String nameChn = null;
-        Short year = null;
-        if (!"".equals(conditions.get(0).get("value"))){
-            nameChn = (String) conditions.get(0).get("value");
+        String nameChn = "";
+        Short year = 9999;
+//        if (!"".equals(conditions.get(0).get("value"))){
+//            nameChn = (String) conditions.get(0).get("value");
+//        }
+//        if (!"".equals(conditions.get(1).get("value"))){
+//            year = isNumeric(conditions.get(1).get("value").toString()) ?   Short.parseShort(conditions.get(1).get("value").toString()) : 9999;
+//        }
+        String  starId = "-1";
+        if (!conditions.isEmpty()){
+            for(int i = 0 ; i < conditions.size() ; i++) {
+                System.out.println(conditions.get(i).get("key"));
+                System.out.println(conditions.get(i).get("value"));
+                if ("StarId".equals(conditions.get(i).get("key"))) {
+                    starId =  (String) conditions.get(i).get("value");
+                }
+                if ("nameChn".equals(conditions.get(i).get("key"))) {
+                    nameChn =  (String) conditions.get(i).get("value");
+                    nameChn  = nameChn.trim();
+                }
+                if ("year".equals(conditions.get(i).get("key"))) {
+                    if (!"".equals(conditions.get(i).get("value").toString())){
+                        year = Short.parseShort ( conditions.get(i).get("value").toString() );
+                    }
+                }
+            }
         }
-        if (!"".equals(conditions.get(1).get("value"))){
-            year = isNumeric(conditions.get(1).get("value").toString()) ?   Short.parseShort(conditions.get(1).get("value").toString()) : 9999;
+        String starAsDirect="",starAsActor="",starAsWriter="";
+       if (!"-1".equals(starId)){
+           Star star = starService.findOne(Long.valueOf(starId));
+             starAsDirect = star.getAsDirector();
+             starAsActor= star.getAsActor();
+             starAsWriter = star.getAsWriter();
+
+             starAsDirect = starAsDirect == null ? "" : starAsDirect;
+             starAsActor = starAsActor == null ? "" : starAsActor;
+             starAsWriter = starAsWriter == null ? "" : starAsWriter;
+       }
+
+        System.out.println(starAsDirect);
+        System.out.println(starAsActor);
+        System.out.println(starAsWriter);
+        System.out.println("-1".equals(starId));
+
+
+        List<Long> b = new ArrayList<Long>();
+        if (!"".equals(starAsDirect)){
+            for (String retval: starAsDirect.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
         }
+        if (!"".equals(starAsActor)){
+            for (String retval: starAsActor.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
+        }
+        if (!"".equals(starAsWriter)){
+            for (String retval: starAsWriter.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
+        }
+        Long[] c = new Long[b.size()];
+        b.toArray(c);
 
         QMedia media = QMedia.media;
         //初始化组装条件(类似where 1=1)
         Predicate predicate = media.deleted.ne(1).and(media.film.isNotNull());
         //执行动态条件拼装
-        predicate = nameChn == null ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(nameChn));
-        predicate = year == null ? predicate : ExpressionUtils.and(predicate,media.year.eq(year));
-
+        predicate = "".equals(nameChn) ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(nameChn));
+        predicate = year == 9999 ? predicate : ExpressionUtils.and(predicate,media.year.eq(year));
+        predicate = "-1".equals(starId) ? predicate : ExpressionUtils.and(predicate,media.id.in(c));
 
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);

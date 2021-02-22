@@ -51,14 +51,13 @@ public class StarServiceImpl implements StarService {
         //用于接收返回数据(配置、分页、数据)
         Map<String, Object> map = new HashMap<>();
         QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
-
-        // 分页信息
-        PageInfo pageInfo = QueryUtil.getPageInfo(queryCondition);
         //获取Query配置
         Query query = QueryUtil.getQuery(queryCondition);
-
+        // 分页信息
+        PageInfo pageInfo = QueryUtil.getPageInfo(queryCondition);
         int pageNum = pageInfo.getPageNum();
         int pageSize = pageInfo.getPageSize();
+
 
         //排序信息
         String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
@@ -73,14 +72,30 @@ public class StarServiceImpl implements StarService {
 
         //4)dsl动态查询
         List<Map<String, Object>> conditions = queryCondition.getConditions();
-        String name = null ;
-        if (!conditions.isEmpty() && !"".equals(conditions.get(0).get("value"))){
-            name =  (String) conditions.get(0).get("value");
+        String name = "";
+        String mediaId = "-1";
+//        if (!conditions.isEmpty() && !"".equals(conditions.get(0).get("value"))){
+//            name =  (String) conditions.get(0).get("value");
+//        }
+        if (!conditions.isEmpty()){
+            for(int i = 0 ; i < conditions.size() ; i++) {
+//                System.out.println(conditions.get(i).get("key"));
+//                System.out.println(conditions.get(i).get("value"));
+                if ("name".equals(conditions.get(i).get("key"))) {
+                    name =  (String) conditions.get(i).get("value");
+                }
+                if ("MediaId".equals(conditions.get(i).get("key"))) {
+                    mediaId =  (String) conditions.get(i).get("value");
+
+                }
+            }
         }
+        System.out.println("mediaId: " + mediaId);
+//        System.out.println(String.valueOf(new String[]{mediaId, mediaId+","}));
 
         QStar star = QStar.star;
-        Predicate predicate = star.deleted.eq(0);
-        predicate = name == null ? predicate : ExpressionUtils.and(predicate,star.name.like(name));
+        Predicate predicate = star.deleted.eq(0).and(star.asActor.contains(mediaId).or(star.asDirector.contains(mediaId)).or(star.asWriter.contains(mediaId)));
+        predicate = "".equals(name) ? predicate : ExpressionUtils.and(predicate,star.name.like(name));
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
         Page<Star> pageCarrier = starRepository.findAll(predicate , pageable);

@@ -45,7 +45,7 @@ public class MediaController {
         request.setAttribute("dataSubTopTableId", "subStar");
         //request.setAttribute("dataSearchDivSubTopHtml", "common/search/star");
 
-        request.setAttribute("dataSubBottomTable", "api/media/duplicate");
+        request.setAttribute("dataSubBottomTable", "api/media/all");
         request.setAttribute("dataSubBottomTableId", "subMedia");
 
 //       return "views/media/triple";
