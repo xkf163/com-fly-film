@@ -70,10 +70,25 @@ public class RelevanceServiceImpl implements RelevanceService {
         Long a = jpaQueryFactory.update(qStar).set(qStar.asActor,"").set(qStar.asActorNumber,0).set(qStar.asDirector,"").set(qStar.asDirectorNumber,0).set(qStar.asWriter,"").set(qStar.asWriterNumber,0)
                 .setNull(qStar.person)
                 .where(qStar.deleted.ne(1)).execute();
+
+
         return a;
     }
 
+    @Transactional
+    public Long initMediaPropWithQueryDsl()
+    {
+        //querydsl查询实体
+        QMedia qMedia = QMedia.media;
+        //00000000)
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        Long a = jpaQueryFactory.update(qMedia).set(qMedia.Director,"").set(qMedia.Actor,"").set(qMedia.Writer,"")
+                .setNull(qMedia.film)
+                .where(qMedia.deleted.ne(1)).execute();
 
+
+        return a;
+    }
 
     /**
      * 为Media关联Film
@@ -89,6 +104,383 @@ public class RelevanceServiceImpl implements RelevanceService {
         List<Media> filmNotFindMediaList = new ArrayList<>();
         List<Media> needUpdateMediaList = new ArrayList<>();
         List<Star> needUpdateStarList = new ArrayList<>(); //需要更新的star
+
+        List<Star> savedStarList = new ArrayList<>();
+        //Map<String,String> starNeedSaveMap = new HashMap<>(); //filmId 和 star doubanNo
+
+        class Tool {
+
+             void CatchStar(Star star,Person person,Media media,String douBanNo, String fieldType) {
+                 String mediaId = String.valueOf(media.getId());
+                //2) person存在，创建或更新star
+                if (star != null) {
+                    star.setPerson(person);
+                    //判断当前filmid是否已存在当前star的asdirect字段中
+                    //不存在add进去，并更新number
+                    String[] oldArray;
+                    String oldString = star.getAsDirector();
+                    if (oldString!= null && !StringUtils.isEmpty(oldString)) {
+                        oldArray = oldString.split(",");
+                        if (oldArray != null && !Arrays.asList(oldArray).contains(mediaId)) {
+                            String[] newArray = new String[oldArray.length + 1];
+                            System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);//将a数组内容复制新数组b
+                            newArray[newArray.length - 1] = mediaId;
+
+                            if ("d".equals(fieldType)) {
+                                star.setAsDirector(StringUtils.join(newArray, ","));
+                                star.setAsDirectorNumber(newArray.length);
+                            } else if("a".equals(fieldType)){
+                                star.setAsActor(StringUtils.join(newArray, ","));
+                                star.setAsActorNumber(newArray.length);
+                            }else if("w".equals(fieldType)){
+                                star.setAsWriter(StringUtils.join(newArray, ","));
+                                star.setAsWriterNumber(newArray.length);
+                            }
+
+                            //star是地址引用，故若已添加，不需再次添加
+                            star.setUpdateDate(new Date());
+                            if (!needUpdateStarList.contains(star)) {
+                                needUpdateStarList.add(star);
+                            }
+
+                        }
+                    } else {
+                        if ("d".equals(fieldType)) {
+                            star.setAsDirector(mediaId);
+                            star.setAsDirectorNumber(1);
+                        } else if("a".equals(fieldType)){
+                            star.setAsActor(mediaId);
+                            star.setAsActorNumber(1);
+                        }else if("w".equals(fieldType)){
+                            star.setAsWriter(mediaId);
+                            star.setAsWriterNumber(1);
+                        }
+
+                        //star是地址引用，故若已添加，不需再次添加
+                        star.setUpdateDate(new Date());
+                        if (!needUpdateStarList.contains(star)) {
+                            needUpdateStarList.add(star);
+                        }
+
+                    }
+
+                    //starService.save(star);
+
+                } else {
+                    //根据Person信息创建new star
+                    star = new Star();
+                    star.setCreateDate(new Date());
+                    star.setDouBanNo(douBanNo);
+                    star.setAsDirectorNumber(1);
+                    star.setAsDirector(mediaId);
+                    star.setName(person.getName());
+                    star.setNameExtend(person.getNameExtend());
+                    star.setPerson(person);
+                    star.setUpdateDate(new Date());
+                    starService.save(star);
+
+                    //新建star保存
+                    savedStarList.add(star);
+
+                }
+
+
+                //210223ADD Media存放StarIds
+                String starId = String.valueOf(star.getId());
+                if (media.getDirector() != null && !StringUtils.isEmpty(media.getDirector())) {
+                    String[] tmpArray= null;
+
+                    if ("d".equals(fieldType)) {
+                        tmpArray = media.getDirector().split(",");
+                    } else if("a".equals(fieldType)){
+                        tmpArray = media.getActor().split(",");
+                    }else if("w".equals(fieldType)){
+                        tmpArray = media.getWriter().split(",");
+                    }
+
+                    if (tmpArray!= null && !Arrays.asList(tmpArray).contains(starId)) {
+                        String[] tmpArrayNew = new String[tmpArray.length + 1];
+                        System.arraycopy(tmpArray, 0, tmpArrayNew, 0, tmpArray.length);//将a数组内容复制新数组b
+                        tmpArrayNew[tmpArrayNew.length - 1] = mediaId;
+                        if ("d".equals(fieldType)) {
+                            media.setDirector(StringUtils.join(tmpArrayNew, ","));
+                        } else if("a".equals(fieldType)){
+                            media.setActor(StringUtils.join(tmpArrayNew, ","));
+                        }else if("w".equals(fieldType)){
+                            media.setWriter(StringUtils.join(tmpArrayNew, ","));
+                        }
+
+                        //media是地址引用，故若已添加，不需再次添加
+                        media.setUpdateDate(new Date());
+                        if (!needUpdateMediaList.contains(media)) {
+                            needUpdateMediaList.add(media);
+                        }
+                    }
+                } else {
+                    if ("d".equals(fieldType)) {
+                        media.setDirector(starId);
+                    } else if("a".equals(fieldType)){
+                        media.setActor(starId);
+                    }else if("w".equals(fieldType)){
+                        media.setWriter(starId);
+                    }
+                    //media是地址引用，故若已添加，不需再次添加
+                    media.setUpdateDate(new Date());
+                    if (!needUpdateMediaList.contains(media)) {
+                        needUpdateMediaList.add(media);
+                    }
+                }
+                //--end
+
+
+
+            }
+
+
+        }
+
+
+
+
+
+        //前台传递的参数，是否遍历全库media
+        String relevantAll = relevance.getRelevantAll();
+        //提取所有符合条件的media条目
+        QMedia qMedia = QMedia.media;
+        List<Media> mediaList;
+        if("1".equals(relevantAll)){
+            mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1));
+            if (this.initStarPropWithQueryDsl()>0){
+                System.out.println("清空star表字段数据");
+            }
+            if (this.initMediaPropWithQueryDsl()>0){
+                System.out.println("清空media表字段数据");
+            }
+
+        }else{
+            //只处理未关联film的Media
+            mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1).and(qMedia.film.isNull()));
+        }
+
+        //数据库中已存在的person编号
+        //List<String> starDouBanNoAllList = starService.findAllDouBanNo();
+        Film film,oldFilm;
+        int ind = 1;
+        for(Media media : mediaList){
+
+            runningLog  = ind+"、"+media.getName();
+            System.out.println("-----"+ind+"----------------"+media.getNameChn());
+            ind++;
+
+            //1)为Media关联Film，并加入更新List
+            oldFilm = media.getFilm();
+            film = findConnectedFilmForMedia(media);
+            if (oldFilm != film){
+                media.setFilm(film);
+                media.setUpdateDate(new Date());
+                needUpdateMediaList.add(media);
+            }
+            if(film == null){
+                filmNotFindMediaList.add(media);
+                continue;
+            }
+
+            //2）为当前匹配到的Film中的导演和演员Person转化为Star（或更新Star）
+
+
+            String directorsDoubanNo = film.getDirectors();
+            String actorsDoubanNo = film.getActors();
+            String writerDoubanNo = film.getScreenWriter();
+
+            String[] ddno_array=null,adno_array=null,sdno_array=null;
+
+            if (directorsDoubanNo != null && !StringUtils.isEmpty(directorsDoubanNo))
+                ddno_array = directorsDoubanNo.split(",");
+            if (actorsDoubanNo != null && !StringUtils.isEmpty(actorsDoubanNo) )
+                adno_array = actorsDoubanNo.split(",");
+            if (writerDoubanNo != null && !StringUtils.isEmpty(writerDoubanNo) )
+                sdno_array = writerDoubanNo.split(",");
+
+            Person person = null;
+            Star star = null;
+            //Film中的导演doubanNo
+            if (ddno_array != null) {
+                for (String douBanNo : ddno_array) {
+                    //找star表，看是否存在，不存在则新建，存在即asdirect加上此filmid（先判断有无此filmid）
+                    //1)重新关联person，如果person被删，则同时删除已存在的star
+                    person = personService.findByDouBanNo(douBanNo);
+                    star = starService.findByDouBanNo(douBanNo);
+                    if (needUpdateStarList.contains(star))  {
+                        //System.out.println(needUpdateStarList.indexOf(star));
+                        star = needUpdateStarList.get(needUpdateStarList.indexOf(star));
+                    }
+                    if (person == null){
+                        //加入到未找到person队列
+                        personDoubanUrl = personDoubanUrlPre+ douBanNo +"/";
+                        if (!personNotFindDoubanUrlList.contains(personDoubanUrl)){
+                            personNotFindDoubanUrlList.add(personDoubanUrl);
+                        }
+                        if (star != null){
+                            starRepository.delete(star);
+                        }
+                        continue;
+                    }
+                    new Tool().CatchStar(star,person,media,douBanNo,"d");
+                }
+            }
+
+            //as主演
+            if (adno_array != null) {
+                for (String douBanNo : adno_array) {
+                    //1)重新关联person，如果person被删，则同时删除已存在的star
+                    person = personService.findByDouBanNo(douBanNo);
+                    star = starService.findByDouBanNo(douBanNo);
+                    if (needUpdateStarList.contains(star))  {
+                        //System.out.println(needUpdateStarList.indexOf(star));
+                        star = needUpdateStarList.get(needUpdateStarList.indexOf(star));
+                    }
+                    if (person == null){
+                        //加入到未找到person队列
+                        personDoubanUrl = personDoubanUrlPre+ douBanNo +"/";
+                        if (!personNotFindDoubanUrlList.contains(personDoubanUrl)){
+                            personNotFindDoubanUrlList.add(personDoubanUrl);
+                        }
+                        if (star != null){
+                            starRepository.delete(star);
+                        }
+                        continue;
+                    }
+                    new Tool().CatchStar(star,person,media,douBanNo,"a");
+                }
+            }
+
+            //as编剧
+            if (sdno_array != null) {
+                for (String douBanNo : sdno_array) {
+                    //1)重新关联person，如果person被删，则同时删除已存在的star
+                    person = personService.findByDouBanNo(douBanNo);
+                    star = starService.findByDouBanNo(douBanNo);
+                    if (needUpdateStarList.contains(star))  {
+                        //System.out.println(needUpdateStarList.indexOf(star));
+                        star = needUpdateStarList.get(needUpdateStarList.indexOf(star));
+                    }
+                    if (person == null){
+                        //加入到未找到person队列
+                        personDoubanUrl = personDoubanUrlPre+ douBanNo +"/";
+                        if (!personNotFindDoubanUrlList.contains(personDoubanUrl)){
+                            personNotFindDoubanUrlList.add(personDoubanUrl);
+                        }
+                        if (star != null){
+                            starRepository.delete(star);
+                        }
+                        continue;
+                    }
+                    new Tool().CatchStar(star,person,media,douBanNo,"w");
+                }
+            }
+
+
+
+        }
+
+
+        System.out.println("----------mediaAllList:::"+mediaList.size());
+
+        //3 批量更新
+        int size  = needUpdateMediaList.size();
+        System.out.println("----------needUpdateMediaList:::"+size);
+        for (int i=0; i<size; i++){
+            Media media = needUpdateMediaList.get(i);
+            entityManager.merge(media);
+            if(i % 50 == 0 || i==size-1){
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
+        size  = needUpdateStarList.size();
+        System.out.println("----------needUpdateStarList:::"+size);
+        for (int i=0; i<size; i++){
+            Star star = needUpdateStarList.get(i);
+            entityManager.merge(star);
+            if(i % 50 == 0 || i==size-1){
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
+        size  = filmNotFindMediaList.size();
+        System.out.println("----------filmNotFindMediaList:::"+size);
+
+        size  = savedStarList.size();
+        System.out.println("----------starSavedList:::"+size);
+
+        size  = personNotFindDoubanUrlList.size();
+        System.out.println("----------personNotFindStarList:::"+size);
+
+
+        QStar star = QStar.star;
+        ind = 1;
+        mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.eq(1));
+        for(Media media : mediaList){
+            String mediaId = String.valueOf(media.getId());
+            runningLog  ="已删除的Media" +ind+"、"+media.getName();
+            System.out.println("-----"+ind+"------deleted-------"+media.getNameChn());
+
+            ind++;
+
+            //2）删除的media从series里去除
+            QSeries series = QSeries.series;
+            List<Series> seriesList = (List<Series>) seriesRepository.findAll(series.asMedias.contains(mediaId));
+            for (Series series1 : seriesList){
+                String asOld = series1.getAsMedias();
+                String[] asOldArray = asOld.split(",");
+                List<String> asOldList = new ArrayList<String>(Arrays.asList(asOldArray));
+                if (asOldList.contains(mediaId)) {
+                    asOldList.remove(mediaId);  // ok
+                    series1.setAsMediaNumber(asOldList.size());
+                    series1.setAsMedias(StringUtils.join(asOldList.toArray(), ","));
+                    series1.setUpdateDate(new Date());
+                    seriesRepository.save(series1);
+                }
+            }
+
+        }
+
+
+
+        long endTime=System.currentTimeMillis(); //获取结束时间
+        System.out.println("程序运行时间： "+(endTime-startTime)+"ms");
+
+
+        runningLog =  "";
+
+        String[] doubanListArray = personNotFindDoubanUrlList.toArray(new String[personNotFindDoubanUrlList.size()]);
+        String doubanListString = StringUtils.join(doubanListArray,"\n");
+        return new ResultBean<>(doubanListString);
+
+
+
+
+    }
+
+
+
+
+
+
+
+        /**
+         * 为Media关联Film
+         */
+    public ResultBean<String> relevantFilmForMediaBAK(Relevance relevance) {
+
+        long startTime=System.currentTimeMillis();   //获取开始时间
+
+        String personDoubanUrl , personDoubanUrlPre = "https://movie.douban.com/celebrity/";
+        List<String> personNotFindDoubanUrlList = new ArrayList<>();
+        List<Media> filmNotFindMediaList = new ArrayList<>();
+        List<Media> needUpdateMediaList = new ArrayList<>();
+        List<Star> needUpdateStarList = new ArrayList<>(); //需要更新的star
+
         List<Star> starSavedList = new ArrayList<>();
         //Map<String,String> starNeedSaveMap = new HashMap<>(); //filmId 和 star doubanNo
 
@@ -123,23 +515,32 @@ public class RelevanceServiceImpl implements RelevanceService {
 
             //1)为Media关联Film，并加入更新List
             oldFilm = media.getFilm();
-            film = null;
             film = findConnectedFilmForMedia(media);
             if (oldFilm != film){
                 media.setFilm(film);
                 media.setUpdateDate(new Date());
+                needUpdateMediaList.add(media);
             }
             if(film == null){
                 filmNotFindMediaList.add(media);
                 continue;
             }
-            needUpdateMediaList.add(media);
+
+
 
             //2）为当前匹配到的Film中的导演和演员Person转化为Star（或更新Star）
             String mediaId = String.valueOf(media.getId());
+
             String directorsDoubanNo = film.getDirectors();
             String actorsDoubanNo = film.getActors();
             String writerDoubanNo = film.getScreenWriter();
+
+
+
+
+
+
+
             String[] ddno_array=null,adno_array=null,sdno_array=null;
 
             if (directorsDoubanNo != null && !StringUtils.isEmpty(directorsDoubanNo))
@@ -170,6 +571,8 @@ public class RelevanceServiceImpl implements RelevanceService {
                         }
                         continue;
                     }
+
+                    //star = CatchStar(star,person,douBanNo,"d",mediaId);
 
                     //2) person存在，创建或更新star
                     //if (starDouBanNoAllList.contains(douBanNo)) {
@@ -610,4 +1013,6 @@ public class RelevanceServiceImpl implements RelevanceService {
     }
 
 
+    private class Tool {
+    }
 }

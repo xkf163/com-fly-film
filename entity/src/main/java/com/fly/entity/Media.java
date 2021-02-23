@@ -48,11 +48,13 @@ public class Media extends BaseEntity implements Serializable {
 
 	private Integer whetherAlive; //全路径是否存在文件(夹)
 
-
+	@Column(columnDefinition = "TEXT")
 	private String Director;
 
+	@Column(columnDefinition = "TEXT")
 	private String Actor;
 
+	@Column(columnDefinition = "TEXT")
 	private String Writer;
 
 	private String nameChn;
