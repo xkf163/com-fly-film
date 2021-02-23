@@ -94,7 +94,8 @@ public class StarServiceImpl implements StarService {
 //        System.out.println(String.valueOf(new String[]{mediaId, mediaId+","}));
 
         QStar star = QStar.star;
-        Predicate predicate = star.deleted.eq(0).and(star.asActor.contains(mediaId).or(star.asDirector.contains(mediaId)).or(star.asWriter.contains(mediaId)));
+        Predicate predicate = star.deleted.eq(0);
+        predicate = "-1".equals(mediaId) ? predicate : ExpressionUtils.and(predicate,star.asActor.contains(mediaId).or(star.asDirector.contains(mediaId)).or(star.asWriter.contains(mediaId)));
         predicate = "".equals(name) ? predicate : ExpressionUtils.and(predicate,star.name.like(name));
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);

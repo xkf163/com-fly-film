@@ -79,12 +79,6 @@ public class MediaServiceImpl implements MediaService {
         List<Map<String, Object>> conditions = queryCondition.getConditions();
         String nameChn = "";
         Short year = 9999;
-//        if (!"".equals(conditions.get(0).get("value"))){
-//            nameChn = (String) conditions.get(0).get("value");
-//        }
-//        if (!"".equals(conditions.get(1).get("value"))){
-//            year = isNumeric(conditions.get(1).get("value").toString()) ?   Short.parseShort(conditions.get(1).get("value").toString()) : 9999;
-//        }
         String  starId = "-1";
         if (!conditions.isEmpty()){
             for(int i = 0 ; i < conditions.size() ; i++) {
@@ -116,11 +110,10 @@ public class MediaServiceImpl implements MediaService {
              starAsWriter = starAsWriter == null ? "" : starAsWriter;
        }
 
-        System.out.println(starAsDirect);
-        System.out.println(starAsActor);
-        System.out.println(starAsWriter);
-        System.out.println("-1".equals(starId));
-
+//        System.out.println(starAsDirect);
+//        System.out.println(starAsActor);
+//        System.out.println(starAsWriter);
+//        System.out.println("-1".equals(starId));
 
         List<Long> b = new ArrayList<Long>();
         if (!"".equals(starAsDirect)){
@@ -154,7 +147,6 @@ public class MediaServiceImpl implements MediaService {
         predicate = "".equals(nameChn) ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(nameChn));
         predicate = year == 9999 ? predicate : ExpressionUtils.and(predicate,media.year.eq(year));
         predicate = "-1".equals(starId) ? predicate : ExpressionUtils.and(predicate,media.id.in(c));
-
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
         Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);

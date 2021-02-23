@@ -201,7 +201,6 @@ public class RelevanceServiceImpl implements RelevanceService {
                         }
 
                     } else {
-
                         //根据Person信息创建new star
                         star = new Star();
                         star.setCreateDate(new Date());
@@ -212,14 +211,32 @@ public class RelevanceServiceImpl implements RelevanceService {
                         star.setNameExtend(person.getNameExtend());
                         star.setPerson(person);
                         starService.save(star);
-
                         //保存的队列
                         starSavedList.add(star);
-
                         //加入，防止重复加入
                         //starDouBanNoAllList.add(douBanNo);
-
                     }
+
+                    //210223ADD Media存放StarIds
+                    String starId = String.valueOf(star.getId());
+                    if (media.getDirector() != null && !StringUtils.isEmpty(media.getDirector())) {
+                        String[] asDArray;
+                        asDArray = media.getDirector().split(",");
+                        if (asDArray != null && !Arrays.asList(asDArray).contains(starId)) {
+                            String[] asDArrayNew = new String[asDArray.length + 1];
+                            System.arraycopy(asDArray, 0, asDArrayNew, 0, asDArray.length);//将a数组内容复制新数组b
+                            asDArrayNew[asDArrayNew.length - 1] = mediaId;
+                            media.setDirector(StringUtils.join(asDArrayNew, ","));
+                        }
+                    } else {
+                        //Director空的情况
+                        media.setDirector(starId);
+                    }
+                    //media是地址引用，故若已添加，不需再次添加
+                    if (!needUpdateMediaList.contains(media)) {
+                        needUpdateMediaList.add(media);
+                    }
+
 
                 }
             }
@@ -296,6 +313,28 @@ public class RelevanceServiceImpl implements RelevanceService {
 //                        starDouBanNoAllList.add(douBanNo);
 
                     }
+
+                    //210223ADD Media存放StarIds
+                    String starId = String.valueOf(star.getId());
+                    if (media.getActor() != null && !StringUtils.isEmpty(media.getActor())) {
+                        String[] asDArray;
+                        asDArray = media.getActor().split(",");
+                        if (asDArray != null && !Arrays.asList(asDArray).contains(starId)) {
+                            String[] asDArrayNew = new String[asDArray.length + 1];
+                            System.arraycopy(asDArray, 0, asDArrayNew, 0, asDArray.length);//将a数组内容复制新数组b
+                            asDArrayNew[asDArrayNew.length - 1] = mediaId;
+                            media.setActor(StringUtils.join(asDArrayNew, ","));
+                        }
+                    } else {
+                        //Director空的情况
+                        media.setActor(starId);
+                    }
+                    //media是地址引用，故若已添加，不需再次添加
+                    if (!needUpdateMediaList.contains(media)) {
+                        needUpdateMediaList.add(media);
+                    }
+
+
                 }
             }
             //as编剧
@@ -368,6 +407,29 @@ public class RelevanceServiceImpl implements RelevanceService {
                         //starDouBanNoAllList.add(douBanNo);
 
                     }
+
+
+                    //210223ADD Media存放StarIds
+                    String starId = String.valueOf(star.getId());
+                    if (media.getWriter() != null && !StringUtils.isEmpty(media.getWriter())) {
+                        String[] asDArray;
+                        asDArray = media.getWriter().split(",");
+                        if (asDArray != null && !Arrays.asList(asDArray).contains(starId)) {
+                            String[] asDArrayNew = new String[asDArray.length + 1];
+                            System.arraycopy(asDArray, 0, asDArrayNew, 0, asDArray.length);//将a数组内容复制新数组b
+                            asDArrayNew[asDArrayNew.length - 1] = mediaId;
+                            media.setWriter(StringUtils.join(asDArrayNew, ","));
+                        }
+                    } else {
+                        //Director空的情况
+                        media.setWriter(starId);
+                    }
+                    //media是地址引用，故若已添加，不需再次添加
+                    if (!needUpdateMediaList.contains(media)) {
+                        needUpdateMediaList.add(media);
+                    }
+
+
                 }
 
             }

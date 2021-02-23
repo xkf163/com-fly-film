@@ -47,7 +47,7 @@
     }
 
     .dynamic-table_wrapper_right_table{
-        padding: 0 5px 0 5px;
+        padding: 0 5px 0 5px !important;
     }
     .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
 </style>
@@ -79,8 +79,8 @@
                         </table>
                     </div>
 
-                    <div class="col-xs-12 col-md-6">
-                        <div class="dynamic-table_wrapper_right_table">
+                    <div class="col-xs-12 col-md-3 dynamic-table_wrapper_right_table">
+<!--                        <div class="dynamic-table_wrapper_right_table">-->
                             <div class="row">
                                 <div class="dataTables_filter alert-block" id="searchDivSubTop">
                                     <input type="hidden" name="name" value="" />
@@ -89,16 +89,19 @@
                             </div>
                             <table id="${dataSubTopTableId}" class="table table-bordered table-hover dataTable" width="100%">
                             </table>
-                        </div>
-                        <div class="dynamic-table_wrapper_right_table">
+<!--                        </div>-->
+                    </div>
+                    <div class="col-xs-12 col-md-3">
+<!--                        <div class="dynamic-table_wrapper_right_table">-->
                             <div class="row">
                                 <div class="dataTables_filter alert-block" id="searchDivSubBottom">
                                     <input type="hidden" name="StarId" value="-1" id="StarId"/>
+                                    <input type="hidden" name="name" value="" />
                                 </div>
                             </div>
                             <table id="${dataSubBottomTableId}" class="table table-bordered table-hover dataTable" width="100%">
                             </table>
-                        </div>
+<!--                        </div>-->
                     </div>
 
                 </div>
@@ -118,14 +121,7 @@
     var subTopUrl ="${dataSubTopTable}";
     var subBottomUrl ="${dataSubBottomTable}";
     $(function() {
-        var  pageHeight  = $(window).height();
-        console.log("pageHeight  "+ pageHeight);
-        var  subTableHeight = (pageHeight-300-41-42+9) / 2;
-        console.log("subTableHeight  "+ subTableHeight);
-        //$("${dataSubTopTableId}").height(subTableHeight);
-        //$("${dataSubBottomTableId}").height(subTableHeight);
-        //$("#dynamic-table_wrapper_right").height(pageHeight-40);
-        //$(".dynamic-table_wrapper_right_table").height(subTableHeight);
+
         jQuery.ajaxSettings.async = false; //同步
         loadPage("${dataSearchDivMainHtml}", $('#searchDivMain') );
         jQuery.ajaxSettings.async = true; //同步
@@ -137,53 +133,46 @@
                 $("#MediaId").val(isSelected?row.id:"-1");
                 if(isSelected)
                     subTopTable.reloadData();
-
-                var defaultId = subTopTable.data.pageCarrier.content[0].id;
-                console.log("defaultId: "+ defaultId);
-                $("#StarId").val(defaultId);
-                subBottomTable.reloadData();
+                    setTimeout(function () {
+                        subTopTable.selectFirstRow(true);
+                    },500);
             }
         }
-        mainTable = new CommonTable("${dataMainTableId}", mainUrl, "searchDivMain",main_config);
-
-        var defaultId = mainTable.data.pageCarrier.content[0].id;
-        console.log("defaultId: "+ defaultId);
-        $("#MediaId").val(defaultId);
 
         var sub_config_bottom={
             lengthChange:false,
-            pagingType:'simple_numbers',
-            scrollY: subTableHeight
+            pagingType:'simple',
+            //scrollY: subTableHeight
             // pageLength: 5,
             // displayLength: 5
         }
 
         var sub_config_top={
             lengthChange:false,
-            pagingType:'simple_numbers',
-            scrollY: subTableHeight,
+            pagingType:'simple',
+            //scrollY: subTableHeight,
             rowClick:function(row,isSelected){
                 $("#StarId").val(isSelected?row.id:"-1");
                 if(isSelected)
                     subBottomTable.reloadData();
             }
-            // pageLength: 5,
-            // displayLength: 5
         }
-
+        mainTable = new CommonTable("${dataMainTableId}", mainUrl, "searchDivMain",main_config);
         subTopTable = new CommonTable("${dataSubTopTableId}", subTopUrl,"searchDivSubTop",sub_config_top);
-
-
-        defaultId = subTopTable.data.pageCarrier.content[0].id;
-        console.log("defaultId: "+ defaultId);
-        $("#StarId").val(defaultId);
-
-
         subBottomTable = new CommonTable("${dataSubBottomTableId}", subBottomUrl,"searchDivSubBottom",sub_config_bottom);
+
+        console.log(typeof(mainTable));
+
+        setTimeout(function () {
+            mainTable.selectFirstRow(true);
+        },500);
 
         $("#thumbnail").magnify();
     });
 
+    function fnRenderSubNames ( d , e , f ) {
+        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.nameChn+"</strong><BR><small style='color: #333'>"+f.nameEng +"</small><BR>"+f.year;
+    }
 
     function fnRenderNames ( d , e , f ) {
         return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.name+"</strong><BR><small style='color: #333'>"+f.diskNo + ":" +f.fullPath+"</small>";

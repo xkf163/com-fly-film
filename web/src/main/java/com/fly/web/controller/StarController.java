@@ -24,6 +24,25 @@ public class StarController {
         return "views/pageDefault";
     }
 
+
+    @GetMapping(value = "/triple/horizontal")
+    public String starTripleHorizontal(HttpServletRequest request) {
+        String pageSubject = request.getParameter("pageSubject");
+        request.setAttribute("pageSubject", pageSubject);
+        request.setAttribute("dataMainTable", "api/star/all");
+        request.setAttribute("dataMainTableId", "mainStar");
+        request.setAttribute("dataSearchDivMainHtml", "common/search/star");
+
+        request.setAttribute("dataSubTopTable", "api/media/all");
+        request.setAttribute("dataSubTopTableId", "subMediaPlus");
+        //request.setAttribute("dataSearchDivSubTopHtml", "common/search/star");
+
+        request.setAttribute("dataSubBottomTable", "api/star/all");
+        request.setAttribute("dataSubBottomTableId", "subStar");
+
+        return "views/star/starTripleHorizontal";
+    }
+
     @GetMapping(value = "/list")
     private String starList( HttpServletRequest request) {
         request.setAttribute("dataStarUrl", "api/star/all");

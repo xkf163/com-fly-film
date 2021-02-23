@@ -33,8 +33,8 @@ public class MediaController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/triple")
-    public String mediaTriple(HttpServletRequest request) {
+    @GetMapping(value = "/triple/vertical")
+    public String mediaTripleVertical(HttpServletRequest request) {
         String pageSubject = request.getParameter("pageSubject");
         request.setAttribute("pageSubject", pageSubject);
         request.setAttribute("dataMainTable", "api/media/all");
@@ -49,7 +49,32 @@ public class MediaController {
         request.setAttribute("dataSubBottomTableId", "subMedia");
 
 //       return "views/media/triple";
-        return "views/pageTriple";
+        return "views/pageTripleVertical";
+    }
+
+
+    /**
+     * media查询主页面，放3张表格，数据串联
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/triple/horizontal")
+    public String mediaTripleHorizontal(HttpServletRequest request) {
+        String pageSubject = request.getParameter("pageSubject");
+        request.setAttribute("pageSubject", pageSubject);
+        request.setAttribute("dataMainTable", "api/media/all");
+        request.setAttribute("dataMainTableId", "mainMedia");
+        request.setAttribute("dataSearchDivMainHtml", "common/search/media");
+
+        request.setAttribute("dataSubTopTable", "api/star/all");
+        request.setAttribute("dataSubTopTableId", "subStar");
+        //request.setAttribute("dataSearchDivSubTopHtml", "common/search/star");
+
+        request.setAttribute("dataSubBottomTable", "api/media/all");
+        request.setAttribute("dataSubBottomTableId", "subMedia");
+
+//       return "views/media/triple";
+        return "views/pageTripleHorizontal";
     }
 
     @GetMapping(value = "/duplicate")

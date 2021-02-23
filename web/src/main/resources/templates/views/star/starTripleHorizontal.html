@@ -1,0 +1,224 @@
+<style>
+
+    td.details-control:after {
+        content: "\f055" !important;
+        font-family: FontAwesome;
+        color: #438EB9;
+        font-size: 16px;
+        font-weight: 400;
+        cursor: pointer;
+    }
+
+
+    tr.details td.details-control:after {
+        content: "\f056" !important;
+        font-family: FontAwesome;
+        color: #438EB9;
+        font-size: 16px;
+        font-weight: 400;
+    }
+    tr.selected td.details-control:after {
+        color: #2B7DBC;
+    }
+
+    .dataTables_filter{
+        margin-left:0px !important;
+        margin-right: 0px !important;
+        margin-left: -4px !important;
+    }
+
+    .dataTables_wrapper .row:first-child{
+        /*background-color: #EFF3F8;*/
+    }
+    .dataTables_wrapper .row:first-child{
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    div.dataTables_filter{
+        text-align: left;
+    }
+
+    div.dataTables_info{
+        line-height: 30px;
+    }
+    .page-header{
+        padding-bottom: 6px !important;
+    }
+
+    .dynamic-table_wrapper_right_table{
+        padding: 0 5px 0 5px !important;
+    }
+    .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
+</style>
+
+
+
+<div class="page-content" >
+
+    <div class="page-header">
+        <h1>${pageSubject}
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                overview &amp; Ver20210222
+            </small>
+        </h1>
+    </div>
+
+    <div class="page-body">
+
+            <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline">
+                <div class="row">
+                    <div class="dataTables_filter alert-block" id="searchDivMain">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-3">
+                    <!-- PAGE CONTENT BEGINS -->
+                        <table id="${dataMainTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                        </table>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6 dynamic-table_wrapper_right_table">
+<!--                        <div class="dynamic-table_wrapper_right_table">-->
+                            <div class="row">
+                                <div class="dataTables_filter alert-block" id="searchDivSubTop">
+                                    <input type="hidden" name="name" value="" />
+                                    <input type="hidden" name="StarId" value="-1" id="StarId"/>
+                                </div>
+                            </div>
+                            <table id="${dataSubTopTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                            </table>
+<!--                        </div>-->
+                    </div>
+                    <div class="col-xs-12 col-md-3">
+<!--                        <div class="dynamic-table_wrapper_right_table">-->
+                            <div class="row">
+                                <div class="dataTables_filter alert-block" id="searchDivSubBottom">
+                                    <input type="hidden" name="MediaId" value="-1" id="MediaId"/>
+                                </div>
+                            </div>
+                            <table id="${dataSubBottomTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                            </table>
+<!--                        </div>-->
+                    </div>
+
+                </div>
+                <!-- PAGE CONTENT ENDS -->
+            </div>
+        </div>    <!-- /.row -->
+
+
+</div>
+    <!-- /.page-content -->
+
+
+<script>
+    //tableId,queryId,conditionContainer
+    var mainTable,subTopTable,subBottomTable;
+    var mainUrl ="${dataMainTable}";
+    var subTopUrl ="${dataSubTopTable}";
+    var subBottomUrl ="${dataSubBottomTable}";
+    $(function() {
+
+        jQuery.ajaxSettings.async = false; //同步
+        loadPage("${dataSearchDivMainHtml}", $('#searchDivMain') );
+        jQuery.ajaxSettings.async = true; //同步
+        //init table and fill data
+        var main_config={
+            lengthChange:false,
+            pagingType:'simple',
+            rowClick:function(row,isSelected){
+                $("#StarId").val(isSelected?row.id:"-1");
+                if(isSelected)
+                    subTopTable.reloadData();
+                    setTimeout(function () {
+                        subTopTable.selectFirstRow(true);
+                    },500);
+            }
+        }
+
+        var sub_config_bottom={
+            lengthChange:false,
+            pagingType:'simple',
+            //scrollY: subTableHeight
+            // pageLength: 5,
+            // displayLength: 5
+        }
+
+        var sub_config_top={
+            lengthChange:false,
+            pagingType:'simple', //分页样式：simple,simple_numbers,full,full_numbers
+            //scrollY: subTableHeight,
+            rowClick:function(row,isSelected){
+                $("#MediaId").val(isSelected?row.id:"-1");
+                if(isSelected)
+                    subBottomTable.reloadData();
+            }
+        }
+        mainTable = new CommonTable("${dataMainTableId}", mainUrl, "searchDivMain",main_config);
+        subTopTable = new CommonTable("${dataSubTopTableId}", subTopUrl,"searchDivSubTop",sub_config_top);
+        subBottomTable = new CommonTable("${dataSubBottomTableId}", subBottomUrl,"searchDivSubBottom",sub_config_bottom);
+
+        console.log(typeof(mainTable));
+
+        setTimeout(function () {
+            mainTable.selectFirstRow(true);
+        },500);
+
+        $("#thumbnail").magnify();
+    });
+
+    function fnRenderSubNames ( d , e , f ) {
+        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.nameChn+"</strong><BR><small style='color: #333'>"+f.nameEng +"</small><BR>"+f.year;
+    }
+
+    function fnRenderNames ( d , e , f ) {
+        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.name+"</strong><BR><small style='color: #333'>"+f.diskNo + ":" +f.fullPath+"</small>";
+    }
+    function fnRenderLogo(value) {
+        var src = '/assets/images/avatars/nologo.png';
+        if (value) {
+            src = 'data:image/jpeg;base64,'+value;
+        }
+        return "<a id='thumbnail' data-magnify='gallery' data-caption='logo' href='"+src+"'><img width='50px'  src="+src+"></a>";
+    }
+
+
+    function fnRenderNameExtend(value,e,f) {
+            return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+value +"</strong><BR><small class='text-info'>"+f.person.job+"</small><BR><small>"+f.person.birthPlace+"</small>";
+    }
+    function fnRenderFaceLogo(value) {
+        if (value) {
+            return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
+        } else
+            return "<img width='50px' src= '/assets/images/avatars/noface.png' >";
+    }
+
+
+    //Film类
+    function fnRenderFilmLogo(value) {
+        if (value) {
+            return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
+        } else
+            return "<img width='50px' src= '/assets/images/avatars/nologo.png' >";
+    }
+
+    function fnRenderReleaseDate(value) {
+        if (value) {
+            if (value.indexOf(",")){
+                return value.replace(/,/g,"<br>");
+            }
+        }
+        return value;
+    }
+    function fnRenderFilmName ( d , e , f ) {
+        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.subject+"</strong><BR><small style='color: #333'>"+f.genre+"</small>";
+    }
+    //PERSON类
+    function fnRenderPersonNameExtend(value,e,f) {
+        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+value +"</strong><BR><small class='text-info'>"+f.job+"</small><BR><small>"+f.birthPlace+"</small>";
+    }
+
+
+</script>
