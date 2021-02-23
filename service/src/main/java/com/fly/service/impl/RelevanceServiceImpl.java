@@ -60,7 +60,7 @@ public class RelevanceServiceImpl implements RelevanceService {
 
 
     @Transactional
-    public Long initStarPropWithQueryDsl()
+    public void initStarPropWithQueryDsl()
     {
         //querydsl查询实体
         QStar qStar = QStar.star;
@@ -69,25 +69,25 @@ public class RelevanceServiceImpl implements RelevanceService {
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
         Long a = jpaQueryFactory.update(qStar).set(qStar.asActor,"").set(qStar.asActorNumber,0).set(qStar.asDirector,"").set(qStar.asDirectorNumber,0).set(qStar.asWriter,"").set(qStar.asWriterNumber,0)
                 .setNull(qStar.person)
-                .where(qStar.deleted.ne(1)).execute();
-
-
-        return a;
+                .where(qStar.deleted.ne(1))
+                .execute();
+        System.out.println(a);
+        //return a;
     }
 
     @Transactional
-    public Long initMediaPropWithQueryDsl()
+    public void initMediaPropWithQueryDsl()
     {
         //querydsl查询实体
         QMedia qMedia = QMedia.media;
         //00000000)
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
-        Long a = jpaQueryFactory.update(qMedia).set(qMedia.Director,"").set(qMedia.Actor,"").set(qMedia.Writer,"")
+        Long a = jpaQueryFactory.update(qMedia).setNull(qMedia.Director).setNull(qMedia.Actor).setNull(qMedia.Writer)
                 .setNull(qMedia.film)
-                .where(qMedia.deleted.ne(1)).execute();
-
-
-        return a;
+                .where(qMedia.deleted.ne(1))
+                .execute();
+        System.out.println(a);
+        //return a;
     }
 
     /**
@@ -187,21 +187,29 @@ public class RelevanceServiceImpl implements RelevanceService {
 
                 //210223ADD Media存放StarIds
                 String starId = String.valueOf(star.getId());
-                if (media.getDirector() != null && !StringUtils.isEmpty(media.getDirector())) {
+                String StarString = null;
+                 if ("d".equals(fieldType)) {
+                     StarString = media.getDirector();
+                 } else if("a".equals(fieldType)){
+                     StarString = media.getActor();
+                 }else if("w".equals(fieldType)){
+                     StarString = media.getWriter();
+                 }
+                if (StarString != null && !StringUtils.isEmpty(StarString)) {
                     String[] tmpArray= null;
-
-                    if ("d".equals(fieldType)) {
-                        tmpArray = media.getDirector().split(",");
-                    } else if("a".equals(fieldType)){
-                        tmpArray = media.getActor().split(",");
-                    }else if("w".equals(fieldType)){
-                        tmpArray = media.getWriter().split(",");
-                    }
+                    tmpArray = StarString.split(",");
+//                    if ("d".equals(fieldType)) {
+//                        tmpArray = media.getDirector().split(",");
+//                    } else if("a".equals(fieldType)){
+//                        tmpArray = media.getActor().split(",");
+//                    }else if("w".equals(fieldType)){
+//                        tmpArray = media.getWriter().split(",");
+//                    }
 
                     if (tmpArray!= null && !Arrays.asList(tmpArray).contains(starId)) {
                         String[] tmpArrayNew = new String[tmpArray.length + 1];
                         System.arraycopy(tmpArray, 0, tmpArrayNew, 0, tmpArray.length);//将a数组内容复制新数组b
-                        tmpArrayNew[tmpArrayNew.length - 1] = mediaId;
+                        tmpArrayNew[tmpArrayNew.length - 1] = starId;
                         if ("d".equals(fieldType)) {
                             media.setDirector(StringUtils.join(tmpArrayNew, ","));
                         } else if("a".equals(fieldType)){
@@ -250,17 +258,21 @@ public class RelevanceServiceImpl implements RelevanceService {
         List<Media> mediaList;
         if("1".equals(relevantAll)){
             mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1));
-            if (this.initStarPropWithQueryDsl()>0){
-                System.out.println("清空star表字段数据");
-            }
-            if (this.initMediaPropWithQueryDsl()>0){
-                System.out.println("清空media表字段数据");
-            }
-
+            this.initStarPropWithQueryDsl();
+            this.initMediaPropWithQueryDsl();
+//            if (this.initStarPropWithQueryDsl()>0){
+//                System.out.println("清空star表字段数据");
+//            }
+//            if (this.initMediaPropWithQueryDsl()>0){
+//                System.out.println("清空media表字段数据");
+//            }
+            entityManager.flush();
         }else{
             //只处理未关联film的Media
             mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1).and(qMedia.film.isNull()));
         }
+
+        //mediaList  = new ArrayList<>();
 
         //数据库中已存在的person编号
         //List<String> starDouBanNoAllList = starService.findAllDouBanNo();
@@ -493,9 +505,9 @@ public class RelevanceServiceImpl implements RelevanceService {
         List<Media> mediaList;
         if("1".equals(relevantAll)){
             mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1));
-            if (this.initStarPropWithQueryDsl()>0){
-                System.out.println("清空star表字段");
-            }
+//            if (this.initStarPropWithQueryDsl()>0){
+//                System.out.println("清空star表字段");
+//            }
         }else{
             //只处理未关联film的Media
             mediaList = (List<Media>) mediaRepository.findAll(qMedia.deleted.ne(1).and(qMedia.film.isNull()));
