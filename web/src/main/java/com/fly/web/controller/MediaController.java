@@ -1,5 +1,6 @@
 package com.fly.web.controller;
 
+import com.fly.common.base.pojo.Result;
 import com.fly.service.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -71,7 +72,7 @@ public class MediaController {
         String pageSubject=request.getParameter("pageSubject");
         request.setAttribute("pageSubject",pageSubject);
         request.setAttribute("dataUrl", "api/media/deleted/"+deleted);
-        request.setAttribute("dataTableId","media_list");
+        request.setAttribute("dataTableId","media_list_admin");
         request.setAttribute("searchDivUrl","common/search/mediaAdminDel");
 //        return "views/media/list";
         return "views/pageDefault";
@@ -84,8 +85,35 @@ public class MediaController {
      * @return
      */
     @PostMapping(value = "/damage/{rowId}")
-    public void mediaDamage(HttpServletRequest request,@PathVariable Long rowId) {
-        mediaService.damage(rowId);
+    public Result mediaDamage(HttpServletRequest request,@PathVariable Long rowId) {
+        try {
+            Boolean ret = mediaService.damage(rowId);
+            if (ret == false){
+                return new Result(false);
+            }
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        return new Result(true);
+    }
+
+    /**
+     * 销毁条目
+     * @param request
+     * @param rowId
+     */
+    @PostMapping(value = "/burned/{rowId}")
+    public Result mediaBurned(HttpServletRequest request, @PathVariable Long rowId) {
+        try {
+            Boolean ret = mediaService.burned(rowId);
+            if (ret == false){
+                return new Result(false);
+            }
+        } catch (Exception e) {
+            return new Result(false);
+        }
+
+        return new Result(true);
     }
 
     /**

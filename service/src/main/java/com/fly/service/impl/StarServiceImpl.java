@@ -227,8 +227,10 @@ public class StarServiceImpl implements StarService {
                     Boolean needUpdate = false;
                     String[] media_array = mediaAs.split(",");
                     List<String> mList = Arrays.asList(media_array);
-                    if (mList.contains(mediaId)) {
-                        mList.remove(mediaId);
+                    List arrList = new ArrayList(mList);
+                    if (arrList.contains(mediaId)) {
+                        int pos = arrList.indexOf(mediaId);
+                        arrList.remove(pos);
                         media_array = mList.toArray(new String[mList.size()]);
                         needUpdate = true;
                     }

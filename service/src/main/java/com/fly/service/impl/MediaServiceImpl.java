@@ -2,6 +2,7 @@ package com.fly.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.fly.common.base.pojo.PageInfo;
+import com.fly.common.base.pojo.ResultBean;
 import com.fly.common.query.entity.Column;
 import com.fly.common.query.entity.Query;
 import com.fly.common.query.entity.QueryCondition;
@@ -23,9 +24,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -560,19 +563,42 @@ public class MediaServiceImpl implements MediaService {
      * @param id
      */
     @Override
-    public void damage(Long id) {
+    @Transactional
+    public Boolean damage(Long id) {
         Media media = mediaRepository.findOne(id);
-        media.setDeleted(2);
+        media.setDeleted(1);
         media.setDeleteDate(new Date());
         media.setDeleteMemo("洗版或者重复下载");
+
         //去除Star表中As字段中当前MediaId
         starService.damageMedia(media);
 
+        media.setWriter(null);
+        media.setActor(null);
+        media.setDirector(null);
+        media.setFilm(null);
+        mediaRepository.save(media);
 
+        return true;
 
-        //mediaRepository.save(media);
+    }
 
-
+    /**
+     * 彻底销毁数据
+     * @param id
+     * @return
+     */
+    @Override
+    @Transactional
+    public Boolean burned(Long id) {
+        Media media = mediaRepository.findOne(id);
+        String fullPath = media.getFullPath();
+        String diskNo = media.getDiskNo();
+        File file = new File(diskNo+":"+fullPath);  //"D:\\xxx\\sss"
+        if (file.exists()) { //用来测试此路径名表示的文件或目录是否存在
+            return false;
+        }
+        return true;
     }
 
 

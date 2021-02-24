@@ -1,5 +1,6 @@
 package com.fly.service;
 
+import com.fly.common.base.pojo.ResultBean;
 import com.fly.entity.Media;
 
 import java.util.Map;
@@ -31,6 +32,7 @@ public interface MediaService {
 
     void delete(Media media);
 
-    void damage(Long id);
+    Boolean damage(Long id);
 
+    Boolean burned(Long id);
 }
