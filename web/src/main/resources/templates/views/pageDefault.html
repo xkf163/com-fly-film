@@ -77,6 +77,9 @@
     <!-- /.page-content -->
 
 
+
+
+<script src="common/js/dataTables_render.js"></script>
 <script>
     //tableId,queryId,conditionContainer
     var ffTable;
@@ -89,55 +92,66 @@
         //init table and fill data
         ffTable = new CommonTable("${dataTableId}", dataUrl, "searchDiv");
         $("#thumbnail").magnify();
+
+        //button event
+        $('button[data-btn-type]').click(function() {
+            var action = $(this).attr('data-btn-type');
+            var rowId=ffTable.getSelectedRowId();
+            switch (action) {
+                case 'add':
+                    modals.openWin({
+                        winId:winId,
+                        title:'新增Film',
+                        width:'1000px',
+                        url:basePath+"/film/edit"
+                        /*, hideFunc:function(){
+                            modals.info("hide me");
+                        },
+                        showFunc:function(){
+                            modals.info("show me");
+                        } */
+                    });
+                    break;
+                case 'eraser':
+                    if(!rowId){
+                        modals.info('请选择要清空的行');
+                        return false;
+                    }
+                    modals.confirm("是否要清空该行数据？",function(){
+                        ajaxPost(basePath+"/media/eraser/"+rowId,null,function(data){
+                            if(data.success){
+                                //modals.correct("已删除该数据");
+                                ffTable.reloadRowData();
+                            }else{
+                                modals.error("用户数据被引用，不可删除！");
+                            }
+                        });
+                    })
+                    break;
+                case 'delete':
+                    if(!rowId){
+                        modals.info('请选择要删除的行');
+                        return false;
+                    }
+                    modals.confirm("是否要删除该行数据？",function(){
+                        ajaxPost(basePath+"/media/damage/"+rowId,null,function(data){
+                            if(data.success){
+                                //modals.correct("已删除该数据");
+                                ffTable.reloadRowData();
+                            }else{
+                                modals.error("用户数据被引用，不可删除！");
+                            }
+                        });
+                    })
+                    break;
+            }
+
+        });
+
+
+
     });
 
-
-    function fnRenderNames ( d , e , f ) {
-        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.name+"</strong><BR><small style='color: #333'>"+f.diskNo + ":" +f.fullPath+"</small>";
-    }
-    function fnRenderLogo(value) {
-        var src = '/assets/images/avatars/nologo.png';
-        if (value) {
-            src = 'data:image/jpeg;base64,'+value;
-        }
-        return "<a id='thumbnail' data-magnify='gallery' data-caption='logo' href='"+src+"'><img width='50px'  src="+src+"></a>";
-    }
-
-
-    function fnRenderNameExtend(value,e,f) {
-            return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+value +"</strong><BR><small class='text-info'>"+f.person.job+"</small><BR><small>"+f.person.birthPlace+"</small>";
-    }
-    function fnRenderFaceLogo(value) {
-        if (value) {
-            return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
-        } else
-            return "<img width='50px' src= '/assets/images/avatars/noface.png' >";
-    }
-
-
-    //Film类
-    function fnRenderFilmLogo(value) {
-        if (value) {
-            return "<img width='50px' src= 'data:image/jpeg;base64,"+value+"' >";
-        } else
-            return "<img width='50px' src= '/assets/images/avatars/nologo.png' >";
-    }
-
-    function fnRenderReleaseDate(value) {
-        if (value) {
-            if (value.indexOf(",")){
-                return value.replace(/,/g,"<br>");
-            }
-        }
-        return value;
-    }
-    function fnRenderFilmName ( d , e , f ) {
-        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.subject+"</strong><BR><small style='color: #333'>"+f.genre+"</small>";
-    }
-    //PERSON类
-    function fnRenderPersonNameExtend(value,e,f) {
-        return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+value +"</strong><BR><small class='text-info'>"+f.job+"</small><BR><small>"+f.birthPlace+"</small>";
-    }
 
 
 </script>

@@ -33,7 +33,12 @@ public class RestMediaController {
 
     @PostMapping(value = "/all")
     public Map<String, Object> mediaAll(String reqObj) throws Exception {
-        return mediaService.findAll(reqObj);
+        return mediaService.findAll(reqObj,false);
+    }
+
+    @PostMapping(value = "/all/{isall}")
+    public Map<String, Object> mediaAllPlus(String reqObj,@PathVariable String isall) throws Exception {
+        return mediaService.findAll(reqObj,true);
     }
 
     @PostMapping(value = "/list")

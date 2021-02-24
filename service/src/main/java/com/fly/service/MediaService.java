@@ -10,14 +10,14 @@ import java.util.Map;
  * @Date : Create in 10:28 2019/8/22
  */
 public interface MediaService {
-    Map<String, Object> findAll(String reqObj) throws Exception;
+
+    Map<String, Object> findAll(String reqObj,Boolean isAll) throws Exception;
 
     Map<String, Object> findDuplicate(String reqObj) throws Exception;
 
     Map<String, Object> findUnlink(String reqObj) throws Exception;
 
     Map<String, Object> findByDeleted(String reqObj,Integer deleted) throws Exception ;
-
 
     Map<String, Object> findAllOfStar(String reqObj) throws Exception ;
 
@@ -30,5 +30,7 @@ public interface MediaService {
     void save(Media media);
 
     void delete(Media media);
+
+    void damage(Long id);
 
 }

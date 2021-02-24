@@ -1,5 +1,6 @@
 package com.fly.service;
 
+import com.fly.entity.Media;
 import com.fly.entity.Star;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface StarService {
     Star save(Star star);
 
     Star findOne(Long id);
+
+    void damageMedia(Media media);
 }

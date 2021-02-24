@@ -118,17 +118,18 @@
 		<!--<column key="film.doubanNo" header="豆号" operator="like" width="30" />-->
 	</query>
 
-	<!-- Media 影音管理/影音列表 -->
-	<query id="media_unlink_list" key="id" tableName="影音列表" className="com.fly.entity.Media"
+	<!-- Media 数据维护/所有的 废弃 -->
+	<query id="media_list_admin" key="id" tableName="影音列表" className="com.fly.entity.Media"
 		   pageSize="10"  widthType="px" order="gatherDate desc">
-		<column key="rowIndex" header="序号" width="10px" allowSort="false" />
+		<column key="rowIndex" header="序号" width="30" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
-		<column key="name" header="片名" width="130"  operator="like"  align="left" />
+		<column key="nameChn" header="片名" width="200"  operator="like"  align="left" />
 		<column key="year" header="年代" width="50"  operator="eq"  allowSort="true"/>
 		<column key="pcName" header="PC名" width="70"  operator="like"  align="left"  allowSort="true"/>
-		<column key="diskName" header="盘名" width="50"  operator="like"  allowSort="true"/>
-		<!--<column key="fullPath" header="全路径" operator="like" align="left"  allowSort="true" />-->
-		<column key="mediaSizeGB" header="大小(GB)"  width="50"  allowSort="true"/>
+		<column key="diskName" header="Disk名" width="50"  operator="like"  allowSort="true"/>
+		<column key="diskNo" header="Disk号" width="50" align="left"  allowSort="true" />
+		<column key="fullPath" header="存放路径" width="auto" operator="like" align="left"  allowSort="true" />
+		<column key="mediaSizeGB" header="大小(GB)"  width="80"  allowSort="true"/>
 		<column key="gatherDate" header="下载时间" operator="like" align="left"  width="110" allowSort="true"/>
 		<!-- <column key="whetherFolder" header="文件夹" width="30"  render="1=是,0=否" /> -->
 		<!--<column key="film.doubanNo" header="豆号" operator="like" width="30" />-->

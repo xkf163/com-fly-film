@@ -50,7 +50,7 @@ public class MediaServiceImpl implements MediaService {
     EntityManager entityManager;
 
     @Override
-    public Map<String, Object> findAll(String reqObj) throws Exception {
+    public Map<String, Object> findAll(String reqObj,Boolean isAll) throws Exception {
         //用于接收返回数据(配置、分页、数据)
         Map<String, Object> map = new HashMap<>();
         QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
@@ -142,7 +142,11 @@ public class MediaServiceImpl implements MediaService {
 
         QMedia media = QMedia.media;
         //初始化组装条件(类似where 1=1)
-        Predicate predicate = media.deleted.ne(1).and(media.film.isNotNull());
+
+        Predicate predicate = media.deleted.ne(1);
+        if (false == isAll){
+            predicate = ExpressionUtils.and(predicate,media.film.isNotNull());
+        }
         //执行动态条件拼装
         predicate = "".equals(nameChn) ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(nameChn));
         predicate = year == 9999 ? predicate : ExpressionUtils.and(predicate,media.year.eq(year));
@@ -549,6 +553,26 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public void delete(Media media){
         mediaRepository.delete(media);
+    }
+
+    /**
+     * 删除media到回收站
+     * @param id
+     */
+    @Override
+    public void damage(Long id) {
+        Media media = mediaRepository.findOne(id);
+        media.setDeleted(2);
+        media.setDeleteDate(new Date());
+        media.setDeleteMemo("洗版或者重复下载");
+        //去除Star表中As字段中当前MediaId
+        starService.damageMedia(media);
+
+
+
+        //mediaRepository.save(media);
+
+
     }
 
 

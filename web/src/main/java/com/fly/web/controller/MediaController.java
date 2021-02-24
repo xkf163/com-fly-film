@@ -1,9 +1,9 @@
 package com.fly.web.controller;
 
+import com.fly.service.MediaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/media")
 public class MediaController {
 
+
+    @Autowired
+    MediaService mediaService;
+
     @GetMapping(value = "/all")
     public String mediaAll(HttpServletRequest request) {
         String pageSubject=request.getParameter("pageSubject");
@@ -26,6 +30,62 @@ public class MediaController {
         request.setAttribute("searchDivUrl","common/search/media");
         return "views/pageDefault";
         //return "views/media/list";
+    }
+
+
+    @GetMapping(value = "/allplus")
+    public String mediaAllPlus(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
+        request.setAttribute("dataUrl", "api/media/all/plus");
+        request.setAttribute("dataTableId","media_list_admin");
+        request.setAttribute("searchDivUrl","common/search/mediaAdminAll");
+//        return "views/media/unlink";
+        return "views/pageDefault";
+    }
+
+    /**
+     * 重复的Media
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/duplicate")
+    public String mediaDuplicate(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
+        request.setAttribute("dataUrl", "api/media/duplicate");
+        request.setAttribute("dataTableId","media_list");
+        request.setAttribute("searchDivUrl","common/search/mediaAdminDup");
+//        return "views/media/duplicate";
+        return "views/pageDefault";
+    }
+
+    /**
+     * 已删除
+     * @param request
+     * @param deleted
+     * @return
+     */
+    @GetMapping(value = "/deleted/{deleted}")
+    public String mediaInProcess(HttpServletRequest request,@PathVariable Integer deleted) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
+        request.setAttribute("dataUrl", "api/media/deleted/"+deleted);
+        request.setAttribute("dataTableId","media_list");
+        request.setAttribute("searchDivUrl","common/search/mediaAdminDel");
+//        return "views/media/list";
+        return "views/pageDefault";
+    }
+
+    /**
+     * 删除media条目到回收站
+     * @param request
+     * @param rowId
+     * @return
+     */
+    @PostMapping(value = "/damage/{rowId}")
+    public void mediaDamage(HttpServletRequest request,@PathVariable Long rowId) {
+        mediaService.damage(rowId);
     }
 
     /**
@@ -77,17 +137,9 @@ public class MediaController {
         return "views/pageTripleHorizontal";
     }
 
-    @GetMapping(value = "/duplicate")
-    public String mediaDuplicate(HttpServletRequest request) {
-        request.setAttribute("dataUrl", "api/media/duplicate");
-        return "views/media/duplicate";
-    }
 
-    @GetMapping(value = "/unlink")
-    public String mediaUnlink(HttpServletRequest request) {
-        request.setAttribute("dataUrl", "api/media/unlink");
-        return "views/media/unlink";
-    }
+
+
 
 
     @GetMapping(value = "/edit")
@@ -96,11 +148,6 @@ public class MediaController {
         return "views/media/edit";
     }
 
-    @GetMapping(value = "/deleted/{deleted}")
-    public String mediaInProcess(HttpServletRequest request,@PathVariable Integer deleted) {
-        request.setAttribute("dataUrl", "api/media/deleted/"+deleted);
-        return "views/media/list";
-    }
 
     /**
      * Media选择

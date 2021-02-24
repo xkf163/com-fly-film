@@ -14,6 +14,8 @@ import com.fly.service.StarService;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sun.xml.internal.bind.v2.runtime.output.XMLStreamWriterOutput;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author:xukangfeng
@@ -162,6 +161,110 @@ public class StarServiceImpl implements StarService {
     @Override
     public Star findOne(Long id) {
         return starRepository.findOne(id);
+    }
+
+    @Override
+    public void damageMedia(Media media) {
+
+        String starAsDirect="",starAsActor="",starAsWriter="";
+        String mediaId = String.valueOf(media.getId());
+
+        starAsDirect = media.getDirector();
+        starAsActor= media.getActor();
+        starAsWriter = media.getWriter();
+
+        starAsDirect = starAsDirect == null ? "" : starAsDirect;
+        starAsActor = starAsActor == null ? "" : starAsActor;
+        starAsWriter = starAsWriter == null ? "" : starAsWriter;
+
+        List<Long> b = new ArrayList<Long>();
+        if (!"".equals(starAsDirect)){
+            for (String retval: starAsDirect.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
+        }
+        if (!"".equals(starAsActor)){
+            for (String retval: starAsActor.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
+        }
+        if (!"".equals(starAsWriter)){
+            for (String retval: starAsWriter.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
+        }
+        Long[] c = new Long[b.size()];
+        b.toArray(c);
+
+
+        QStar qstar = QStar.star;
+        Predicate predicate = qstar.deleted.ne(1);
+        predicate =  ExpressionUtils.and(predicate,qstar.id.in(c));
+        List<Star> stars  = (List<Star>) starRepository.findAll(predicate);
+
+        System.out.println("stars.size:" + stars.size());
+        List<Star> needUpdateStarList = new ArrayList<>(); //需要更新的star
+        for(Star star: stars){
+            Boolean starNeedUpdate = false;
+            String[] fileTypeArray = {"d","a","w"};
+            for (String fieldType : fileTypeArray) {
+                String mediaAs = null;
+                if ("d".equals(fieldType)) {
+                    mediaAs = star.getAsDirector();
+                } else if("a".equals(fieldType)){
+                    mediaAs = star.getAsActor();
+                }else if("w".equals(fieldType)){
+                    mediaAs = star.getAsWriter();
+                }
+
+                if (mediaAs != null && !StringUtils.isEmpty(mediaAs)){
+                    Boolean needUpdate = false;
+                    String[] media_array = mediaAs.split(",");
+                    List<String> mList = Arrays.asList(media_array);
+                    if (mList.contains(mediaId)) {
+                        mList.remove(mediaId);
+                        media_array = mList.toArray(new String[mList.size()]);
+                        needUpdate = true;
+                    }
+                    if (needUpdate) {
+                        if ("d".equals(fieldType)) {
+                            star.setAsDirector(StringUtils.join(media_array, ","));
+                        } else if("a".equals(fieldType)){
+                            star.setAsActor(StringUtils.join(media_array, ","));
+                        }else if("w".equals(fieldType)){
+                            star.setAsWriter(StringUtils.join(media_array, ","));
+                        }
+                        starNeedUpdate = true;
+                    }
+                }
+            }
+
+            if (starNeedUpdate){
+                needUpdateStarList.add(star);
+            }
+
+        }
+
+
+        //更新数据
+        int size  = needUpdateStarList.size();
+        System.out.println("----------needUpdateStarList:::"+size);
+        for (int i=0; i<size; i++){
+            Star star = needUpdateStarList.get(i);
+            entityManager.merge(star);
+            if(i % 50 == 0 || i==size-1){
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
+
+
     }
 
     @Override

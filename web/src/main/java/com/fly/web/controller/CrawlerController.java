@@ -79,38 +79,60 @@ public class CrawlerController {
 
         //是延伸爬
         if("1".equals(crawler.getLoginIn())){
+            System.out.println("in....");
+            douBanProcessor.getSite().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36 Edg/88.0.705.74")
+//                    .addHeader("Upgrade-Insecure-Requests","1")
+//                    .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+//                    .addHeader("Host","movie.douban.com")
+//                    .addHeader("Sec-Fetch-Site","none")
+//                    .addHeader("Sec-Fetch-Mode","navigate")
+//                    .addHeader("Sec-Fetch-User","?1")
+//                    .addHeader("Sec-Fetch-Dest","document")
+//                    .addHeader("Accept-Encoding","gzip, deflate, br")
+//                    .addHeader("Accept-Language","zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
+//                    .addHeader("Cookie","__yadk_uid=NjVEYHUjY3FDdnZ4wSUyV2Ba5FATwU6s; ll=\"118172\"; bid=QgZxwfZoHes; _vwo_uuid_v2=D30B3CE5F0F73F2AE8B10A94BC94893D6|9964dc4949af23699f8400e199f988cf; __utmc=30149280; __utmc=223695111; __gads=ID=81f64bb146d609fd-220548754dc300df:T=1599097847:RT=1599097847:R:S=ALNI_Mbozr8JyynTkJsgR2HHaKSOFwQCug; __utmz=30149280.1614135138.4.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmz=223695111.1614135138.4.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; _pk_ref.100001.4cf6=[\"\",\"\",1614142023,\"https://www.baidu.com/link?url=wuvXb1l_QZ7oHcqgEJtd28pmkHsoNHLFLe6oaO83kYTArNCrWN7d-FJrYdfuvnc9&wd=&eqid=b7b22a2e0002f0a5000000046035bc22\"]; _pk_ses.100001.4cf6=*; __utma=30149280.1537919671.1599096252.1614139946.1614142024.6; __utmb=30149280.0.10.1614142024; __utma=223695111.1671921046.1599096252.1614139946.1614142024.6; __utmb=223695111.0.10.1614142024; ap_v=0,6.0; _pk_id.100001.4cf6=b2081f63c2d74a8c.1599096254.5.1614142326.1614139946.");
 
-            douBanProcessor.getSite().setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36")
-                    .addCookie("__utma", "30149280.1980906895.1559658144.1568516128.1568516244.14")
-                    .addCookie("__utma", "223695111.1182102876.1559658144.1568516128.1568516245.10")
-                    .addCookie("__utmb", "30149280.0.10.1568516244")
-                    .addCookie("__utmb", "223695111.0.10.1568516245")
+
+            //__yadk_uid=NjVEYHUjY3FDdnZ4wSUyV2Ba5FATwU6s; ll="118172"; bid=QgZxwfZoHes; _vwo_uuid_v2=D30B3CE5F0F73F2AE8B10A94BC94893D6|9964dc4949af23699f8400e199f988cf;
+                    // __utmc=30149280; __utmc=223695111; __gads=ID=81f64bb146d609fd-220548754dc300df:T=1599097847:RT=1599097847:R:S=ALNI_Mbozr8JyynTkJsgR2HHaKSOFwQCug;
+                    // __utmz=30149280.1614135138.4.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmz=223695111.1614135138.4.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic;
+                    // _pk_ref.100001.4cf6=["","",1614142023,"https://www.baidu.com/link?url=wuvXb1l_QZ7oHcqgEJtd28pmkHsoNHLFLe6oaO83kYTArNCrWN7d-FJrYdfuvnc9&wd=&eqid=b7b22a2e0002f0a5000000046035bc22"];
+                    // _pk_ses.100001.4cf6=*; __utma=30149280.1537919671.1599096252.1614139946.1614142024.6; __utmb=30149280.0.10.1614142024;
+                    // __utma=223695111.1671921046.1599096252.1614139946.1614142024.6; __utmb=223695111.0.10.1614142024; ap_v=0,6.0; _pk_id.100001.4cf6=b2081f63c2d74a8c.1599096254.5.1614142326.1614139946.
+                    .addCookie("__yadk_uid", "NjVEYHUjY3FDdnZ4wSUyV2Ba5FATwU6s")
+                    .addCookie("ll", "118172")
+                    .addCookie("bid", "QgZxwfZoHes")
+                    .addCookie("_vwo_uuid_v2", "D30B3CE5F0F73F2AE8B10A94BC94893D6|9964dc4949af23699f8400e199f988cf")
                     .addCookie("__utmc", "30149280")
                     .addCookie("__utmc", "223695111")
-                    .addCookie("__utmt", "1")
-                    .addCookie("__utmz", "30149280.1568516244.14.10.utmcsr=accounts.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/passport/login")
-                    .addCookie("__utmz", "223695111.1568516245.10.8.utmcsr=accounts.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/passport/login")
-                    .addCookie("__yadk_uid", "MLav7bmXG4MFd6vpKEfx1yzy0j9OxWSt")
-                    .addCookie("_pk_id.100001.4cf6", "7813fef5453dc078.1555408943.12.1568516244.1568516223.")
-                    .addCookie("_pk_ref.100001.4cf6", "%5B%22%22%2C%22%22%2C1568516244%2C%22https%3A%2F%2Faccounts.douban.com%2Fpassport%2Flogin%22%5D")
+                    .addCookie("__gads", "ID=81f64bb146d609fd-220548754dc300df:T=1599097847:RT=1599097847:R:S=ALNI_Mbozr8JyynTkJsgR2HHaKSOFwQCug")
+                    .addCookie("__utmz", "30149280.1614135138.4.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic")
+                    .addCookie("__utmz", "223695111.1614135138.4.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic")
+                    .addCookie("_pk_id.100001.4cf6", "[\"\",\"\",1614142023,\"https://www.baidu.com/link?url=wuvXb1l_QZ7oHcqgEJtd28pmkHsoNHLFLe6oaO83kYTArNCrWN7d-FJrYdfuvnc9&wd=&eqid=b7b22a2e0002f0a5000000046035bc22\"]")
                     .addCookie("_pk_ses.100001.4cf6", "*")
-                    .addCookie("_vwo_uuid_v2", "DE8E99BF6B7BB8C96A6937774B27E2217|29f884e8256e4324bb08c187a593170a")
-                    .addCookie("acw_tc", "2760828a15680895477653210ee153816ab74aff939b612c7a7c5cb5325a4b")
+                    .addCookie("__utma", "30149280.1537919671.1599096252.1614139946.1614142024.6")
+                    .addCookie("__utmb", "30149280.0.10.1614142024")
+                    .addCookie("__utma", "223695111.1671921046.1599096252.1614139946.1614142024.6")
+                    .addCookie("__utmb", "223695111.0.10.1614142024")
                     .addCookie("ap_v", "0,6.0")
-                    .addCookie("bid", "X3nxgVw2IyE")
-                    .addCookie("ck", "kFbH")
-                    .addCookie("ct", "y")
-                    .addCookie("dbcl2", "173941351:oqncRyWS8Zc")
-                    .addCookie("douban-fav-remind", "1")
-                    .addCookie("ll", "118172")
-                    .addCookie("push_doumail_num", "0")
-                    .addCookie("push_noty_num", "0")
-                    .addCookie("regpop", "1")
-                    .addCookie("trc_cookie_storage", "taboola%2520global%253Auser-id%3D27e39c7d-d4b7-4d84-a21a-7b7143311c4c-tuct34086e6")
-                    .addCookie("Referer", "movie.douban.com")
-                    .addCookie("viewed","\"3439300\"");
+                    .addCookie("_pk_id.100001.4cf6", "b2081f63c2d74a8c.1599096254.5.1614142326.1614139946.");
+
+//                    .addCookie("__utmt", "1")
+//                    .addCookie("_pk_ref.100001.4cf6", "%5B%22%22%2C%22%22%2C1568516244%2C%22https%3A%2F%2Faccounts.douban.com%2Fpassport%2Flogin%22%5D")
+//                    .addCookie("acw_tc", "2760828a15680895477653210ee153816ab74aff939b612c7a7c5cb5325a4b")
+//                    .addCookie("ck", "kFbH")
+//                    .addCookie("ct", "y")
+//                    .addCookie("dbcl2", "173941351:oqncRyWS8Zc")
+//                    .addCookie("douban-fav-remind", "1")
+//                    .addCookie("push_doumail_num", "0")
+//                    .addCookie("push_noty_num", "0")
+//                    .addCookie("regpop", "1")
+//                    .addCookie("trc_cookie_storage", "taboola%2520global%253Auser-id%3D27e39c7d-d4b7-4d84-a21a-7b7143311c4c-tuct34086e6")
+//                    .addCookie("Referer", "movie.douban.com")
+//                    .addCookie("viewed","\"3439300\"");
 
         }else {
+            System.out.println("in else");
             douBanProcessor.setSite(Site.me().setSleepTime( crawler.getSleepTime())
                     .setRetryTimes(1)
                     .setTimeOut(6000)

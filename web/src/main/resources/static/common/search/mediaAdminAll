@@ -1,0 +1,9 @@
+<input placeholder="请输入片名（中）" name="nameChn" class="form-control" type="search" likeOption="true"/>
+<input placeholder="请输入影片年代" name="year" class="form-control" type="search" />
+<div class="btn-group">
+    <button type="button" class="btn btn-primary" data-btn-type="search"><i class="fa fa-search"></i></button>
+    <button type="button" class="btn btn-default" data-btn-type="reset"><i class="fa fa-rotate-left"></i></button>
+</div>
+<div class="btn-group">
+    <button type="button" class="btn btn-default" data-btn-type="delete"><i class="fa fa-minus"></i></button>
+</div>
