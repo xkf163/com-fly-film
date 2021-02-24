@@ -8,10 +8,8 @@ import com.fly.common.query.entity.QueryCondition;
 import com.fly.common.query.util.QueryUtil;
 import com.fly.common.utils.StrUtil;
 import com.fly.dao.StarRepository;
-import com.fly.entity.Person;
-import com.fly.entity.QFilm;
-import com.fly.entity.QStar;
-import com.fly.entity.Star;
+import com.fly.entity.*;
+import com.fly.service.MediaService;
 import com.fly.service.StarService;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,8 @@ public class StarServiceImpl implements StarService {
     @Autowired
     StarRepository starRepository;
 
+    @Autowired
+    MediaService mediaService;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -90,13 +91,50 @@ public class StarServiceImpl implements StarService {
                 }
             }
         }
-        System.out.println("mediaId: " + mediaId);
+ //       System.out.println("mediaId: " + mediaId);
 //        System.out.println(String.valueOf(new String[]{mediaId, mediaId+","}));
+        String starAsDirect="",starAsActor="",starAsWriter="";
+        if(!"-1".equals(mediaId)){
+            Media media = mediaService.findOne(Long.valueOf(mediaId));
+
+            starAsDirect = media.getDirector();
+            starAsActor= media.getActor();
+            starAsWriter = media.getWriter();
+
+            starAsDirect = starAsDirect == null ? "" : starAsDirect;
+            starAsActor = starAsActor == null ? "" : starAsActor;
+            starAsWriter = starAsWriter == null ? "" : starAsWriter;
+        }
+        List<Long> b = new ArrayList<Long>();
+        if (!"".equals(starAsDirect)){
+            for (String retval: starAsDirect.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
+        }
+        if (!"".equals(starAsActor)){
+            for (String retval: starAsActor.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
+        }
+        if (!"".equals(starAsWriter)){
+            for (String retval: starAsWriter.split(",")){
+                System.out.println(retval);
+                Long a = Long.valueOf(retval);
+                b.add(a);
+            }
+        }
+        Long[] c = new Long[b.size()];
+        b.toArray(c);
 
         QStar star = QStar.star;
         Predicate predicate = star.deleted.eq(0);
-        predicate = "-1".equals(mediaId) ? predicate : ExpressionUtils.and(predicate,star.asActor.contains(mediaId).or(star.asDirector.contains(mediaId)).or(star.asWriter.contains(mediaId)));
+        //predicate = "-1".equals(mediaId) ? predicate : ExpressionUtils.and(predicate,star.asActor.contains(mediaId).or(star.asDirector.contains(mediaId)).or(star.asWriter.contains(mediaId)));
         predicate = "".equals(name) ? predicate : ExpressionUtils.and(predicate,star.name.like(name));
+        predicate = "-1".equals(mediaId) ? predicate : ExpressionUtils.and(predicate,star.id.in(c));
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
         Page<Star> pageCarrier = starRepository.findAll(predicate , pageable);

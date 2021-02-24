@@ -12,4 +12,6 @@ public class Relevance {
 
     String relevantAll;
 
+    String relevantInit;
+
 }
