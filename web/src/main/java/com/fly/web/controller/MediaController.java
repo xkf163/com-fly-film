@@ -61,6 +61,17 @@ public class MediaController {
         return "views/pageDefault";
     }
 
+    @GetMapping(value = "/unlink")
+    public String mediaUnlink(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
+        request.setAttribute("dataUrl", "api/media/unlink");
+        request.setAttribute("dataTableId","media_list_admin");
+        request.setAttribute("searchDivUrl","common/search/mediaAdminDup");
+//        return "views/media/unlink";
+        return "views/pageDefault";
+    }
+
     /**
      * 已删除
      * @param request
