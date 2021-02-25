@@ -33,8 +33,8 @@ import java.util.regex.Pattern;
 @Service
 public class ScannerServiceImpl implements ScannerService {
 
-    private static final String[] folderKeys  = new String[] {"720P","1080P","1080I","DTS","CMCT","TLF","CHD","HDS","HDSKY","FRDS","EPIC","HDAREA","ATOMS","TRUEHD","X264","X265","DVDRIP"};
-    private static final String[] filePostfix = new String[]{"MKV","TS","AVI","MP4"};
+    private static final String[] folderKeys  = new String[] {"720P","1080P","1080I","DTS","CMCT","TLF","CHD","HDS","HDSKY","FRDS","EPIC","HDAREA","ATOMS","TRUEHD","X264","X265","DVDRIP","DVD9","DVD5"};
+    private static final String[] filePostfix = new String[]{"MKV","TS","AVI","MP4","ISO"};
 
     @Autowired
     MediaRepository mediaRepository;
@@ -125,7 +125,7 @@ public class ScannerServiceImpl implements ScannerService {
 //            }
         }
 
-
+        System.out.println("addFailedMediaEntries: "+addFailedMediaEntriesList.size());
         return new Object[]{oldMediaEntriesList,newMediaEntriesList,addFailedMediaEntriesList};
     }
 
