@@ -111,7 +111,7 @@
 
         // -34px -52px -42px -45px -12px
         var _h = $(window).height();
-        _h = _h - 300 + 9;
+        _h = _h - 300 + 9 + 20 + 12;
         // alert(JSON.stringify(columns));
         //var allowPaging = this.data.query.allowPaging;
         var allowPaging = true;

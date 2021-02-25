@@ -6,7 +6,7 @@
 	<!-- Media 影音管理/影音列表 -->
 	<query id="mainMedia" key="id" tableName="影音列表" className="com.fly.entity.Media"
 		   pageSize="5"  widthType="px" order="gatherDate desc">
-		<column key="rowIndex" header="序号" width="30" allowSort="false"  />
+		<column key="rowIndex" header="序" width="10" allowSort="false"  />
 		<column key="id" header="id" hidden="true"/>
 		<column key="film.filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderLogo" />
 		<column key="name" header="影音文件（夹）名" width="auto" operator="like"  align="left" fnRender="fnRenderNames" />
@@ -20,7 +20,7 @@
 	<!-- Media 影音管理/影音列表 -->
 	<query id="subMedia" key="id" tableName="影音列表" className="com.fly.entity.Media"
 		   pageSize="5"  widthType="px" order="year desc">
-		<column key="rowIndex" header="序号" width="30" allowSort="false"  />
+		<column key="rowIndex" header="序" width="10" allowSort="false"  />
 		<column key="id" header="id" hidden="true"/>
 		<column key="film.filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderLogo" />
 		<column key="nameChn" header="片名" width="auto" operator="like"  align="left" fnRender="fnRenderSubNames" />
@@ -35,7 +35,7 @@
 	<!-- Media 影音管理/影音列表 -->
 	<query id="subMediaPlus" key="id" tableName="影音列表" className="com.fly.entity.Media"
 		   pageSize="5"  widthType="px" order="year desc">
-		<column key="rowIndex" header="序号" width="30" allowSort="false"  />
+		<column key="rowIndex" header="序" width="10" allowSort="false"  />
 		<column key="id" header="id" hidden="true"/>
 		<column key="film.filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderLogo" />
 		<column key="name" header="影音文件（夹）名" width="auto" operator="like"  align="left" fnRender="fnRenderNames" />
@@ -49,7 +49,7 @@
 	<!-- Star 影音管理/影人列表-->
 	<query id="mainStar" key="id" tableName="人物列表" className="com.fly.entity.Star"
 		   pageSize="10"  widthType="px" order="asActorNumber desc">
-		<column key="rowIndex" header="序号" width="30" allowSort="false" />
+		<column key="rowIndex" header="序" width="10" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="person.faceLogo" header="" width="50"  operator="like"  align="center" fnRender="fnRenderFaceLogo" />
 		<column key="nameExtend" header="姓名" width="auto"  operator="like"  align="left"  fnRender="fnRenderNameExtend" />
@@ -58,7 +58,7 @@
 	<!-- Star 影音管理/影人列表-->
 	<query id="subStar" key="id" tableName="人物列表" className="com.fly.entity.Star"
 		   pageSize="5"  widthType="px" order="asActorNumber desc">
-		<column key="rowIndex" header="序号" width="30" allowSort="false" />
+		<column key="rowIndex" header="序" width="10" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="person.faceLogo" header="" width="50"  operator="like"  align="center" fnRender="fnRenderFaceLogo" />
 		<column key="nameExtend" header="姓名" width="auto"  operator="like"  align="left"  fnRender="fnRenderNameExtend" />
