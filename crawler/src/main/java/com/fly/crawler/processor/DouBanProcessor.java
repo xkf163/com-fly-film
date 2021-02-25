@@ -92,10 +92,12 @@ public class DouBanProcessor implements PageProcessor {
             .me()
             .setSleepTime(sleepTime)
             .setRetryTimes(1)
-            .setTimeOut(6000)
+            .setTimeOut(10000)
             .setCharset("utf-8")
-            .setDomain("movie.douban.com");
-
+            .setDomain("movie.douban.com")
+            .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+            .addHeader("Accept-Language","zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
+            .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36 Edg/88.0.705.74");
 //            .addCookie("gr_user_id","922cd5e7-60dc-4640-92ac-f15bf31d7a41")
 //            .addCookie("as","https://movie.douban.com/")
 //            .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")

@@ -14,7 +14,7 @@ import com.fly.service.StarService;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sun.xml.internal.bind.v2.runtime.output.XMLStreamWriterOutput;
+//import com.sun.xml.internal.bind.v2.runtime.output.XMLStreamWriterOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

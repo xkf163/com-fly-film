@@ -22,6 +22,7 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.SpiderListener;
 import us.codecraft.webmagic.monitor.SpiderMonitor;
+import us.codecraft.webmagic.pipeline.FilePipeline;
 
 import javax.management.JMException;
 import java.util.ArrayList;
@@ -79,7 +80,6 @@ public class CrawlerController {
 
         //是延伸爬
         if("1".equals(crawler.getLoginIn())){
-            System.out.println("in....");
             douBanProcessor.getSite().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36 Edg/88.0.705.74")
 //                    .addHeader("Upgrade-Insecure-Requests","1")
 //                    .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
@@ -99,6 +99,10 @@ public class CrawlerController {
                     // _pk_ref.100001.4cf6=["","",1614142023,"https://www.baidu.com/link?url=wuvXb1l_QZ7oHcqgEJtd28pmkHsoNHLFLe6oaO83kYTArNCrWN7d-FJrYdfuvnc9&wd=&eqid=b7b22a2e0002f0a5000000046035bc22"];
                     // _pk_ses.100001.4cf6=*; __utma=30149280.1537919671.1599096252.1614139946.1614142024.6; __utmb=30149280.0.10.1614142024;
                     // __utma=223695111.1671921046.1599096252.1614139946.1614142024.6; __utmb=223695111.0.10.1614142024; ap_v=0,6.0; _pk_id.100001.4cf6=b2081f63c2d74a8c.1599096254.5.1614142326.1614139946.
+
+
+
+
                     .addCookie("__yadk_uid", "NjVEYHUjY3FDdnZ4wSUyV2Ba5FATwU6s")
                     .addCookie("ll", "118172")
                     .addCookie("bid", "QgZxwfZoHes")
@@ -132,12 +136,26 @@ public class CrawlerController {
 //                    .addCookie("viewed","\"3439300\"");
 
         }else {
-            System.out.println("in else");
-            douBanProcessor.setSite(Site.me().setSleepTime( crawler.getSleepTime())
+            douBanProcessor.setSite(Site.me().setSleepTime(crawler.getSleepTime())
                     .setRetryTimes(1)
-                    .setTimeOut(6000)
+                    .setTimeOut(10000)
                     .setCharset("utf-8")
-                    .setDomain("movie.douban.com"));
+                    .setDomain("movie.douban.com")
+                    .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+                    .addHeader("Accept-Language","zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
+//                    .addHeader("Cache-Control","no-cache")
+//                    .addHeader("Connection","keep-alive")
+//                    .addHeader("Cookie","ll=\"118172\"; bid=PIOdFoxdFzo; __yadk_uid=9LCNZjYykWwW7VaMlchyMCyd5owv5m89; __gads=ID=a793a9979f6c3c34-2259baf57ec40023:T=1604153151:RT=1604153151:S=ALNI_MbKKQbjlSbqMLyLL3Nom5VhhX3AVg; _vwo_uuid_v2=DD0C20C1E8E4C1FDC683726B4973C31F2|2cc30f7c755a860a848624a82540a079; douban-fav-remind=1; __utmz=30149280.1613906322.5.5.utmcsr=cn.bing.com|utmccn=(referral)|utmcmd=referral|utmcct=/; __utmz=223695111.1613906322.3.3.utmcsr=cn.bing.com|utmccn=(referral)|utmcmd=referral|utmcct=/; ap_v=0,6.0; __utmc=30149280; __utmc=223695111; _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1614261720%2C%22https%3A%2F%2Fcn.bing.com%2F%22%5D; _pk_id.100001.4cf6=2b5f13d2e45374f6.1604153151.8.1614261720.1614257645.; _pk_ses.100001.4cf6=*; __utma=30149280.465811318.1604153151.1614257639.1614261720.10; __utmb=30149280.0.10.1614261720; __utma=223695111.1716771773.1604153151.1614257639.1614261720.8; __utmb=223695111.0.10.1614261720")
+//                    .addHeader("Host","movie.douban.com")
+//                    .addHeader("Pragma","no-cache")
+//                    .addHeader("Referer","https://movie.douban.com/%20,")
+//                    .addHeader("Sec-Fetch-Dest","document")
+//                    .addHeader("Sec-Fetch-Mode","navigate")
+//                    .addHeader("Sec-Fetch-Site","same-origin")
+//                    .addHeader("Sec-Fetch-User","?1")
+//                    .addHeader("Upgrade-Insecure-Requests","1")
+                    .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36 Edg/88.0.705.74")
+            );
         }
 
 
@@ -172,7 +190,7 @@ public class CrawlerController {
         //首页进入
         if ("1".equals(crawler.getHomepage())) {
             url = "https://movie.douban.com/";
-            spider = Spider.create(douBanProcessor).addUrl(url).thread(thread);
+            spider = Spider.create(douBanProcessor).addUrl(url).addPipeline(new FilePipeline("D:\\webmagic\\")).thread(thread);
 
         }else{
             //转换成数组
