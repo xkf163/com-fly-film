@@ -190,7 +190,7 @@ public class CrawlerController {
         //首页进入
         if ("1".equals(crawler.getHomepage())) {
             url = "https://movie.douban.com/";
-            spider = Spider.create(douBanProcessor).addUrl(url).addPipeline(new FilePipeline("D:\\webmagic\\")).thread(thread);
+            spider = Spider.create(douBanProcessor).addUrl(url).thread(thread);
 
         }else{
             //转换成数组
