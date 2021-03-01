@@ -168,6 +168,17 @@
         },500);
 
         $("#thumbnail").magnify();
+
+        // 关键词搜索框添加绑定回车函数
+        //$("button[data-btn-type='search']").on('keypress', function(event) {
+        $("#searchDivMain input").on('keypress', function(event) {
+            if (event.keyCode == "13") {
+                mainTable.reloadData();
+                setTimeout(function () {
+                    mainTable.selectFirstRow(true);
+                },500);
+            }
+        })
     });
 
 

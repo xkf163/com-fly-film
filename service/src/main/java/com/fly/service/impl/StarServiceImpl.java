@@ -65,7 +65,7 @@ public class StarServiceImpl implements StarService {
         if (!StrUtil.isEmpty(sortInfo)) {
             //判断排序类型及排序字段
             String[] sortArray = sortInfo.split(" ");
-            System.out.println(sortArray);
+            //System.out.println(sortArray);
             sort = "asc".equals(sortArray[1]) ? new Sort(Sort.Direction.ASC, sortArray[0]) : new Sort(Sort.Direction.DESC, sortArray[0]);
         }
 
@@ -106,22 +106,22 @@ public class StarServiceImpl implements StarService {
         }
         List<Long> b = new ArrayList<Long>();
         if (!"".equals(starAsDirect)){
+            System.out.println("starAsDirect: "+starAsDirect);
             for (String retval: starAsDirect.split(",")){
-                System.out.println(retval);
                 Long a = Long.valueOf(retval);
                 b.add(a);
             }
         }
         if (!"".equals(starAsActor)){
+            System.out.println("starAsActor: "+starAsActor);
             for (String retval: starAsActor.split(",")){
-                System.out.println(retval);
                 Long a = Long.valueOf(retval);
                 b.add(a);
             }
         }
         if (!"".equals(starAsWriter)){
+            System.out.println("starAsWriter: "+starAsWriter);
             for (String retval: starAsWriter.split(",")){
-                System.out.println(retval);
                 Long a = Long.valueOf(retval);
                 b.add(a);
             }
@@ -180,21 +180,18 @@ public class StarServiceImpl implements StarService {
         List<Long> b = new ArrayList<Long>();
         if (!"".equals(starAsDirect)){
             for (String retval: starAsDirect.split(",")){
-                System.out.println(retval);
                 Long a = Long.valueOf(retval);
                 b.add(a);
             }
         }
         if (!"".equals(starAsActor)){
             for (String retval: starAsActor.split(",")){
-                System.out.println(retval);
                 Long a = Long.valueOf(retval);
                 b.add(a);
             }
         }
         if (!"".equals(starAsWriter)){
             for (String retval: starAsWriter.split(",")){
-                System.out.println(retval);
                 Long a = Long.valueOf(retval);
                 b.add(a);
             }

@@ -334,13 +334,19 @@
 								<img class="nav-user-photo" src="assets/images/avatars/user.jpg" alt="Jason's Photo" />
 								<span class="user-info">
 									<small>Welcome,</small>
-									Jason
+									Tiago
 								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>
 							</a>
 
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+								<li>
+									<a href="/admin" target="_blank">
+										<i class="ace-icon fa fa-user-secret"></i>
+										管理
+									</a>
+								</li>
 								<li>
 									<a href="#">
 										<i class="ace-icon fa fa-cog"></i>
@@ -596,7 +602,7 @@
 
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
-             var tf; //定时器
+             var int,tf; //定时器
             $(function(){
                 //首页默认加载
                 loadPage("/dashboard");

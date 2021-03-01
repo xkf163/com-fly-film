@@ -93,7 +93,7 @@
     //刷新表格
     function refresh(){
         console.log("刷新表格" + new Date().toLocaleString());
-        ffTable.reloadData();
+        ffTable.reloadRowData();
     }
 
 
@@ -139,7 +139,7 @@
             var rowId=ffTable.getSelectedRowId();
             switch (action) {
                 case 'refresh':
-                    ffTable.reloadData();
+                    ffTable.reloadRowData();
                     break;
                 case 'eraser':
                     if(!rowId){
@@ -150,7 +150,7 @@
                         ajaxPost(basePath+"/media/eraser/"+rowId,null,function(data){
                             if(data.success){
                                 modals.correct("已销毁该数据。");
-                                ffTable.reloadData();
+                                ffTable.reloadRowData();
                             }else{
                                 modals.error("用户数据被引用，不可删除！");
                             }
@@ -166,7 +166,7 @@
                         ajaxPost(basePath+"/media/damage/"+rowId,null,function(data){
                             if(data.success){
                                 modals.correct("已删除该数据，并取消关联。");
-                                ffTable.reloadData();
+                                ffTable.reloadRowData();
                             }else{
                                 modals.error("用户数据被引用，不可删除！");
                             }
@@ -177,7 +177,13 @@
 
         });
 
-
+        // 关键词搜索框添加绑定回车函数
+        //$("button[data-btn-type='search']").on('keypress', function(event) {
+        $("#searchDiv input").on('keypress', function(event) {
+                if (event.keyCode == "13") {
+                    ffTable.reloadData();
+                }
+        })
 
     });
 
