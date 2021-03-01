@@ -893,7 +893,7 @@
     CommonTable.prototype.fillDataTableJPA = function (sSource, aoData, fnCallback, oSettings) {
         var result = this.data;
         var map = oSettings.oAjaxData;
-        console.log(oSettings);
+        //console.log(oSettings);
         var dataCache = $("#dataCache" + oSettings.sTableId);
         if (this.loaded) {// 换页
             var pageInfo = {};
@@ -908,7 +908,7 @@
                 if (map["iSortCol_" + i] != 0)// 过滤掉rowIndex的排序
                     sortArr.push(columnNames[map["iSortCol_" + i]] + " " + map["sSortDir_" + i]);
             }
-            console.log(sortArr.join());
+            //(sortArr.join());
             dataCache.data("sortInfo", sortArr.join());
             result = this.getServerDataJPA(pageInfo, oSettings.sTableId, oSettings.sAjaxSource);
             this.data = result;

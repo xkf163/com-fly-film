@@ -417,6 +417,48 @@
 
 					<li class="">
 						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-database"></i>
+							<span class="menu-text"> 豆瓣影库 </span>
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="#"  data-url="/film/all">
+									<i class="menu-icon fa fa-caret-right"></i>
+									<span class="menu-text">电影列表</span>
+								</a>
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="#"  data-url="/person/all">
+									<i class="menu-icon fa fa-caret-right"></i>
+									<span class="menu-text">人物列表</span>
+								</a>
+								<b class="arrow"></b>
+							</li>
+							<li class="hide">
+								<a href="#" data-url="/person/list">
+									<i class="menu-icon fa fa-caret-right"></i>
+									<span class="menu-text">人物合集</span>
+								</a>
+								<b class="arrow"></b>
+							</li>
+							<li class="">
+								<a href="#" data-url="/crawler/new" >
+									<i class="menu-icon fa fa-bug"></i>
+									<span class="menu-text">影资爬虫</span>
+								</a>
+								<b class="arrow"></b>
+							</li>
+						</ul>
+					</li>
+
+					<li class="">
+						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-youtube-play"></i>
 							<span class="menu-text">
 								影片管理
@@ -503,7 +545,6 @@
 		</script>
 		<!--[if !IE]> -->
 		<script src="assets/js/jquery-2.1.4.min.js"></script>
-
 		<!-- <![endif]-->
 
 		<!--[if IE]>
@@ -546,7 +587,8 @@
 		<script src="plugins/sparkline/jquery.sparkline.index.min.js"></script>
 
 
-		<script src="https://cdn.bootcss.com/jquery.form/4.2.2/jquery.form.min.js"></script>
+
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
 
 		<script type="text/javascript" src="common/js/base.js"></script>
         <script type="text/javascript" src="common/js/base-modal.js"></script>
@@ -554,11 +596,14 @@
 
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
-             var int; //定时器
+             var tf; //定时器
             $(function(){
                 //首页默认加载
                 loadPage("/dashboard");
                 $("a[data-url]").click(function(evt){
+
+					tf !== null && clearInterval(tf); //清除定时器
+
                 	var url = $(this).data("url");
                 	url = url + "?pageSubject="+$(this).find("span").text();
                     loadPage(url);

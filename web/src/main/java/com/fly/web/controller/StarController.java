@@ -20,7 +20,7 @@ public class StarController {
         request.setAttribute("pageSubject",pageSubject);
         request.setAttribute("dataUrl", "api/star/all");
         request.setAttribute("dataTableId","star_list");
-        request.setAttribute("searchDivUrl","common/search/star");
+        request.setAttribute("searchDivUrl","common/search/starAutoRefresh");
         return "views/pageDefault";
     }
 

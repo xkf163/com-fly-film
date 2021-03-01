@@ -28,7 +28,7 @@ public class MediaController {
         request.setAttribute("pageSubject",pageSubject);
         request.setAttribute("dataUrl", "api/media/all");
         request.setAttribute("dataTableId","media_list");
-        request.setAttribute("searchDivUrl","common/search/media");
+        request.setAttribute("searchDivUrl","common/search/mediaAutoRefresh");
         return "views/pageDefault";
         //return "views/media/list";
     }

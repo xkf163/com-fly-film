@@ -5,3 +5,8 @@
     <button type="button" class="btn btn-default" data-btn-type="refresh"><i class="fa fa-refresh"></i></button>
     <button type="button" class="btn btn-default" data-btn-type="reset"><i class="fa fa-mail-reply"></i></button>
 </div>
+<div class="checkbox">
+    <label>
+      <input type="checkbox" id="checkRefresh"> 自动刷新
+    </label>
+</div>

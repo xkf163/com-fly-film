@@ -42,6 +42,13 @@
     .page-header{
         padding-bottom: 6px !important;
     }
+    .icheckbox_flat-blue, .iradio_flat-blue {
+        transform: scale(1.7,1.7);
+        margin-right: 5px;
+    }
+.checkbox{
+    padding-left: 10px;
+}
 
     .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
 </style>
@@ -54,7 +61,7 @@
         <h1>${pageSubject}
             <small>
                 <i class="ace-icon fa fa-angle-double-right"></i>
-                overview &amp; Ver20190926
+                pageDefault &amp; Ver20210301 & Ver20190926
             </small>
         </h1>
     </div>
@@ -77,18 +84,51 @@
     <!-- /.page-content -->
 
 
-
-
 <script src="common/js/dataTables_render.js"></script>
 <script>
     //tableId,queryId,conditionContainer
     var ffTable;
     var dataUrl ="${dataUrl}";
 
+    //刷新表格
+    function refresh(){
+        console.log("刷新表格" + new Date().toLocaleString());
+        ffTable.reloadData();
+    }
+
+
     $(function() {
         jQuery.ajaxSettings.async = false; //同步
         loadPage("${searchDivUrl}", $('#searchDiv') );
         jQuery.ajaxSettings.async = true; //同步
+
+        if ($('#checkRefresh')[0]) {
+            $('#checkRefresh').iCheck({
+                checkboxClass: 'icheckbox_flat-blue', //选择框的风格。
+                radioClass: 'icheckbox_flat-blue',
+            });
+
+            $('#checkRefresh').on('ifChanged', function (event) {
+                if ($(this).is(':checked')) {
+                    console.log("开启定时刷新");
+                    localStorage.setItem("is_f", 2);
+                    tf = setInterval('refresh()', 5000); //指定秒刷新一次
+                } else {
+                    console.log("关闭定时刷新");
+                    clearInterval(tf); //取消自动刷新
+                    localStorage.setItem("is_f", 0);
+                }
+            })
+
+            //定时刷新
+            is_f = localStorage.getItem("is_f");
+            if(is_f == 2){
+                console.log("默认开启定时刷新");
+                $('#checkRefresh').iCheck("check");
+            }
+
+        }
+
         //init table and fill data
         ffTable = new CommonTable("${dataTableId}", dataUrl, "searchDiv");
         $("#thumbnail").magnify();
@@ -98,19 +138,8 @@
             var action = $(this).attr('data-btn-type');
             var rowId=ffTable.getSelectedRowId();
             switch (action) {
-                case 'add':
-                    modals.openWin({
-                        winId:winId,
-                        title:'新增Film',
-                        width:'1000px',
-                        url:basePath+"/film/edit"
-                        /*, hideFunc:function(){
-                            modals.info("hide me");
-                        },
-                        showFunc:function(){
-                            modals.info("show me");
-                        } */
-                    });
+                case 'refresh':
+                    ffTable.reloadData();
                     break;
                 case 'eraser':
                     if(!rowId){
@@ -121,7 +150,7 @@
                         ajaxPost(basePath+"/media/eraser/"+rowId,null,function(data){
                             if(data.success){
                                 modals.correct("已销毁该数据。");
-                                ffTable.reloadRowData();
+                                ffTable.reloadData();
                             }else{
                                 modals.error("用户数据被引用，不可删除！");
                             }
@@ -137,7 +166,7 @@
                         ajaxPost(basePath+"/media/damage/"+rowId,null,function(data){
                             if(data.success){
                                 modals.correct("已删除该数据，并取消关联。");
-                                ffTable.reloadRowData();
+                                ffTable.reloadData();
                             }else{
                                 modals.error("用户数据被引用，不可删除！");
                             }
