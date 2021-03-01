@@ -244,9 +244,6 @@ public class CrawlerController {
     @PostMapping(value = "/logo")
     @ResponseBody
     public void runningLogo(Crawler crawler) {
-
-       // System.out.println(crawler.getForFilm());
-
         //所有filmlogo为空的film数据，并返回 https://movie.douban.com/subject/1305579/ 的LIST，供爬虫用
         List<String> filmUrlWithoutLogoList = new ArrayList<>();
         if("1".equals(crawler.getForFilm())){
@@ -254,6 +251,8 @@ public class CrawlerController {
         }else {
             filmUrlWithoutLogoList = filmService.findAllUrlOfMediaFilmWithoutLogo();
         }
+
+        System.out.println("filmUrlWithoutLogoList :"+filmUrlWithoutLogoList.size());
 
         String[] urlArray=filmUrlWithoutLogoList.toArray(new String[filmUrlWithoutLogoList.size()]);
 

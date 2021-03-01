@@ -54,8 +54,10 @@ public class DouBanLogoProcessor implements PageProcessor {
             .setRetryTimes(1)
             .setTimeOut(6000)
             .setCharset("utf-8")
-            .setDomain("movie.douban.com");
-
+            .setDomain("movie.douban.com")
+            .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+            .addHeader("Accept-Language","zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
+            .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36 Edg/88.0.705.74");
 //            .addCookie("gr_user_id","922cd5e7-60dc-4640-92ac-f15bf31d7a41")
 //            .addCookie("as","https://movie.douban.com/")
 //            .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
@@ -76,23 +78,15 @@ public class DouBanLogoProcessor implements PageProcessor {
 
         //1)电影页面
         if (page.getUrl().regex(URL_FILM).match() ) {
-
             Film f = crawlerService.extractOnlyFilmLogo(page);
             filmSaveQueue.add(f);
-
-
         }else if(page.getUrl().regex(URL_PERSON).match()){
-
             Person p = crawlerService.extractOnlyPersonLogo(page);
             personSaveQueue.add(p);
-
-
         }else {
             System.out.println("--URL不符合Rule--"+page.getUrl());
             runningLog  = "--跳过----URL不符合Rule----"+page.getUrl();
         }
-
-
 
        //批量保存，而不是抓一个就保存一次
         crawlerService.saveFilmList(filmSaveQueue);
