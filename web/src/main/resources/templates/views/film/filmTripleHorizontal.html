@@ -130,17 +130,20 @@
     var mainUrl ="${dataMainTable}";
     var subTopUrl ="${dataSubTopTable}";
     var subBottomUrl ="${dataSubBottomTable}";
+
+    //刷新表格
+    function refresh(){
+        console.log("刷新表格" + new Date().toLocaleString());
+        mainTable.reloadData();
+    }
+
     $(function() {
 
         jQuery.ajaxSettings.async = false; //同步
         loadPage("${dataSearchDivMainHtml}", $('#searchDivMain') );
         jQuery.ajaxSettings.async = true; //同步
 
-        //刷新表格
-        function refresh(){
-            console.log("刷新表格" + new Date().toLocaleString());
-            mainTable.reloadData();
-        }
+
 
         if ($('#checkRefresh')[0]) {
             $('#checkRefresh').iCheck({

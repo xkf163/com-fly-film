@@ -70,7 +70,7 @@
 	</query>
 
 	<!-- Film 豆瓣数据/按电影-->
-	<query id="mainFilm" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="updateDate desc">
+	<query id="mainFilm" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="createDate desc">
 		<column key="rowIndex" header="序" width="20" allowSort="false" />
 		<column key="id" header="id" hidden="true"/>
 		<column key="filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderFilmLogo" />
