@@ -128,7 +128,7 @@ public class MediaController {
     }
 
     /**
-     * media查询主页面，放3张表格，数据串联
+     * media查询主页面，放3张表格，左1右2，数据串联
      * @param request
      * @return
      */
@@ -153,7 +153,7 @@ public class MediaController {
 
 
     /**
-     * media查询主页面，放3张表格，数据串联
+     * media查询主页面，放3张表格并排，数据串联
      * @param request
      * @return
      */
@@ -177,7 +177,30 @@ public class MediaController {
     }
 
 
+    /**
+     * 本地影库/按影片
+     * media查询主页面，放3张表格并排，数据串联
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/query/all")
+    public String mediaQueryHorizontal(HttpServletRequest request) {
 
+        String pageSubject = request.getParameter("pageSubject");
+
+        request.setAttribute("pageSubject", pageSubject);
+        request.setAttribute("dataMainTable", "api/media/all");
+        request.setAttribute("dataMainTableId", "mainMedia");
+        request.setAttribute("dataSearchDivMainHtml", "common/search/media");
+
+        request.setAttribute("dataSubTopTable", "api/star/all");
+        request.setAttribute("dataSubTopTableId", "subStar");
+
+        request.setAttribute("dataSubBottomTable", "api/media/all");
+        request.setAttribute("dataSubBottomTableId", "subMedia");
+
+        return "views/media/mediaTripleHorizontal";
+    }
 
 
 

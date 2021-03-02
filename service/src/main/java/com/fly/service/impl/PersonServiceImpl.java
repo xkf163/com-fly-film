@@ -9,6 +9,8 @@ import com.fly.common.query.util.QueryUtil;
 import com.fly.common.utils.StrUtil;
 import com.fly.dao.PersonRepository;
 import com.fly.entity.*;
+import com.fly.service.FilmService;
+import com.fly.service.MediaService;
 import com.fly.service.PersonService;
 
 import com.querydsl.core.Tuple;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +48,8 @@ public class PersonServiceImpl implements PersonService {
     @PersistenceContext
     EntityManager entityManager;
 
-
+    @Autowired
+    FilmService filmService;
 
     @Override
     public Map<String, Object> findAll(String reqObj) throws Exception {
@@ -74,16 +78,70 @@ public class PersonServiceImpl implements PersonService {
 
         //4)dsl动态查询
         List<Map<String, Object>> conditions = queryCondition.getConditions();
-        String nameExtend = null;
-        if (conditions!=null && conditions.size()>-1){
-            if (!"".equals(conditions.get(0).get("value"))){
-                nameExtend = (String) conditions.get(0).get("value");
+        String nameExtend = "";
+        String FilmNo = "-1";
+        if (!conditions.isEmpty()){
+            for(int i = 0 ; i < conditions.size() ; i++) {
+                System.out.println(conditions.get(i).get("key"));
+                System.out.println(conditions.get(i).get("value"));
+                if ("nameExtend".equals(conditions.get(i).get("key"))) {
+                    nameExtend =  (String) conditions.get(i).get("value");
+                    nameExtend = nameExtend.trim();
+                }
+                if ("FilmNo".equals(conditions.get(i).get("key"))) {
+                    FilmNo =  (String) conditions.get(i).get("value");
+                    FilmNo = FilmNo.trim();
+                }
             }
         }
 
+        for (Map<String, Object> conditionsMap : conditions) {
+            String key = conditionsMap.get("key").toString();
+            Object value = conditionsMap.get("value");
+            System.out.println("key:"+key +" val:"+value);
+        }
+
+
+
+        String starAsDirect="",starAsActor="",starAsWriter="";
+        if(!"-1".equals(FilmNo)){
+            Film film = filmService.findByDoubanNo(FilmNo);
+
+            starAsDirect = film.getDirectors();
+            starAsActor= film.getActors();
+            starAsWriter = film.getScreenWriter();
+
+            starAsDirect = starAsDirect == null ? "" : starAsDirect;
+            starAsActor = starAsActor == null ? "" : starAsActor;
+            starAsWriter = starAsWriter == null ? "" : starAsWriter;
+        }
+        List<String> b = new ArrayList<String>();
+        if (!"".equals(starAsDirect)){
+            System.out.println("starAsDirect: "+starAsDirect);
+            for (String retval: starAsDirect.split(",")){
+                b.add(retval);
+            }
+        }
+        if (!"".equals(starAsActor)){
+            System.out.println("starAsActor: "+starAsActor);
+            for (String retval: starAsActor.split(",")){
+                b.add(retval);
+            }
+        }
+        if (!"".equals(starAsWriter)){
+            System.out.println("starAsWriter: "+starAsWriter);
+            for (String retval: starAsWriter.split(",")){
+                b.add(retval);
+            }
+        }
+        String[] c = new String[b.size()];
+        b.toArray(c);
+
+
         QPerson person = QPerson.person;
         Predicate predicate = person.isNotNull().or(person.isNull());
-        predicate = nameExtend == null ? predicate : ExpressionUtils.and(predicate,person.nameExtend.like(nameExtend));
+        predicate = "".equals(nameExtend) ? predicate : ExpressionUtils.and(predicate,person.nameExtend.like(nameExtend));
+        predicate = "-1".equals(FilmNo) ? predicate : ExpressionUtils.and(predicate,person.douBanNo.in(c));
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
         Page<Person> pageCarrier = personRepository.findAll( predicate ,pageable);
