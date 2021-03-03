@@ -29,4 +29,8 @@ public interface PersonService {
     Map getPersonNamesByDoubanNos(String personDoubanNos);
 
     Map getPersonNamesByPersonIds(String personIds);
+
+    Person findByNameContaining(String name);
+
+    List<String> findAllOfFilm(String subject);
 }

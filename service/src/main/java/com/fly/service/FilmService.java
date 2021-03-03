@@ -30,4 +30,9 @@ public interface FilmService {
     List<String> findAllUrlOfMediaFilmWithoutLogo() ;
 
     Film findOne(Long id);
+
+    List<String> findAllOfPerson(String name);
+
+    Film findBySubjectContaining(String subject);
+
 }

@@ -1,0 +1,248 @@
+<style>
+    .form-group{
+        margin-bottom: 5px !important;
+    }
+
+    .scroll-box {
+        height:375px;
+        border:2px solid #000;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: #F8F8F8;
+    }
+    .scroll-box ul {
+        list-style:none;
+        width:100%;
+        height:100%;
+        margin-left: 10px;
+    }
+    .scroll-box ul li {
+        width:100%;
+        height:20px;
+        box-sizing:border-box;
+        line-height:20px;
+        text-align:left;
+        color: #000;
+        overflow-x: hidden;
+    }
+
+</style>
+
+<div class="page-content">
+
+    <div class="page-header">
+        <h1>图片补丁 </h1>
+    </div><!-- /.page-header -->
+
+    <div class="page-body">
+
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="row">
+                        <form id="patch-form" method="patch-form" class="form-horizontal">
+
+                            <div class="form-group hidden">
+                                <div class="col-md-6 col-xs-6 form-group">
+                                    <label for="thread">线程数：</label>
+                                    <input type="text" class="form-control " id="thread" name="thread" value="1" />
+                                </div>
+                                <div  class="col-md-6 col-xs-6 form-group pull-right">
+                                    <label for="thread">批量保存临界值: </label>
+                                    <input type="text" class="form-control " id="batchNumber" name="batchNumber" value="10" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-xs-8 form-group">
+                                    <label for="thread">查询关键字：</label>
+                                    <input type="text" class="form-control" id="searchKey" name="searchKey" value="" data-bv-notempty="true" data-bv-notempty-message="不能为空" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-xs-6 form-group">
+                                    <label for="thread">间隔时间（毫秒）：</label>
+                                    <input type="text" class="form-control" id="sleepTime" name="sleepTime" value=30000 />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class=" col-md-6 col-xs-6">
+                                    <input type="checkbox" data-flag="icheck" class="square-grey" value="1"  id="forPerson" name="forPerson">&nbsp;&nbsp;爬取人物作品海报
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-6 col-xs-6">
+                                    <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="forFilm" name="forFilm">&nbsp;&nbsp;爬取电影人物头像
+                                </div>
+                            </div>
+
+                            <div class="form-group pull-left">
+                                <!--以下两种方式提交验证,根据所需选择-->
+                                <button type="submit" class="btn btn-success" data-btn-type="start">开爬</button>
+                                <button type="button" class="btn btn-danger" onclick="endCrawler();" data-btn-type="end">终止</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-9">
+                    <div class="row">
+                        <div class="form-group">
+                            <label style="margin-left: 30px;">显示运行日志：</label><input type="checkbox" data-flag="icheck" class="square-grey"  value="1"  id="refreshC" name="refreshC" ><input type="checkbox" data-flag="icheck" class="square-green pull-right"  value="1"  id="refresh" name="refresh" >
+                            <div class="scroll-box" style="margin-left: 30px;">
+                                <ul>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+<script>
+    //tableId,queryId,conditionContainer
+    var pacthform =null;
+    var winId = "user-win";
+    $(function() {
+        //初始化控件
+        pacthform=$("#patch-form").form();
+        //数据校验
+        $("#patch-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认开始？', function() {
+                    var params = pacthform.getFormSimpleData();
+                    var searchKey = $("#searchKey").val();
+                    var submitType = $(submitButton).attr("data-btn-type");
+                    var objType = "person";
+                    if ($("#forFilm").is(':checked')){
+                        objType = "film";
+                    }
+
+                    ajaxPost(basePath+'/crawler/'+objType+'/picpatch?searchkey='+searchKey, params, function(data, status) {
+                        if(data.msg == "success"){
+                            if(id!="0"){//更新
+                                modals.hideWin(winId);
+                                //seriesTable.reloadRowData(id);
+
+                            }else{//新增
+                                //modals.info("数据保存成功");
+                                modals.hideWin(winId);
+                               // seriesTable.reloadData();
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+
+
+
+
+
+
+
+        window.clearInterval(int);
+        int = setInterval(function () {
+
+            if ($("#refresh").is(':checked')) {
+                $.ajax({
+                    type: "post",
+                    url: "/relevance/log",
+                    cache:false,
+                    async:true,
+                    success: function(result){
+                        if (result.length > 0) {
+                            $ul = $(".scroll-box ul");
+                            $("<li>"+result+"</li>").prependTo($ul);
+
+
+                        }
+
+                    }
+                });
+            }
+
+            if ($("#refreshC").is(':checked')) {
+                $.ajax({
+                    type: "post",
+                    url: "/crawler/log",
+                    cache:false,
+                    async:true,
+                    success: function(result){
+                        if (result.length > 0) {
+                            $ul = $(".scroll-box ul");
+                            $("<li>"+result+"</li>").prependTo($ul);
+
+
+                        }
+
+                    }
+                });
+            }
+
+            if ($("#refreshL").is(':checked')) {
+                $.ajax({
+                    type: "post",
+                    url: "/crawler/logb",
+                    cache:false,
+                    async:true,
+                    success: function(result){
+                        if (result.length > 0) {
+                            $ul = $(".scroll-box ul");
+                            $("<li>"+result+"</li>").prependTo($ul);
+
+
+                        }
+
+                    }
+                });
+            }
+
+        }, 100);
+
+
+
+        $(document).find('[data-flag="icheck"]').each(function () {
+            var cls = $(this).attr("class") ? $(this).attr("class") : "square-green";
+            $(this).iCheck(
+                {
+                    checkboxClass: 'icheckbox_' + cls,
+                    radioClass: 'iradio_' + cls
+                }
+            ).on('ifChanged', function (e) {
+                //var field = $(this).attr('name');
+            });
+        });
+
+
+    });
+
+
+
+    
+    function endCrawler() {
+        $.ajax({
+            type: "get",
+            url: "/crawler/stop",
+            cache:false,
+            async:true,
+        });
+
+        modals.info("终止请求发出成功！")
+    }
+    
+</script>

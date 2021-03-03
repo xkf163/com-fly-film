@@ -279,4 +279,61 @@ public class PersonServiceImpl implements PersonService {
         map.put("name", StringUtils.join(listPersonName.toArray(), ","));
         return map;
     }
+
+    @Override
+    public Person findByNameContaining(String name) {
+        return personRepository.findByNameContaining(name);
+    }
+    @Override
+    public List<String> findAllOfFilm(String subject){
+
+
+        Film film = filmService.findBySubjectContaining(subject);
+        if (null == film){
+            return new ArrayList<>();
+        }
+
+        String starAsDirect="",starAsActor="",starAsWriter="";
+
+            starAsDirect = film.getDirectors();
+            starAsActor= film.getActors();
+            starAsWriter = film.getScreenWriter();
+
+            starAsDirect = starAsDirect == null ? "" : starAsDirect;
+            starAsActor = starAsActor == null ? "" : starAsActor;
+            starAsWriter = starAsWriter == null ? "" : starAsWriter;
+
+
+        List<String> b = new ArrayList<String>();
+        if (!"".equals(starAsDirect)){
+            for (String retval: starAsDirect.split(",")){
+                b.add(retval);
+            }
+        }
+        if (!"".equals(starAsActor)){
+            for (String retval: starAsActor.split(",")){
+                b.add(retval);
+            }
+        }
+        if (!"".equals(starAsWriter)){
+            for (String retval: starAsWriter.split(",")){
+                b.add(retval);
+            }
+        }
+        String[] c = new String[b.size()];
+        b.toArray(c);
+
+
+        QPerson qPerson = QPerson.person;
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<String> lists = jpaQueryFactory.select(qPerson.douBanNo.prepend("https://movie.douban.com/celebrity/").append("/"))
+                .from(qPerson)
+                .where(qPerson.faceLogo.isNull().and(qPerson.douBanNo.isNotNull()))
+                .where(qPerson.douBanNo.in(c))
+                .fetch();
+        return lists;
+
+
+    }
+
 }

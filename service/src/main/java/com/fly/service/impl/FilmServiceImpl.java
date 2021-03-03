@@ -27,10 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -298,9 +295,37 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.findOne(id);
     }
 
+
+    /**
+     * 根据 人物豆瓣编号 查找其 所有参与作品
+     * @param
+     * @return
+     */
+    @Override
+    public List<String> findAllOfPerson(String name) {
+        Person person = personService.findByNameContaining(name);
+        if (null == person){
+            return new ArrayList<>();
+        }
+        String douBanNo = person.getDouBanNo();
+        QFilm qFilm = QFilm.film;
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+        List<String> lists = jpaQueryFactory.select(qFilm.doubanNo.prepend("https://movie.douban.com/subject/").append("/"))
+                .from(qFilm)
+                .where(qFilm.filmLogo.isNull().and(qFilm.doubanNo.isNotNull()))
+                .where(qFilm.directors.contains(douBanNo).or(qFilm.screenWriter.contains(douBanNo)).or(qFilm.actors.contains(douBanNo)))
+                .fetch();
+        return lists;
+    }
+
+    @Override
+    public Film findBySubjectContaining(String subject) {
+        return filmRepository.findBySubjectContaining(subject);
+    }
+
     /*
-            是否未数字
-             */
+    是否未数字
+     */
     public static boolean isNumeric(String str) {
         String bigStr;
         try {

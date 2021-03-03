@@ -13,5 +13,6 @@ public interface PersonRepository extends JpaRepository<Person,Long>, QueryDslPr
 
     Person findByDouBanNo(String douBanNo);
 
+    Person findByNameContaining(String name);
 
 }

@@ -5,6 +5,7 @@ import com.fly.crawler.processor.DouBanLogoProcessor;
 import com.fly.crawler.processor.DouBanProcessor;
 import com.fly.crawler.service.CrawlerService;
 import com.fly.entity.Film;
+import com.fly.entity.Person;
 import com.fly.service.FilmService;
 import com.fly.service.PersonService;
 import org.openqa.selenium.By;
@@ -25,6 +26,7 @@ import us.codecraft.webmagic.monitor.SpiderMonitor;
 import us.codecraft.webmagic.pipeline.FilePipeline;
 
 import javax.management.JMException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +58,64 @@ public class CrawlerController {
         return "views/crawler/new";
     }
 
+    @GetMapping(value = "/picpatch")
+    public String crawlerPicPatch(){
+        return "views/crawler/picpatch";
+    }
+
+
+    /**
+     * 人物作品海报爬取补丁
+     * @param request
+     * @throws JMException
+     */
+    @PostMapping(value = "/person/picpatch")
+    @ResponseBody
+    public void personPicPatch(HttpServletRequest request) {
+        //nameExtend 关键字
+        String searchKey = request.getParameter("searchKey");
+        System.out.println("searchKey:" +searchKey);
+        List<String> fs = filmService.findAllOfPerson(searchKey);
+
+        String[] urlArray=fs.toArray(new String[fs.size()]);
+
+        douBanLogoProcessor.runningLog  = " 海报爬取队列长度： "+fs.size();
+
+        System.out.println(" 海报爬取队列长度： "+fs.size());
+
+        //默认spider
+        spider = Spider.create(douBanLogoProcessor).addUrl(urlArray).thread(1);
+
+        //异步启动，当前线程继续执行
+        spider.start();
+
+    }
+
+
+    /**
+     * 电影人物头像爬取补丁
+     * @param request
+     */
+    @PostMapping(value = "/film/picpatch")
+    @ResponseBody
+    public void filmPicPatch(HttpServletRequest request)  {
+        String searchKey = request.getParameter("searchKey");
+
+        System.out.println("searchKey:" +searchKey);
+        List<String> fs = personService.findAllOfFilm(searchKey);
+
+        String[] urlArray=fs.toArray(new String[fs.size()]);
+        douBanLogoProcessor.runningLog  = " 头像爬取队列长度： "+fs.size();
+        System.out.println(" 头像爬取队列长度： "+fs.size());
+        //默认spider
+        spider = Spider.create(douBanLogoProcessor).addUrl(urlArray).thread(1);
+
+        //异步启动，当前线程继续执行
+        spider.start();
+
+
+
+    }
 
     /**
      * @Author: xukangfeng
