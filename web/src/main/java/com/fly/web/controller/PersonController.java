@@ -40,4 +40,29 @@ public class PersonController {
         return "views/person/person_edit";
     }
 
+
+
+    /**
+     * 豆瓣影库/按人物
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/query/all")
+    public String personQueryHorizontal(HttpServletRequest request) {
+        String pageSubject = request.getParameter("pageSubject");
+
+        request.setAttribute("pageSubject", pageSubject);
+        request.setAttribute("dataMainTable", "api/person/all");
+        request.setAttribute("dataMainTableId", "mainPerson");
+        request.setAttribute("dataSearchDivMainHtml", "common/search/person");
+
+        request.setAttribute("dataSubTopTable", "api/film/all");
+        request.setAttribute("dataSubTopTableId", "subFilm");
+
+        request.setAttribute("dataSubBottomTable", "api/person/all");
+        request.setAttribute("dataSubBottomTableId", "subPerson");
+
+        return "views/person/personTripleHorizontal";
+    }
+
 }

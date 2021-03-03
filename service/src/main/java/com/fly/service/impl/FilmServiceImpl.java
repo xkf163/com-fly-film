@@ -81,15 +81,33 @@ public class FilmServiceImpl implements FilmService {
 
         //4)dsl动态查询
         List<Map<String, Object>> conditions = queryCondition.getConditions();
-        String subjectMain = null;
-        Short year = null;
-       if (conditions !=null && conditions.size()> -1) {
-            if (!"".equals(conditions.get(0).get("value"))){
-                subjectMain = (String) conditions.get(0).get("value");
+        String subjectMain = "";
+        Short year = 9999;
+        String PersonNo = "-1";
+        if (!conditions.isEmpty()){
+            for(int i = 0 ; i < conditions.size() ; i++) {
+                System.out.println(conditions.get(i).get("key"));
+                System.out.println(conditions.get(i).get("value"));
+                if ("subjectMain".equals(conditions.get(i).get("key"))) {
+                    subjectMain =  (String) conditions.get(i).get("value");
+                    subjectMain = subjectMain.trim();
+                }
+                if ("year".equals(conditions.get(i).get("key"))) {
+                    if (!"".equals(conditions.get(i).get("value").toString())){
+                        year = Short.parseShort ( conditions.get(i).get("value").toString() );
+                    }
+                }
+                if ("PersonNo".equals(conditions.get(i).get("key"))) {
+                    PersonNo =  (String) conditions.get(i).get("value");
+                    PersonNo = PersonNo.trim();
+                }
             }
-            if (!"".equals(conditions.get(1).get("value"))){
-                year = isNumeric(conditions.get(1).get("value").toString()) ?  Short.parseShort(conditions.get(1).get("value").toString()) : 9999;
-            }
+        }
+
+        for (Map<String, Object> conditionsMap : conditions) {
+            String key = conditionsMap.get("key").toString();
+            Object value = conditionsMap.get("value");
+            System.out.println("key:"+key +" val:"+value);
         }
 
 
@@ -97,14 +115,9 @@ public class FilmServiceImpl implements FilmService {
         //初始化组装条件(类似where 1=1)
         Predicate predicate = film.isNotNull().or(film.isNull());
         //执行动态条件拼装
-        predicate = subjectMain == null ? predicate : ExpressionUtils.and(predicate,film.subjectMain.like(subjectMain));
-        predicate = year == null ? predicate : ExpressionUtils.and(predicate,film.year.eq(year));
-
-        for (Map<String, Object> conditionsMap : conditions) {
-            String key = conditionsMap.get("key").toString();
-            Object value = conditionsMap.get("value");
-            System.out.println("key:"+key +" val:"+value);
-        }
+        predicate =  "".equals(subjectMain) ? predicate : ExpressionUtils.and(predicate,film.subjectMain.like(subjectMain));
+        predicate = year == 9999 ? predicate : ExpressionUtils.and(predicate,film.year.eq(year));
+        predicate = "-1".equals(PersonNo) ? predicate : ExpressionUtils.and(predicate,film.directors.contains(PersonNo).or(film.screenWriter.contains(PersonNo)).or(film.actors.contains(PersonNo)));
 
         Pageable pageable = new PageRequest(pageNum-1, pageSize , sort);
         Page<Film> pageCarrier = filmRepository.findAll(predicate , pageable);

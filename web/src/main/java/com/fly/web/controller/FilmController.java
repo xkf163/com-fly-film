@@ -50,4 +50,30 @@ public class FilmController {
         return "views/film/person_select";
     }
 
+
+    /**
+     * 豆瓣影库/按影片
+     * film查询主页面，放3张表格并排，数据串联
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/query/all")
+    public String filmQueryHorizontal(HttpServletRequest request) {
+
+        String pageSubject = request.getParameter("pageSubject");
+
+        request.setAttribute("pageSubject", pageSubject);
+        request.setAttribute("dataMainTable", "api/film/all");
+        request.setAttribute("dataMainTableId", "mainFilm");
+        request.setAttribute("dataSearchDivMainHtml", "common/search/film");
+
+        request.setAttribute("dataSubTopTable", "api/person/all");
+        request.setAttribute("dataSubTopTableId", "subPerson");
+
+        request.setAttribute("dataSubBottomTable", "api/film/all");
+        request.setAttribute("dataSubBottomTableId", "subFilm");
+
+        return "views/film/filmTripleHorizontal";
+    }
+
 }

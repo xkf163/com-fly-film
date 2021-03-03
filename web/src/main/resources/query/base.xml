@@ -69,6 +69,28 @@
 <!--		<column key="asWriterNumber" header="编剧数" align="center" width="50"  allowSort="true"/>-->
 	</query>
 
+	<!-- Film 豆瓣数据/按电影-->
+	<query id="mainFilm" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="createDate desc">
+		<column key="rowIndex" header="序" width="20" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderFilmLogo" />
+		<column key="subject" header="片名" width="auto"  align="left" fnRender="fnRenderFilmNamePlus" />
+		<column key="year" header="年份" width="50"  operator="eq"  allowSort="true" />
+		<column key="doubanRating" header="豆分" width="50" allowSort="true"/>
+		<column key="doubanNo" header="豆号" hidden="true"/>
+	</query>
+
+	<!-- Film 豆瓣数据/按电影-->
+	<query id="subFilm" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="year desc">
+		<column key="rowIndex" header="序" width="20" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderFilmLogo" />
+		<column key="subject" header="片名" width="auto"  align="left" fnRender="fnRenderFilmNamePlus" />
+		<column key="year" header="年份" width="50"  operator="eq"  allowSort="true" />
+		<column key="doubanRating" header="豆分" width="50" allowSort="true"/>
+		<column key="doubanNo" header="豆号" hidden="true"/>
+	</query>
+
 	<!-- Film 豆瓣数据/电影列表-->
 	<query id="film_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="createDate desc">
 		<column key="rowIndex" header="序号" width="30" allowSort="false" />
@@ -76,13 +98,14 @@
 		<column key="filmLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderFilmLogo" />
 		<column key="subject" header="片名" width="auto"  align="left" fnRender="fnRenderFilmName" />
 		<column key="year" header="年份" width="40"  operator="eq"  allowSort="true" />
-<!--		<column key="genre" header="类型" width="100"  align="left" />-->
+		<!--		<column key="genre" header="类型" width="100"  align="left" />-->
 		<column key="doubanRating" header="豆分" width="40" allowSort="true"/>
 		<column key="country" header="国家/地区" width="80"  align="left" />
 		<column key="initialReleaseDate" header="发行时间" operator="like" align="left"  width="200"  fnRender="fnRenderReleaseDate" />
 		<column key="runtime" header="时长" operator="like" width="40" allowSort="true" />
 		<column key="createDate" header="爬取时间" operator="like" width="120" allowSort="true" />
 	</query>
+
 
 	<!-- Film 豆瓣数据/人物合集（右表）-->
 	<query id="film_person_list" key="id" tableName="电影列表" className="com.fly.entity.Film" pageSize="10"  widthType="px" order="year desc">
@@ -187,6 +210,30 @@
 		<column key="mediaSizeGB" header="大小(GB)" align="left" width="40"  allowSort="true"/>
 		<!--		<column key="gatherDate" header="下载时间" operator="like" align="left"  width="100" allowSort="true"/>-->
 		<!-- <column key="whetherFolder" header="文件夹" width="30"  render="1=是,0=否" /> -->
+	</query>
+
+	<!-- Person 豆瓣数据/按人物-->
+	<query id="mainPerson" key="id" tableName="人物列表" className="com.fly.entity.Person"
+		   pageSize="10"  widthType="px" order="createDate desc">
+		<column key="rowIndex" header="序" width="20" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="faceLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderFaceLogo" />
+		<column key="nameExtend" header="姓名" width="auto"  operator="like"  align="left"   fnRender="fnRenderPersonNameExtend" />
+		<column key="gender" header="性别" width="30"  operator="like"  align="left"  />
+		<column key="birthDay" header="出生日" width="80" align="left"  operator="like"  allowSort="true"/>
+		<column key="douBanNo" header="豆号" hidden="true"/>
+	</query>
+
+	<!-- Person 豆瓣数据/按人物-->
+	<query id="subPerson" key="id" tableName="人物列表" className="com.fly.entity.Person"
+		   pageSize="10"  widthType="px" order="createDate desc">
+		<column key="rowIndex" header="序" width="20" allowSort="false" />
+		<column key="id" header="id" hidden="true"/>
+		<column key="faceLogo" header="" width="30"  operator="like"  align="center" fnRender="fnRenderFaceLogo" />
+		<column key="nameExtend" header="姓名" width="auto"  operator="like"  align="left"   fnRender="fnRenderPersonNameExtend" />
+		<column key="gender" header="性别" width="30"  operator="like"  align="left"  />
+		<column key="birthDay" header="出生日" width="80" align="left"  operator="like"  allowSort="true"/>
+		<column key="douBanNo" header="豆号" hidden="true"/>
 	</query>
 
 	<!-- Person 豆瓣数据/人物列表-->

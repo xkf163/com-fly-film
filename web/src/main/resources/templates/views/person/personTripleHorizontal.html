@@ -1,0 +1,239 @@
+<style>
+
+    td.details-control:after {
+        content: "\f055" !important;
+        font-family: FontAwesome;
+        color: #438EB9;
+        font-size: 16px;
+        font-weight: 400;
+        cursor: pointer;
+    }
+
+
+    tr.details td.details-control:after {
+        content: "\f056" !important;
+        font-family: FontAwesome;
+        color: #438EB9;
+        font-size: 16px;
+        font-weight: 400;
+    }
+    tr.selected td.details-control:after {
+        color: #2B7DBC;
+    }
+
+    .dataTables_filter{
+        margin-left:0px !important;
+        margin-right: 0px !important;
+        margin-left: -4px !important;
+    }
+
+    .dataTables_wrapper .row:first-child{
+        /*background-color: #EFF3F8;*/
+    }
+    .dataTables_wrapper .row:first-child{
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    div.dataTables_filter{
+        text-align: left;
+    }
+
+    div.dataTables_info{
+        line-height: 30px;
+    }
+    .page-header{
+        padding-bottom: 6px !important;
+    }
+
+    .dynamic-table_wrapper_right_table{
+        padding: 0 5px 0 5px !important;
+    }
+
+    .icheckbox_flat-blue, .iradio_flat-blue {
+        transform: scale(1.7,1.7);
+        margin-right: 5px;
+    }
+    .checkbox{
+        padding-left: 10px;
+    }
+
+
+    .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
+</style>
+
+
+
+<div class="page-content" >
+
+    <div class="page-header">
+        <h1>${pageSubject}
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                overview &amp; Ver20210222
+            </small>
+        </h1>
+    </div>
+
+    <div class="page-body">
+
+            <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline">
+                <div class="row">
+                    <div class="dataTables_filter alert-block" id="searchDivMain">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                    <!-- PAGE CONTENT BEGINS -->
+                        <table id="${dataMainTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                        </table>
+                    </div>
+
+                    <div class="col-xs-12 col-md-4 dynamic-table_wrapper_right_table">
+<!--                        <div class="dynamic-table_wrapper_right_table">-->
+                            <div class="row">
+                                <div class="dataTables_filter alert-block" id="searchDivSubTop">
+                                    <input type="hidden" name="subjectMain" value=""/>
+                                    <input type="hidden" name="year" value="" />
+                                    <input type="hidden" name="PersonNo" value="-1" id="PersonNo"/>
+                                </div>
+                            </div>
+                            <table id="${dataSubTopTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                            </table>
+<!--                        </div>-->
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+<!--                        <div class="dynamic-table_wrapper_right_table">-->
+                            <div class="row">
+                                <div class="dataTables_filter alert-block" id="searchDivSubBottom">
+                                    <input type="hidden" name="FilmNo" value="-1" id="FilmNo"/>
+                                </div>
+                            </div>
+                            <table id="${dataSubBottomTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                            </table>
+<!--                        </div>-->
+                    </div>
+
+                </div>
+                <!-- PAGE CONTENT ENDS -->
+            </div>
+        </div>    <!-- /.row -->
+
+
+</div>
+    <!-- /.page-content -->
+
+<script src="common/js/dataTables_render.js"></script>
+<script>
+    //tableId,queryId,conditionContainer
+    var mainTable,subTopTable,subBottomTable;
+    var mainUrl ="${dataMainTable}";
+    var subTopUrl ="${dataSubTopTable}";
+    var subBottomUrl ="${dataSubBottomTable}";
+
+    //刷新表格
+    function refresh(){
+        console.log("刷新表格" + new Date().toLocaleString());
+        mainTable.reloadData();
+    }
+
+    $(function() {
+
+        jQuery.ajaxSettings.async = false; //同步
+        loadPage("${dataSearchDivMainHtml}", $('#searchDivMain') );
+        jQuery.ajaxSettings.async = true; //同步
+
+
+
+        if ($('#checkRefresh')[0]) {
+            $('#checkRefresh').iCheck({
+                checkboxClass: 'icheckbox_flat-blue', //选择框的风格。
+                radioClass: 'icheckbox_flat-blue',
+            });
+
+            $('#checkRefresh').on('ifChanged', function (event) {
+                if ($(this).is(':checked')) {
+                    console.log("开启定时刷新");
+                    localStorage.setItem("is_f", 2);
+                    tf = setInterval('refresh()', 5000); //指定秒刷新一次
+                } else {
+                    console.log("关闭定时刷新");
+                    clearInterval(tf); //取消自动刷新
+                    localStorage.setItem("is_f", 0);
+                }
+            })
+
+            //定时刷新
+            is_f = localStorage.getItem("is_f");
+            if(is_f == 2){
+                console.log("默认开启定时刷新");
+                $('#checkRefresh').iCheck("check");
+            }
+
+        }
+
+        //init table and fill data
+        var main_config={
+            lengthChange:false,
+            pagingType:'simple',
+            rowClick:function(row,isSelected){
+                console.log(row);
+                $("#PersonNo").val(isSelected?row.douBanNo:"-1");
+                if(isSelected)
+                    subTopTable.reloadData();
+                    setTimeout(function () {
+                        subTopTable.selectFirstRow(true);
+                    },500);
+            }
+        }
+
+        var sub_config_bottom={
+            lengthChange:false,
+            pagingType:'simple',
+            //scrollY: subTableHeight
+            // pageLength: 5,
+            // displayLength: 5
+        }
+
+        var sub_config_top={
+            lengthChange:false,
+            pagingType:'simple',
+            //scrollY: subTableHeight,
+            rowClick:function(row,isSelected){
+                $("#FilmNo").val(isSelected?row.doubanNo:"-1");
+                if(isSelected)
+                    subBottomTable.reloadData();
+            }
+        }
+        mainTable = new CommonTable("${dataMainTableId}", mainUrl, "searchDivMain",main_config);
+        subTopTable = new CommonTable("${dataSubTopTableId}", subTopUrl,"searchDivSubTop",sub_config_top);
+        subBottomTable = new CommonTable("${dataSubBottomTableId}", subBottomUrl,"searchDivSubBottom",sub_config_bottom);
+
+        console.log(typeof(mainTable));
+
+        setTimeout(function () {
+            mainTable.selectFirstRow(true);
+        },500);
+
+        $("#thumbnail").magnify();
+
+
+        // 关键词搜索框添加绑定回车函数
+        //$("button[data-btn-type='search']").on('keypress', function(event) {
+        $("#searchDivMain input").on('keypress', function(event) {
+            if (event.keyCode == "13") {
+                mainTable.reloadData();
+                setTimeout(function () {
+                    mainTable.selectFirstRow(true);
+                },500);
+            }
+        })
+
+
+
+
+    });
+
+
+
+</script>
