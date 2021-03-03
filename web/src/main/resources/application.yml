@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: ali
   http:
     multipart:
       max-file-size: 10Mb
