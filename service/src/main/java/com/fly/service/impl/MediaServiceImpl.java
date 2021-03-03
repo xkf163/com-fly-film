@@ -101,16 +101,16 @@ public class MediaServiceImpl implements MediaService {
             }
         }
         String starAsDirect="",starAsActor="",starAsWriter="";
-       if (!"-1".equals(starId)){
-           Star star = starService.findOne(Long.valueOf(starId));
-             starAsDirect = star.getAsDirector();
-             starAsActor= star.getAsActor();
-             starAsWriter = star.getAsWriter();
+        if (!"-1".equals(starId)){
+            Star star = starService.findOne(Long.valueOf(starId));
+            starAsDirect = star.getAsDirector();
+            starAsActor= star.getAsActor();
+            starAsWriter = star.getAsWriter();
 
-             starAsDirect = starAsDirect == null ? "" : starAsDirect;
-             starAsActor = starAsActor == null ? "" : starAsActor;
-             starAsWriter = starAsWriter == null ? "" : starAsWriter;
-       }
+            starAsDirect = starAsDirect == null ? "" : starAsDirect;
+            starAsActor = starAsActor == null ? "" : starAsActor;
+            starAsWriter = starAsWriter == null ? "" : starAsWriter;
+        }
 
 //        System.out.println(starAsDirect);
 //        System.out.println(starAsActor);
@@ -456,22 +456,22 @@ public class MediaServiceImpl implements MediaService {
         QMedia media = QMedia.media;
         Predicate predicate = media.isNotNull().or(media.isNull());
         String[] mediasArray = new String[]{};
-       if (star == null){
-       }else{
+        if (star == null){
+        }else{
 
-           String medias = (String) starClass.getDeclaredMethod(propName).invoke(star);
-           System.out.println(medias);
+            String medias = (String) starClass.getDeclaredMethod(propName).invoke(star);
+            System.out.println(medias);
 
-           if (medias == null){
-               predicate = media.id.stringValue().eq("-1");
-           }else{
-               mediasArray = medias.split(",");
-               //再次搜索：带分页
-               predicate = media.id.stringValue().in(Arrays.asList(mediasArray));
-           }
+            if (medias == null){
+                predicate = media.id.stringValue().eq("-1");
+            }else{
+                mediasArray = medias.split(",");
+                //再次搜索：带分页
+                predicate = media.id.stringValue().in(Arrays.asList(mediasArray));
+            }
 
-       }
-       predicate = name == null ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(name).or(media.nameEng.like(name)));
+        }
+        predicate = name == null ? predicate : ExpressionUtils.and(predicate,media.nameChn.like(name).or(media.nameEng.like(name)));
 
 
 
