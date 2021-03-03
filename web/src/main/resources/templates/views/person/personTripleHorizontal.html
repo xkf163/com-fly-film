@@ -188,16 +188,22 @@
         }
 
         var sub_config_bottom={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            }
             //scrollY: subTableHeight
             // pageLength: 5,
             // displayLength: 5
         }
 
         var sub_config_top={
-            lengthChange:false,
+            // lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
             //scrollY: subTableHeight,
             rowClick:function(row,isSelected){
                 $("#FilmNo").val(isSelected?row.doubanNo:"-1");
