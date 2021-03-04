@@ -1,3 +1,5 @@
+
+
 <style>
     .form-group{
         margin-bottom: 5px !important;
@@ -31,78 +33,60 @@
 <div class="page-content">
 
     <div class="page-header">
-        <h1>图片补丁 </h1>
+        <h1><i class="ace-icon fa fa-image"></i> 图片补丁
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>overview &amp; Ver20210304
+            </small>
+        </h1>
     </div><!-- /.page-header -->
 
     <div class="page-body">
-
-
-        <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="col-xs-12 col-sm-6 col-md-3">
-                    <div class="row">
-                        <form id="patch-form" method="patch-form" class="form-horizontal">
-
-                            <div class="form-group hidden">
-                                <div class="col-md-6 col-xs-6 form-group">
-                                    <label for="thread">线程数：</label>
-                                    <input type="text" class="form-control " id="thread" name="thread" value="1" />
-                                </div>
-                                <div  class="col-md-6 col-xs-6 form-group pull-right">
-                                    <label for="thread">批量保存临界值: </label>
-                                    <input type="text" class="form-control " id="batchNumber" name="batchNumber" value="10" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-xs-8 form-group">
-                                    <label for="thread">查询关键字：</label>
-                                    <input type="text" class="form-control" id="searchKey" name="searchKey" value="" data-bv-notempty="true" data-bv-notempty-message="不能为空" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-6 col-xs-6 form-group">
-                                    <label for="thread">间隔时间（毫秒）：</label>
-                                    <input type="text" class="form-control" id="sleepTime" name="sleepTime" value=30000 />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class=" col-md-6 col-xs-6">
-                                    <input type="checkbox" data-flag="icheck" class="square-grey" value="1"  id="forPerson" name="forPerson">&nbsp;&nbsp;爬取人物作品海报
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-md-6 col-xs-6">
-                                    <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="forFilm" name="forFilm">&nbsp;&nbsp;爬取电影人物头像
-                                </div>
-                            </div>
-
-                            <div class="form-group pull-left">
-                                <!--以下两种方式提交验证,根据所需选择-->
-                                <button type="submit" class="btn btn-success" data-btn-type="start">开爬</button>
-                                <button type="button" class="btn btn-danger" onclick="endCrawler();" data-btn-type="end">终止</button>
-                            </div>
-                        </form>
-                    </div>
-
-
-                </div>
-
-                <div class="col-xs-12 col-sm-6 col-md-9">
-                    <div class="row">
+        <div class="ol-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class="row">
+                    <form id="patch-form" method="patch-form" class="form-horizontal">
                         <div class="form-group">
-                            <label style="margin-left: 30px;">显示运行日志：</label><input type="checkbox" data-flag="icheck" class="square-grey"  value="1"  id="refreshC" name="refreshC" ><input type="checkbox" data-flag="icheck" class="square-green pull-right"  value="1"  id="refresh" name="refresh" >
-                            <div class="scroll-box" style="margin-left: 30px;">
-                                <ul>
-                                </ul>
+                            <div class="col-md-6 col-xs-6 form-group">
+                                <label for="searchKey">查询关键字：</label>
+                                <input type="text" class="form-control" id="searchKey" name="searchKey" value="" data-bv-notempty="true" data-bv-notempty-message="不能为空" />
                             </div>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-xs-6 form-group">
+                                <label for="sleepTime">间隔时间（毫秒）：</label>
+                                <input type="text" class="form-control" id="sleepTime" name="sleepTime" value=30000 />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" data-flag="icheck" class="square-grey" value="1"  id="forPerson" name="forPerson">&nbsp;&nbsp;爬取人物作品海报
+                        </div>
 
+                        <div class="form-group">
+                            <input type="checkbox"  data-flag="icheck" class="square-grey"  value="1"  id="forFilm" name="forFilm">&nbsp;&nbsp;爬取电影人物头像
+                        </div>
+
+                        <div class="form-group left">
+                            <!--以下两种方式提交验证,根据所需选择-->
+                            <button type="submit" class="btn btn-success" data-btn-type="start">开爬</button>
+                            <button type="button" class="btn btn-danger" onclick="endCrawler();" data-btn-type="end">终止</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-9">
+                <div class="row">
+                    <div class="form-group">
+                        <label style="margin-left: 30px;">显示运行日志：</label><input type="checkbox" data-flag="icheck" class="square-grey"  value="1"  id="refreshC" name="refreshC" ><input type="checkbox" data-flag="icheck" class="square-green pull-right"  value="1"  id="refresh" name="refresh" >
+                        <div class="scroll-box" style="margin-left: 30px;">
+                            <ul>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-
-
             </div>
+        </div>
     </div>
 </div>
 
@@ -140,7 +124,7 @@
                             }else{//新增
                                 //modals.info("数据保存成功");
                                 modals.hideWin(winId);
-                               // seriesTable.reloadData();
+                                // seriesTable.reloadData();
                             }
                         }
                     });
@@ -232,8 +216,6 @@
     });
 
 
-
-    
     function endCrawler() {
         $.ajax({
             type: "get",
@@ -241,8 +223,7 @@
             cache:false,
             async:true,
         });
-
         modals.info("终止请求发出成功！")
     }
-    
+
 </script>

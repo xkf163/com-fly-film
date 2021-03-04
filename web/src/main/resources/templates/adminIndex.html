@@ -383,7 +383,7 @@
 
 				<ul class="nav nav-list">
 					<li class="active">
-						<a href="#" data-url="/dashboard" >
+						<a href="#" data-url="/dashboardadmin" >
 							<i class="menu-icon fa fa-tachometer"></i>
 							<span class="menu-text"> DashBoard</span>
 						</a>
@@ -670,7 +670,7 @@
              var int; //定时器
             $(function(){
                 //首页默认加载
-                loadPage("/dashboard");
+                loadPage("/dashboardadmin");
                 $("a[data-url]").click(function(evt){
                 	var url = $(this).data("url");
                 	url = url + "?pageSubject="+$(this).find("span").text();

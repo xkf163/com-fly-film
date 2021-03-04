@@ -389,7 +389,7 @@
 
 				<ul class="nav nav-list">
 					<li class="active">
-						<a href="#" data-url="/dashboard" >
+						<a href="#" data-url="/dashboardfront" >
 							<i class="menu-icon fa fa-tachometer"></i>
 							<span class="menu-text"> DashBoard</span>
 						</a>
@@ -570,7 +570,7 @@
              var int,tf; //定时器
             $(function(){
                 //首页默认加载
-                loadPage("/dashboard");
+                loadPage("/dashboardfront");
                 $("a[data-url]").click(function(evt){
 
 					tf !== null && clearInterval(tf); //清除定时器

@@ -19,9 +19,15 @@ public class IndexController {
         return "adminIndex";
     }
 
-    @GetMapping(value = "/dashboard")
-    public String dashboard(){
-        return "views/dashboard/dashboard";
+    @GetMapping(value = "/dashboardfront")
+    public String dashboardFront(){
+        return "views/dashboard/front";
     }
+
+    @GetMapping(value = "/dashboardadmin")
+    public String dashboardAdmin(){
+        return "views/dashboard/admin";
+    }
+
 
 }
