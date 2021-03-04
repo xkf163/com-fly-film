@@ -45,6 +45,27 @@ public class MediaController {
         return "views/pageDefault";
     }
 
+
+    @GetMapping(value = "/quality/low")
+    public String mediaQualityLow(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
+        request.setAttribute("dataUrl", "api/media/quality");
+        request.setAttribute("dataTableId","media_list");
+        request.setAttribute("searchDivUrl","common/search/mediaForQualityLow");
+        return "views/pageDefault";
+    }
+
+    @GetMapping(value = "/quality/high")
+    public String mediaQualityHigh(HttpServletRequest request) {
+        String pageSubject=request.getParameter("pageSubject");
+        request.setAttribute("pageSubject",pageSubject);
+        request.setAttribute("dataUrl", "api/media/quality");
+        request.setAttribute("dataTableId","media_list");
+        request.setAttribute("searchDivUrl","common/search/mediaForQualityHigh");
+        return "views/pageDefault";
+    }
+
     /**
      * 重复的Media
      * @param request

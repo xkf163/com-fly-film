@@ -28,11 +28,18 @@
         overflow-x: hidden;
     }
 
+    .marginleft{
+        margin-left: -12px;
+    }
+    .marginleft8{
+
+        padding-bottom: 6px;
+    }
 </style>
 
 <div class="page-content">
 
-    <div class="page-header">
+    <div class="page-header marginleft8">
         <h1><i class="ace-icon fa fa-image"></i> 图片补丁
             <small>
                 <i class="ace-icon fa fa-angle-double-right"></i>overview &amp; Ver20210304
@@ -43,7 +50,9 @@
     <div class="page-body">
         <div class="ol-xs-12 col-sm-12 col-md-12">
             <div class="col-xs-12 col-sm-6 col-md-3">
+
                 <div class="row">
+                    <h3 class="header smaller lighter green marginleft">爬虫配置</h3>
                     <form id="patch-form" method="patch-form" class="form-horizontal">
                         <div class="form-group">
                             <div class="col-md-6 col-xs-6 form-group">
@@ -72,6 +81,24 @@
                         </div>
                     </form>
                 </div>
+
+
+                <div class="row">
+                    <h3 class="header smaller lighter orange marginleft">关联配置</h3>
+                    <form id="relevance-form" method="relevance-form" class="form-horizontal">
+                            <div class="form-group">
+                                <input type="checkbox" value="1"   data-flag="icheck" class="square-blue"   id="relevantInit" name="relevantInit">&nbsp;&nbsp;清空已关联数据
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="1"   data-flag="icheck" class="square-blue"   id="relevantAll" name="relevantAll">&nbsp;&nbsp;全新关联（默认只执行未关联的Media）
+                            </div>
+
+                            <div class="form-group left">
+                                <button type="submit" class="btn btn-warning" data-btn-type="save">关联</button>
+                            </div>
+                    </form>
+                </div>
+
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-9">

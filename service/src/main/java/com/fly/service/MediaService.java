@@ -1,6 +1,7 @@
 package com.fly.service;
 
 import com.fly.common.base.pojo.ResultBean;
+import com.fly.common.exception.QueryException;
 import com.fly.entity.Media;
 
 import java.util.Map;
@@ -35,4 +36,8 @@ public interface MediaService {
     Boolean damage(Long id);
 
     Boolean burned(Long id);
+
+    Map<String, Object> findAllOfQuality(String reqObj) throws QueryException;
+
+
 }

@@ -2,6 +2,7 @@ package com.fly.web.restcontroller;
 
 
 import com.fly.common.base.pojo.ResultBean;
+import com.fly.common.exception.QueryException;
 import com.fly.common.utils.EncryptUtil;
 import com.fly.common.utils.StrUtil;
 import com.fly.dao.FilmRepository;
@@ -61,21 +62,15 @@ public class RestMediaController {
         return mediaService.findDuplicate(reqObj);
     }
 
-
     @PostMapping(value = "/unlink")
     public Map<String, Object> mediaUnlink(String reqObj) throws Exception {
         return mediaService.findUnlink(reqObj);
     }
 
-
     @PostMapping(value = "/deleted/{deleted}")
     public Map<String, Object> mediaInTrash(String reqObj,@PathVariable Integer deleted) throws Exception {
         return mediaService.findByDeleted(reqObj,deleted);
     }
-
-
-
-
 
     @PostMapping(value = "/get")
     private Media getMedia(String id) {
@@ -182,7 +177,10 @@ public class RestMediaController {
 
 
 
-
+    @PostMapping(value = "/quality")
+    public Map<String, Object> mediaQuality(String reqObj) throws QueryException {
+        return mediaService.findAllOfQuality(reqObj);
+    }
 
 
 }

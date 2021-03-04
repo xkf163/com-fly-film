@@ -3,6 +3,7 @@ package com.fly.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.fly.common.base.pojo.PageInfo;
 import com.fly.common.base.pojo.ResultBean;
+import com.fly.common.exception.QueryException;
 import com.fly.common.query.entity.Column;
 import com.fly.common.query.entity.Query;
 import com.fly.common.query.entity.QueryCondition;
@@ -591,6 +592,93 @@ public class MediaServiceImpl implements MediaService {
         }
         return true;
     }
+
+    @Override
+    public Map<String, Object> findAllOfQuality(String reqObj) throws QueryException {
+        //用于接收返回数据(配置、分页、数据)
+        Map<String, Object> map = new HashMap<>();
+        QueryCondition queryCondition = JSON.parseObject(reqObj, QueryCondition.class);
+
+        // 分页信息
+        PageInfo pageInfo = QueryUtil.getPageInfo(queryCondition);
+        int pageNum = pageInfo.getPageNum();
+        int pageSize = pageInfo.getPageSize();
+        //获取Query配置
+        Query query = QueryUtil.getQuery(queryCondition);
+
+
+        //4)dsl动态查询
+        List<Map<String, Object>> conditions = queryCondition.getConditions();
+        int sizeCritical = 15;
+        float filmDoubanRatingCritical  = 7.0f;
+        String qualityType = "high";
+
+        if (!conditions.isEmpty()){
+            for(int i = 0 ; i < conditions.size() ; i++) {
+                System.out.println(conditions.get(i).get("key")+" : "+conditions.get(i).get("value"));
+                if ("qualityType".equals(conditions.get(i).get("key"))) {
+                    qualityType =  (String) conditions.get(i).get("value");
+                }
+            }
+            if ("low".equals(qualityType)){
+                 sizeCritical = 10;
+                 filmDoubanRatingCritical  = 8.0f;
+            }
+            for(int i = 0 ; i < conditions.size() ; i++) {
+                if ("sizeCritical".equals(conditions.get(i).get("key"))) {
+                    if(!"".equals(conditions.get(i).get("value"))){
+                        sizeCritical =  Integer.parseInt((String) conditions.get(i).get("value"));
+                    }
+                }
+                if ("ratingCritical".equals(conditions.get(i).get("key"))) {
+                    if(!"".equals(conditions.get(i).get("value"))){
+                        filmDoubanRatingCritical =  Float.parseFloat((String) conditions.get(i).get("value"));
+                    }
+                }
+            }
+
+        }
+
+        //排序信息
+        String sortInfo = !StrUtil.isEmpty(queryCondition.getSortInfo()) ? queryCondition.getSortInfo() : query.getOrder();
+        //String sortInfo = "gatherDate desc";
+        Sort sort = null;
+        if (!StrUtil.isEmpty(sortInfo)) {
+            //判断排序类型及排序字段
+            String[] sortArray = sortInfo.split(" ");
+            //System.out.println(sortArray);
+            sort = "asc".equals(sortArray[1]) ? new Sort(Sort.Direction.ASC, sortArray[0]) : new Sort(Sort.Direction.DESC, sortArray[0]);
+        }
+
+        Pageable pageable = new PageRequest(pageNum-1, pageSize, sort);
+
+        QMedia media = QMedia.media;
+        //再次搜索：带分页
+        Predicate predicate = media.deleted.eq(0).and(media.film.isNotNull());
+
+
+        //Long mediaSizeCritical = 21474836480l;
+        long mediaSizeCritical = (long) sizeCritical * 1024 * 1024 * 1024;
+        if ("low".equals(qualityType)){
+            System.out.println("查询条件：容量小于" + sizeCritical + "GB；豆分大于" + filmDoubanRatingCritical+"。");
+            predicate  = ExpressionUtils.and(predicate,media.mediaSize.lt(mediaSizeCritical).and(media.film.doubanRating.gt(filmDoubanRatingCritical)));
+
+        }else{
+            System.out.println("查询条件：容量大于" + sizeCritical + "GB；豆分小于" + filmDoubanRatingCritical+"。");
+            predicate  = ExpressionUtils.and(predicate,media.mediaSize.gt(mediaSizeCritical).and(media.film.doubanRating.lt(filmDoubanRatingCritical)));
+
+        }
+
+        Page<Media> pageCarrier = mediaRepository.findAll(predicate , pageable);
+        List<Column> columnCarrier = query.getColumnList();
+
+        map.put("pageCarrier", pageCarrier);
+        map.put("columnCarrier", columnCarrier);
+
+        return map;
+    }
+
+
 
 
     public static boolean isNumeric(String str) {

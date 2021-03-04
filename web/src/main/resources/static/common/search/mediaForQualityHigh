@@ -1,0 +1,14 @@
+
+<input placeholder="临界大小(GB),默认15" name="sizeCritical" class="form-control" type="search"  />
+<input placeholder="临界评分,默认7.0" name="ratingCritical" class="form-control" type="search"  />
+<input name="qualityType" class="form-control hide" value="high"  />
+<div class="btn-group">
+    <button type="button" class="btn btn-primary" data-btn-type="search"><i class="fa fa-search"></i></button>
+    <button type="button" class="btn btn-default" data-btn-type="refresh"><i class="fa fa-refresh"></i></button>
+    <button type="button" class="btn btn-default" data-btn-type="reset"><i class="fa fa-mail-reply"></i></button>
+</div>
+<div class="checkbox">
+    <label>
+      <input type="checkbox" id="checkRefresh"> 自动刷新
+    </label>
+</div>
