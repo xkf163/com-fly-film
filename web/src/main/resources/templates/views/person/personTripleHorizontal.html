@@ -61,11 +61,7 @@
 
     .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
 </style>
-
-
-
 <div class="page-content" >
-
     <div class="page-header">
         <h1>${pageSubject}
             <small>
@@ -74,9 +70,7 @@
             </small>
         </h1>
     </div>
-
     <div class="page-body">
-
             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline">
                 <div class="row">
                     <div class="dataTables_filter alert-block" id="searchDivMain">
@@ -118,11 +112,8 @@
                 <!-- PAGE CONTENT ENDS -->
             </div>
         </div>    <!-- /.row -->
-
-
 </div>
     <!-- /.page-content -->
-
 <script src="common/js/dataTables_render.js"></script>
 <script>
     //tableId,queryId,conditionContainer
@@ -138,12 +129,9 @@
     }
 
     $(function() {
-
         jQuery.ajaxSettings.async = false; //同步
         loadPage("${dataSearchDivMainHtml}", $('#searchDivMain') );
         jQuery.ajaxSettings.async = true; //同步
-
-
 
         if ($('#checkRefresh')[0]) {
             $('#checkRefresh').iCheck({
@@ -174,8 +162,11 @@
 
         //init table and fill data
         var main_config={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
             rowClick:function(row,isSelected){
                 console.log(row);
                 $("#PersonNo").val(isSelected?row.douBanNo:"-1");
@@ -223,7 +214,6 @@
 
         $("#thumbnail").magnify();
 
-
         // 关键词搜索框添加绑定回车函数
         //$("button[data-btn-type='search']").on('keypress', function(event) {
         $("#searchDivMain input").on('keypress', function(event) {
@@ -235,11 +225,6 @@
             }
         })
 
-
-
-
     });
-
-
 
 </script>

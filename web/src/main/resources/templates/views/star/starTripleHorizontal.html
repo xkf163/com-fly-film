@@ -127,8 +127,11 @@
 
         //init table and fill data
         var main_config={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
             rowClick:function(row,isSelected){
                 $("#StarId").val(isSelected?row.id:"-1");
                 if(isSelected)
@@ -140,16 +143,23 @@
         }
 
         var sub_config_bottom={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
             //scrollY: subTableHeight
             // pageLength: 5,
             // displayLength: 5
         }
 
         var sub_config_top={
-            lengthChange:false,
-            pagingType:'simple', //分页样式：simple,simple_numbers,full,full_numbers
+            //lengthChange:false,
+            pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
+            //分页样式：simple,simple_numbers,full,full_numbers
             //scrollY: subTableHeight,
             rowClick:function(row,isSelected){
                 $("#MediaId").val(isSelected?row.id:"-1");

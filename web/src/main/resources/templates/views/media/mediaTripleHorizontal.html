@@ -52,10 +52,7 @@
     .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
 </style>
 
-
-
 <div class="page-content" >
-
     <div class="page-header">
         <h1>${pageSubject}
             <small>
@@ -66,7 +63,6 @@
     </div>
 
     <div class="page-body">
-
             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline">
                 <div class="row">
                     <div class="dataTables_filter alert-block" id="searchDivMain">
@@ -126,8 +122,6 @@
         loadPage("${dataSearchDivMainHtml}", $('#searchDivMain') );
         jQuery.ajaxSettings.async = true; //同步
 
-
-
         //init table and fill data
         var main_config={
             // lengthChange:false,
@@ -143,16 +137,22 @@
         }
 
         var sub_config_bottom={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            }
             //scrollY: subTableHeight
             // pageLength: 5,
             // displayLength: 5
         }
 
         var sub_config_top={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
             //scrollY: subTableHeight,
             rowClick:function(row,isSelected){
                 $("#StarId").val(isSelected?row.id:"-1");

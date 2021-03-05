@@ -1,6 +1,6 @@
 ﻿{
     "processing":   "处理中...",
-    "lengthMenu":   "_MENU_ 记录/页",
+    "lengthMenu":   "_MENU_",
     "zeroRecords":  "没有匹配的记录",
     "info":         "共 _TOTAL_ 项",
     "infoEmpty":    "第 0 至 0 项记录，共 0 项",

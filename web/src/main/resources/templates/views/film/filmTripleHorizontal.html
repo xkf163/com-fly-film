@@ -62,10 +62,7 @@
     .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
 </style>
 
-
-
 <div class="page-content" >
-
     <div class="page-header">
         <h1>${pageSubject}
             <small>
@@ -118,8 +115,6 @@
                 <!-- PAGE CONTENT ENDS -->
             </div>
         </div>    <!-- /.row -->
-
-
 </div>
     <!-- /.page-content -->
 
@@ -143,8 +138,6 @@
         loadPage("${dataSearchDivMainHtml}", $('#searchDivMain') );
         jQuery.ajaxSettings.async = true; //同步
 
-
-
         if ($('#checkRefresh')[0]) {
             $('#checkRefresh').iCheck({
                 checkboxClass: 'icheckbox_flat-blue', //选择框的风格。
@@ -162,20 +155,21 @@
                     localStorage.setItem("is_f", 0);
                 }
             })
-
             //定时刷新
             is_f = localStorage.getItem("is_f");
             if(is_f == 2){
                 console.log("默认开启定时刷新");
                 $('#checkRefresh').iCheck("check");
             }
-
         }
 
         //init table and fill data
         var main_config={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
             rowClick:function(row,isSelected){
                 console.log(row);
                 $("#FilmNo").val(isSelected?row.doubanNo:"-1");
@@ -188,16 +182,22 @@
         }
 
         var sub_config_bottom={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            }
             //scrollY: subTableHeight
             // pageLength: 5,
             // displayLength: 5
         }
 
         var sub_config_top={
-            lengthChange:false,
+            //lengthChange:false,
             pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
             //scrollY: subTableHeight,
             rowClick:function(row,isSelected){
                 $("#PersonNo").val(isSelected?row.douBanNo:"-1");
