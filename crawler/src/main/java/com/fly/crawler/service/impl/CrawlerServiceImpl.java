@@ -230,13 +230,9 @@ public class CrawlerServiceImpl implements CrawlerService {
             e.printStackTrace();
         }
 
-
-
-
-
         //条目创建（爬取）时间
         f.setCreateDate(new Date());
-
+        f.setUpdateDate(new Date());
         //System.out.println(f);
         return f;
     }
@@ -464,6 +460,7 @@ public class CrawlerServiceImpl implements CrawlerService {
 
         //条目创建（爬取）时间
         p.setCreateDate(new Date());
+        p.setUpdateDate(new Date());
 
         return p;
     }

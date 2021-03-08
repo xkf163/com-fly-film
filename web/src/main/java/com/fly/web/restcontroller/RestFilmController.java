@@ -87,6 +87,7 @@ public class RestFilmController {
         }else{
             film = new Film();
             film.setCreateDate(new Date());
+            film.setUpdateDate(new Date());
         }
 
         if (filmLogo == null){

@@ -68,6 +68,7 @@ public class RestPersonController {
         }else{
             person = new Person();
             person.setCreateDate(new Date());
+            person.setUpdateDate(new Date());
         }
 
         if (faceLogo == null){
