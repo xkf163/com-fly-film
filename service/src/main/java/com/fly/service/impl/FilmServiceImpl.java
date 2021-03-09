@@ -305,7 +305,11 @@ public class FilmServiceImpl implements FilmService {
     public List<String> findAllOfPerson(String name) {
         Person person = personService.findByNameContaining(name);
         if (null == person){
-            return new ArrayList<>();
+            //认为是豆瓣编号 再进行搜索一次
+            person = personService.findByDouBanNo(name);
+            if (null == person){
+                return new ArrayList<>();
+            }
         }
         String douBanNo = person.getDouBanNo();
         QFilm qFilm = QFilm.film;

@@ -290,7 +290,11 @@ public class PersonServiceImpl implements PersonService {
 
         Film film = filmService.findBySubjectContaining(subject);
         if (null == film){
-            return new ArrayList<>();
+            //认为是豆瓣编号 再进行搜索一次
+            film = filmService.findByDoubanNo(subject);
+            if (null == film){
+                return new ArrayList<>();
+            }
         }
 
         String starAsDirect="",starAsActor="",starAsWriter="";

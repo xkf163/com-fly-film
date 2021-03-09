@@ -61,10 +61,12 @@ function fnRenderFilmName ( d , e , f ) {
 }
 
 function fnRenderPersonNameExtend(value,e,f) {
-	return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+value +"</strong><BR><small class='text-info'>"+f.job+"</small><BR><small>"+f.birthPlace+"</small>";
+	return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+value +"</strong><BR><small class='text-info'>"+f.job+"</small><BR><small>"+f.birthPlace+"</small>\n"+
+		"<a target='_blank' href='https://movie.douban.com/celebrity/"+f.douBanNo+"/' onclick='javascript:void(0)'><i class='fa fa-link'></i></a>";
 }
 
 function fnRenderFilmNamePlus ( d , e , f ) {
-	return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.subject+"</strong><BR><small style='color: #333'>"+f.genre+"</small><BR><small  style='color: #333'>"+f.country+"</small>";
+	return "<strong style='padding-bottom: 10px;line-height: 25px;'>"+f.subject+"</strong><BR><small style='color: #333'>"+f.genre+"</small><BR><small  style='color: #333'>"+f.country+"</small><!-- Trigger -->\n" +
+		"<a target='_blank' href='https://movie.douban.com/subject/"+f.doubanNo+"/' onclick='javascript:void(0)'><i class='fa fa-link' ></i></a>";
 }
 
