@@ -1,5 +1,4 @@
 
-
 <style>
     .form-group{
         margin-bottom: 5px !important;
@@ -35,6 +34,17 @@
 
         padding-bottom: 6px;
     }
+
+    .table-bordered>thead>tr>th {border-bottom-width:3px !important;}
+
+    .icheckbox_flat-blue, .iradio_flat-blue {
+        transform: scale(1.7,1.7);
+        margin-right: 5px;
+    }
+    .checkbox{
+        padding-left: 10px;
+    }
+
 </style>
 
 <div class="page-content">
@@ -101,27 +111,174 @@
 
             </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-9">
-                <div class="row">
-                    <div class="form-group">
-                        <label style="margin-left: 30px;">显示运行日志：</label><input type="checkbox" data-flag="icheck" class="square-grey"  value="1"  id="refreshC" name="refreshC" ><input type="checkbox" data-flag="icheck" class="square-green pull-right"  value="1"  id="refresh" name="refresh" >
-                        <div class="scroll-box" style="margin-left: 30px;">
-                            <ul>
-                            </ul>
+            <div class="col-xs-12 col-sm-6 col-md-5">
+                    <div class="dataTables_filter alert-block pull-left" id="searchDivMiddle" style="margin-left: -6px;">
+                        <input placeholder="请输入片名" name="subjectMain" class="form-control" type="search" likeOption="true"/>
+                        <input placeholder="请输入年份" name="year" class="form-control" type="search" />
+                        <input type="hidden" name="PersonNo" value="-1" id="PersonNo"/>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" data-btn-type="search"><i class="fa fa-search"></i></button>
+                            <button type="button" class="btn btn-default" data-btn-type="refresh"><i class="fa fa-refresh"></i></button>
+                            <button type="button" class="btn btn-default" data-btn-type="reset"><i class="fa fa-mail-reply"></i></button>
+                        </div>
+                        <div class="checkbox pull-right">
+                            <label>
+                                <input type="checkbox" id="checkRefresh"> 自动刷新
+                            </label>
                         </div>
                     </div>
-                </div>
-
+<!--                <div class="col-md-12">-->
+                    <table id="${dataMiddleTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                    </table>
+<!--                </div>-->
             </div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="dataTables_filter alert-block  pull-left" id="searchDivRight"  style="margin-left: -6px;">
+                    <input type="hidden" name="FilmNo" value="-1" id="FilmNo"/>
+                    <input placeholder="请输入姓名" name="nameExtend" class="form-control" type="search" likeOption="true"/>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search"><i class="fa fa-search"></i></button>
+                        <button type="button" class="btn btn-default" data-btn-type="refresh"><i class="fa fa-refresh"></i></button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset"><i class="fa fa-mail-reply"></i></button>
+                    </div>
+                    <div class="checkbox pull-right">
+                        <label>
+                            <input type="checkbox" id="checkRefreshRight"> 自动刷新
+                        </label>
+                    </div>
+                </div>
+                <table id="${dataRightTableId}" class="table table-bordered table-hover dataTable" width="100%">
+                </table>
+            </div>
+
         </div>
     </div>
 </div>
 
+<script src="common/js/dataTables_render.js"></script>
 <script>
     //tableId,queryId,conditionContainer
     var pacthform =null;
     var winId = "user-win";
+    var middleTable,rightTable;
+    var middleUrl ="${dataMiddleTable}";
+    var rightUrl ="${dataRightTable}";
+
+    //刷新表格
+    function refresh(){
+        $("#PersonNo").val("-1");
+        console.log("刷新表格" + new Date().toLocaleString());
+        middleTable.reloadData();
+    }
+    function refreshRight(){
+        $("#FilmNo").val("-1");
+        console.log("刷新表格" + new Date().toLocaleString());
+        rightTable.reloadData();
+    }
+
     $(function() {
+        if ($('#checkRefresh')[0]) {
+            $('#checkRefresh').iCheck({
+                checkboxClass: 'icheckbox_flat-blue', //选择框的风格。
+                radioClass: 'icheckbox_flat-blue',
+            });
+
+            $('#checkRefresh').on('ifChanged', function (event) {
+                if ($(this).is(':checked')) {
+                    console.log("开启定时刷新");
+                    localStorage.setItem("is_f", 2);
+                    tf = setInterval('refresh()', 20000); //指定秒刷新一次
+                } else {
+                    console.log("关闭定时刷新");
+                    clearInterval(tf); //取消自动刷新
+                    localStorage.setItem("is_f", 0);
+                }
+            })
+            //定时刷新
+            is_f = localStorage.getItem("is_f");
+            if(is_f == 2){
+                console.log("默认开启定时刷新");
+                $('#checkRefresh').iCheck("check");
+            }
+        }
+
+        if ($('#checkRefreshRight')[0]) {
+            $('#checkRefreshRight').iCheck({
+                checkboxClass: 'icheckbox_flat-blue', //选择框的风格。
+                radioClass: 'icheckbox_flat-blue',
+            });
+
+            $('#checkRefreshRight').on('ifChanged', function (event) {
+                if ($(this).is(':checked')) {
+                    console.log("开启定时刷新");
+                    localStorage.setItem("is_r", 2);
+                    tf = setInterval('refreshRight()', 20000); //指定秒刷新一次
+                } else {
+                    console.log("关闭定时刷新");
+                    clearInterval(tf); //取消自动刷新
+                    localStorage.setItem("is_r", 0);
+                }
+            })
+            //定时刷新
+            is_r = localStorage.getItem("is_r");
+            if(is_r == 2){
+                console.log("默认开启定时刷新");
+                $('#checkRefreshRight').iCheck("check");
+            }
+        }
+
+        //init table and fill data
+        var middle_config={
+            lengthChange:false,
+            pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
+            rowClick:function(row,isSelected){
+                console.log(row);
+                $("#FilmNo").val(isSelected?row.doubanNo:"-1");
+                if(isSelected)
+                    rightTable.reloadData();
+            }
+        }
+        var right_config={
+            lengthChange:false,
+            pagingType:'simple',
+            language: {
+                "sUrl": basePath + "/common/json/zh_CN_Sub.json"
+            },
+            rowClick:function(row,isSelected){
+                console.log(row);
+                $("#PersonNo").val(isSelected?row.douBanNo:"-1");
+                if(isSelected)
+                    middleTable.reloadData();
+            }
+        }
+        middleTable = new CommonTable("${dataMiddleTableId}", middleUrl, "searchDivMiddle",middle_config);
+        rightTable = new CommonTable("${dataRightTableId}", rightUrl,"searchDivRight",right_config);
+
+        setTimeout(function () {
+            middleTable.selectFirstRow(true);
+        },500);
+
+        // 关键词搜索框添加绑定回车函数
+        //$("button[data-btn-type='search']").on('keypress', function(event) {
+        $("#searchDivMiddle input").on('keypress', function(event) {
+            if (event.keyCode == "13") {
+                middleTable.reloadData();
+                setTimeout(function () {
+                    middleTable.selectFirstRow(true);
+                },500);
+            }
+        })
+        $("#searchDivRight input").on('keypress', function(event) {
+            if (event.keyCode == "13") {
+                rightTable.reloadData();
+                setTimeout(function () {
+                    rightTable.selectFirstRow(true);
+                },500);
+            }
+        })
         //初始化控件
         pacthform=$("#patch-form").form();
         //数据校验
@@ -163,67 +320,6 @@
 
 
 
-
-
-
-        window.clearInterval(int);
-        int = setInterval(function () {
-
-            if ($("#refresh").is(':checked')) {
-                $.ajax({
-                    type: "post",
-                    url: "/relevance/log",
-                    cache:false,
-                    async:true,
-                    success: function(result){
-                        if (result.length > 0) {
-                            $ul = $(".scroll-box ul");
-                            $("<li>"+result+"</li>").prependTo($ul);
-
-
-                        }
-
-                    }
-                });
-            }
-
-            if ($("#refreshC").is(':checked')) {
-                $.ajax({
-                    type: "post",
-                    url: "/crawler/log",
-                    cache:false,
-                    async:true,
-                    success: function(result){
-                        if (result.length > 0) {
-                            $ul = $(".scroll-box ul");
-                            $("<li>"+result+"</li>").prependTo($ul);
-
-
-                        }
-
-                    }
-                });
-            }
-
-            if ($("#refreshL").is(':checked')) {
-                $.ajax({
-                    type: "post",
-                    url: "/crawler/logb",
-                    cache:false,
-                    async:true,
-                    success: function(result){
-                        if (result.length > 0) {
-                            $ul = $(".scroll-box ul");
-                            $("<li>"+result+"</li>").prependTo($ul);
-
-
-                        }
-
-                    }
-                });
-            }
-
-        }, 100);
 
 
 

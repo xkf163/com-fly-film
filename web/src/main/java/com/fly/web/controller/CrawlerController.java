@@ -59,7 +59,18 @@ public class CrawlerController {
     }
 
     @GetMapping(value = "/picpatch")
-    public String crawlerPicPatch(){
+    public String crawlerPicPatch(HttpServletRequest request){
+
+        //request.setAttribute("dataSearchDivMiddle", "common/search/film");
+        request.setAttribute("dataMiddleTable", "api/film/all");
+        request.setAttribute("dataMiddleTableId", "subFilm");
+
+
+        request.setAttribute("dataRightTable", "api/person/all");
+        request.setAttribute("dataRightTableId", "subPerson");
+
+
+
         return "views/crawler/picpatch";
     }
 
@@ -77,15 +88,12 @@ public class CrawlerController {
         System.out.println("searchKey:" +searchKey);
         List<String> fs = filmService.findAllOfPerson(searchKey);
 
+
         String[] urlArray=fs.toArray(new String[fs.size()]);
-
-        douBanLogoProcessor.runningLog  = " 海报爬取队列长度： "+fs.size();
-
+        //douBanLogoProcessor.runningLog  = " 海报爬取队列长度： "+fs.size();
         System.out.println(" 海报爬取队列长度： "+fs.size());
-
         //默认spider
         spider = Spider.create(douBanLogoProcessor).addUrl(urlArray).thread(1);
-
         //异步启动，当前线程继续执行
         spider.start();
 
