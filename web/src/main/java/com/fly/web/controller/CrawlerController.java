@@ -63,13 +63,10 @@ public class CrawlerController {
 
         //request.setAttribute("dataSearchDivMiddle", "common/search/film");
         request.setAttribute("dataMiddleTable", "api/film/all");
-        request.setAttribute("dataMiddleTableId", "subFilm");
-
+        request.setAttribute("dataMiddleTableId", "mainFilm");
 
         request.setAttribute("dataRightTable", "api/person/all");
-        request.setAttribute("dataRightTableId", "subPerson");
-
-
+        request.setAttribute("dataRightTableId", "mainPerson");
 
         return "views/crawler/picpatch";
     }
